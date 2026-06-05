@@ -59,8 +59,12 @@ window.SectorButton = SectorButton;
 // ============ Sector detail view ============
 function SectorView({ sector, monthIdx, onMonthChange }) {
   const accent = window.ACCENTS[sector.accent] || window.ACCENTS.blue;
-  const data = window.SECTOR_DATA[sector.id];
+  const sectorData = window.SECTOR_DATA[sector.id];
   const activeMonth = window.MONTHS[monthIdx];
+
+  // Busca datos del mes activo; si no existe, toma el último mes disponible
+  const monthKeys = Object.keys(sectorData);
+  const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
 
   return (
     <div style={accent}>
@@ -99,10 +103,10 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
               <div className="chart-sub">{c.sub}</div>
             </div>
             <div className="chart-body">
-              {c.type === 'line' && <window.LineChart data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} />}
-              {c.type === 'bar'  && <window.BarChart  data={c.data} activeLabel={activeMonth && c.data.find(d => d.x.toLowerCase().startsWith(activeMonth.short.slice(0,3).toLowerCase()))?.x} />}
-              {c.type === 'hbar' && <window.HBarChart data={c.data} />}
-              {c.type === 'donut'&& <window.DonutChart data={c.data} />}
+              {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} />}
+              {c.type === 'bar'   && <window.BarChart   data={c.data} activeLabel={activeMonth && c.data.find(d => d.x.toLowerCase().startsWith(activeMonth.short.slice(0,3).toLowerCase()))?.x} />}
+              {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
+              {c.type === 'donut' && <window.DonutChart data={c.data} />}
             </div>
           </div>
         ))}
@@ -140,7 +144,7 @@ function KpiCard({ kpi }) {
 }
 window.KpiCard = KpiCard;
 
-// ============ Detail Accordion (desplegables debajo de los gráficos) ============
+// ============ Detail Accordion ============
 function DetailAccordion({ detail, activeMonth, defaultOpen }) {
   const [open, setOpen] = useState(!!defaultOpen);
   const accent = window.ACCENTS[detail.accent] || window.ACCENTS.blue;
@@ -159,8 +163,8 @@ function DetailAccordion({ detail, activeMonth, defaultOpen }) {
       {open && (
         <div className="detail-acc-body">
           {detail.type === 'siniestros-report' && <SiniestrosReport groups={detail.groups} />}
-          {detail.type === 'table' && <DetailTable detail={detail} />}
-          {detail.type === 'comparativo' && <DetailComparativo detail={detail} activeMonth={activeMonth} />}
+          {detail.type === 'table'              && <DetailTable detail={detail} />}
+          {detail.type === 'comparativo'        && <DetailComparativo detail={detail} activeMonth={activeMonth} />}
         </div>
       )}
     </div>
@@ -187,9 +191,7 @@ function SiniestrosReport({ groups }) {
             </div>
             {g.rows.map((r, j) => (
               <div key={j} className="sin-row">
-                <div className="sin-cell-medida">
-                  <span className="sin-tri">▸</span> {r.medida}
-                </div>
+                <div className="sin-cell-medida"><span className="sin-tri">▸</span> {r.medida}</div>
                 <div className="sin-cell-resp">{r.responsable}</div>
                 <div className="sin-cell-fecha">{r.fecha}</div>
               </div>
@@ -233,9 +235,6 @@ function DetailTable({ detail }) {
               if (c.key === 'resultado') {
                 return <div key={j} style={style}><span className="result-pill result-good">{v}</span></div>;
               }
-              if (c.key === 'razon' || c.key === 'unidad' || c.key === 'local') {
-                return <div key={j} className="dt-cell-link" style={style}>{v}</div>;
-              }
               return <div key={j} style={style}>{v}</div>;
             })}
           </div>
@@ -243,8 +242,14 @@ function DetailTable({ detail }) {
         {detail.totalRow && (
           <div className="dt-row dt-row-total" style={{ gridTemplateColumns: gridCols }}>
             <div style={{ fontWeight: 700, letterSpacing: 0.4 }}>{detail.totalRow.label}</div>
-            {detail.columns.slice(1, -1).map((c, i) => <div key={i} style={{ textAlign: 'right' }}>{detail.totalRow.extra && i === detail.columns.length - 3 ? detail.totalRow.extra : ''}</div>)}
-            <div style={{ textAlign: 'right', fontWeight: 700, color: detail.totalRow.color === 'green' ? '#2C7E51' : 'inherit' }}>{detail.totalRow.value}</div>
+            {detail.columns.slice(1, -1).map((c, i) => (
+              <div key={i} style={{ textAlign: 'right' }}>
+                {detail.totalRow.extra && i === detail.columns.length - 3 ? detail.totalRow.extra : ''}
+              </div>
+            ))}
+            <div style={{ textAlign: 'right', fontWeight: 700, color: detail.totalRow.color === 'green' ? '#2C7E51' : 'inherit' }}>
+              {detail.totalRow.value}
+            </div>
           </div>
         )}
       </div>
@@ -255,7 +260,7 @@ function DetailTable({ detail }) {
 function DetailComparativo({ detail, activeMonth }) {
   const monthIdx = window.MONTHS.findIndex(m => m === activeMonth);
   const prevMonth = monthIdx > 0 ? window.MONTHS[monthIdx - 1] : window.MONTHS[0];
-  const leftLbl = prevMonth.short;
+  const leftLbl  = prevMonth.short;
   const rightLbl = activeMonth ? activeMonth.short : '';
   return (
     <div className="cmp-wrap">
@@ -264,29 +269,21 @@ function DetailComparativo({ detail, activeMonth }) {
           <div className="cmp-razon">RAZÓN SOCIAL</div>
           <div className="cmp-side cmp-side-left">
             <div className="cmp-side-label">{leftLbl}</div>
-            <div className="cmp-cells">
-              {detail.columns.map((c, i) => <div key={i}>{c}</div>)}
-            </div>
+            <div className="cmp-cells">{detail.columns.map((c, i) => <div key={i}>{c}</div>)}</div>
           </div>
           <div className="cmp-side cmp-side-right">
             <div className="cmp-side-label">{rightLbl}</div>
-            <div className="cmp-cells">
-              {detail.columns.map((c, i) => <div key={i}>{c}</div>)}
-            </div>
+            <div className="cmp-cells">{detail.columns.map((c, i) => <div key={i}>{c}</div>)}</div>
           </div>
         </div>
         {detail.rows.map((r, i) => (
           <div key={i} className="cmp-row">
             <div className="cmp-razon">{r.razon}</div>
             <div className="cmp-side cmp-side-left">
-              <div className="cmp-cells">
-                {r.left.map((v, j) => <div key={j}>{v}</div>)}
-              </div>
+              <div className="cmp-cells">{r.left.map((v, j) => <div key={j}>{v}</div>)}</div>
             </div>
             <div className="cmp-side cmp-side-right">
-              <div className="cmp-cells">
-                {r.right.map((v, j) => <div key={j}>{v}</div>)}
-              </div>
+              <div className="cmp-cells">{r.right.map((v, j) => <div key={j}>{v}</div>)}</div>
             </div>
           </div>
         ))}
