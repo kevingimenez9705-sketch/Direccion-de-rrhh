@@ -440,7 +440,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:152.6},{x:'May 25',y:114.8},{x:'Abr 26',y:255.3},{x:'May 26',y:389.8}] },
-        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
       ],
     },
     feb: {
@@ -451,7 +451,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:152.6},{x:'May 25',y:114.8},{x:'Abr 26',y:255.3},{x:'May 26',y:389.8}] },
-        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
       ],
     },
     mar: {
@@ -462,7 +462,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:152.6},{x:'May 25',y:114.8},{x:'Abr 26',y:255.3},{x:'May 26',y:389.8}] },
-        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
       ],
     },
     abr: {
@@ -478,7 +478,7 @@ window.SECTOR_DATA = {
           {x:'RIOS BRUNO',y:5.1},{x:'SAYAGO MARCIO',y:4.9},{x:'COMACHI V.',y:3.8},
           {x:'VICTORICA B.',y:3.7},{x:'RUANO ROJAS',y:2.5},{x:'GONZALEZ M.',y:1.2},
         ]},
-        { type:'donut',title:'Distribución por tipo (monto)', sub:'% del total · Abr 2026', data:[{label:'Fábrica',value:18.1},{label:'Sabores',value:21.7},{label:'Extremas',value:10.2},{label:'Otros',value:50.0}] },
+        { type:'donut',title:'Distribución por tipo (monto)', sub:'% del total · Abr 2026', center:'$255.3M', data:[{label:'Fábrica',value:18.1},{label:'Sabores',value:21.7},{label:'Extremas',value:10.2},{label:'Otros',value:50.0}] },
       ],
       details: [{
         key:'detalle-abr', title:'Detalle acuerdos — Abr 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
@@ -517,7 +517,7 @@ window.SECTOR_DATA = {
           {x:'TABEIRA GABRIEL',y:4.48},{x:'CERTALDO',y:3.76},{x:'VICTORICA BARBARA',y:3.27},
           {x:'SORIA ADRIAN',y:2.60},{x:'MOSCARELLA',y:1.86},
         ]},
-        { type:'donut',title:'Distribución por tipo (monto)', sub:'% del total', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'donut',title:'Distribución por tipo (monto)', sub:'% del total · May 2026', center:'$389.8M', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
       ],
       details: [{
         key:'detalle-may', title:'Detalle acuerdos — May 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
