@@ -48,12 +48,12 @@ const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{
 const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66}];
 const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:'Abr',y:6.54},{x:'May',y:7.51}];
 
-// ─── TENDENCIAS DOTACIÓN (solo May 2026 con dato — Empleados Fin del Período) ───
-const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:4235}];
-const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:1845}];
-const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:1121}];
-const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:374}];
-const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:895}];
+// ─── TENDENCIAS DOTACIÓN (Empleados Fin del Período · Mar derivado de Empleados Iniciales Abr) ───
+const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235}];
+const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845}];
+const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121}];
+const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'Abr',y:368},{x:'May',y:374}];
+const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895}];
 
 // ─── HORAS EXTRAS TENDENCIA (May = período pagado 20/4 al 19/5) ───
 const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922}];
@@ -97,7 +97,7 @@ window.SECTOR_DATA = {
     },
     mar: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
+        { label:'Dotación',   value:'4.067', delta:{ dir:'neutral', text:'Fin Mar 2026 · derivado inicio Abr' } },
         { label:'Ausentismo', value:'6.82%', delta:{ dir:'up',      text:'+2.49 pp vs. mes ant.' } },
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Mar' } },
       ],
@@ -110,7 +110,7 @@ window.SECTOR_DATA = {
     },
     abr: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
+        { label:'Dotación',   value:'4.101', delta:{ dir:'up', text:'+34 vs. fin de Mar (4.067)' } },
         { label:'Ausentismo', value:'5.99%', delta:{ dir:'down',    text:'−0.83 pp vs. mes ant.' } },
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Abr' } },
       ],
@@ -172,7 +172,7 @@ window.SECTOR_DATA = {
     },
     mar: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
+        { label:'Dotación',   value:'1.668', delta:{ dir:'neutral', text:'Fin Mar 2026 · derivado inicio Abr' } },
         { label:'Ausentismo', value:'5.17%', delta:{ dir:'up',      text:'+1.01 pp vs. mes ant.' } },
         { label:'Rotación',   value:'18.81%',delta:{ dir:'up',      text:'+5.76 pp vs. mes ant.' } },
       ],
@@ -185,7 +185,7 @@ window.SECTOR_DATA = {
     },
     abr: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
+        { label:'Dotación',   value:'1.754', delta:{ dir:'up', text:'+86 vs. fin de Mar (1.668)' } },
         { label:'Ausentismo', value:'3.56%', delta:{ dir:'down',    text:'−1.61 pp vs. mes ant.' } },
         { label:'Rotación',   value:'14.52%',delta:{ dir:'down',    text:'−4.29 pp vs. mes ant.' } },
       ],
@@ -247,7 +247,7 @@ window.SECTOR_DATA = {
     },
     mar: {
       kpis: [
-        { label:'Dotación',   value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
+        { label:'Dotación',   value:'1.107', delta:{ dir:'neutral', text:'Fin Mar 2026 · derivado inicio Abr' } },
         { label:'Ausentismo', value:'7.17%',  delta:{ dir:'up',      text:'+5.88 pp vs. mes ant.' } },
         { label:'Rotación',   value:'12.16%', delta:{ dir:'up',      text:'+0.68 pp vs. mes ant.' } },
       ],
@@ -260,7 +260,7 @@ window.SECTOR_DATA = {
     },
     abr: {
       kpis: [
-        { label:'Dotación',   value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
+        { label:'Dotación',   value:'1.102', delta:{ dir:'down', text:'−5 vs. fin de Mar (1.107)' } },
         { label:'Ausentismo', value:'4.38%',  delta:{ dir:'down',    text:'−2.79 pp vs. mes ant.' } },
         { label:'Rotación',   value:'13.58%', delta:{ dir:'up',      text:'+1.42 pp vs. mes ant.' } },
       ],
@@ -322,7 +322,7 @@ window.SECTOR_DATA = {
     },
     mar: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
+        { label:'Dotación',   value:'364', delta:{ dir:'neutral', text:'Fin Mar 2026 · derivado inicio Abr' } },
         { label:'Ausentismo', value:'5.74%', delta:{ dir:'down',    text:'−0.82 pp vs. mes ant.' } },
         { label:'Rotación',   value:'4.54%', delta:{ dir:'up',      text:'+1.91 pp vs. mes ant.' } },
       ],
@@ -335,7 +335,7 @@ window.SECTOR_DATA = {
     },
     abr: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
+        { label:'Dotación',   value:'368', delta:{ dir:'up', text:'+4 vs. fin de Mar (364)' } },
         { label:'Ausentismo', value:'9.28%', delta:{ dir:'up',      text:'+3.54 pp vs. mes ant.' } },
         { label:'Rotación',   value:'4.64%', delta:{ dir:'up',      text:'+0.10 pp vs. mes ant.' } },
       ],
@@ -397,7 +397,7 @@ window.SECTOR_DATA = {
     },
     mar: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
+        { label:'Dotación',   value:'928', delta:{ dir:'neutral', text:'Fin Mar 2026 · derivado inicio Abr' } },
         { label:'Ausentismo', value:'9.21%', delta:{ dir:'up',      text:'+2.54 pp vs. mes ant.' } },
         { label:'Rotación',   value:'7.46%', delta:{ dir:'down',    text:'−0.36 pp vs. mes ant.' } },
       ],
@@ -410,7 +410,7 @@ window.SECTOR_DATA = {
     },
     abr: {
       kpis: [
-        { label:'Dotación',   value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
+        { label:'Dotación',   value:'877', delta:{ dir:'down', text:'−51 vs. fin de Mar (928)' } },
         { label:'Ausentismo', value:'11.43%', delta:{ dir:'up',      text:'+2.22 pp vs. mes ant.' } },
         { label:'Rotación',   value:'6.54%',  delta:{ dir:'down',    text:'−0.92 pp vs. mes ant.' } },
       ],
