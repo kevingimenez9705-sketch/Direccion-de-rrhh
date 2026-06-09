@@ -42,7 +42,7 @@ const ausStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:6.56},{x:'Mar',y:5.74},{x:'
 const ausFabricaTend  = [{x:'Ene',y:8.60},{x:'Feb',y:6.67},{x:'Mar',y:9.21},{x:'Abr',y:11.43},{x:'May',y:9.61}];
 
 // ─── TENDENCIAS ROTACIÓN (datos reales del xlsx) ───
-const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:9.96}]; // May: rotación a nivel empresa 9.96%
+const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96}]; // Abr calculado ((bajas+altas)/2 ÷ dot. promedio) · May del xlsx (9.96%)
 const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50}];
 const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15}];
 const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66}];
@@ -112,7 +112,7 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Dotación',   value:'4.101', delta:{ dir:'up', text:'+34 vs. fin de Mar (4.067)' } },
         { label:'Ausentismo', value:'5.99%', delta:{ dir:'down',    text:'−0.83 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Abr' } },
+        { label:'Rotación',   value:'11.62%',delta:{ dir:'neutral', text:'Calculado: 412 bajas · 537 altas' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
@@ -125,7 +125,7 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Dotación',   value:'4.235', delta:{ dir:'up',      text:'+134 vs. inicio del mes (4.101)' } },
         { label:'Ausentismo', value:'5.37%', delta:{ dir:'down',    text:'−0.62 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'9.96%', delta:{ dir:'neutral', text:'364 bajas · 466 altas · May 2026' } },
+        { label:'Rotación',   value:'9.96%', delta:{ dir:'down',    text:'−1.66 pp vs. mes ant. · 364 bajas · 466 altas' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
