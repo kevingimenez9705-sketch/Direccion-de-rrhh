@@ -651,7 +651,6 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Horas extras — mes activo', value:'6.325',  delta:{ dir:'up',      text:'Mayor volumen del período' } },
         { label:'Costo del mes',              value:'$67.3M', delta:{ dir:'up',      text:'Ene 2026' } },
-        { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Ene 2026' } },
       ],
       charts: [
         { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
@@ -677,7 +676,6 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Horas extras — mes activo', value:'4.479',  delta:{ dir:'down',    text:'−29.2% vs. mes anterior' } },
         { label:'Costo del mes',              value:'$49.4M', delta:{ dir:'down',    text:'−26.6% vs. mes anterior' } },
-        { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Feb 2026' } },
       ],
       charts: [
         { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
@@ -701,7 +699,6 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Horas extras — mes activo', value:'3.779',  delta:{ dir:'down',    text:'−15.6% vs. mes anterior' } },
         { label:'Costo del mes',              value:'$38.8M', delta:{ dir:'down',    text:'−21.4% vs. mes anterior' } },
-        { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
       ],
       charts: [
         { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
@@ -726,7 +723,6 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Horas extras — mes activo', value:'4.169',  delta:{ dir:'up',      text:'+10.3% vs. mes anterior' } },
         { label:'Costo del mes',              value:'$49.2M', delta:{ dir:'up',      text:'+26.9% vs. mes anterior' } },
-        { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
       ],
       charts: [
         { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
@@ -749,7 +745,6 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Horas extras — mes activo', value:'3.922',  delta:{ dir:'down',    text:'−5.9% vs. mes anterior' } },
         { label:'Costo del mes',              value:'$43.9M', delta:{ dir:'down',    text:'−10.8% vs. mes anterior' } },
-        { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato May 2026' } },
       ],
       charts: [
         { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
