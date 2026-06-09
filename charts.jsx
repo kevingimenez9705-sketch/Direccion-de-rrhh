@@ -219,7 +219,7 @@ function HBarChart({ data }) {
 }
 
 // ============ Donut chart ============
-function DonutChart({ data }) {
+function DonutChart({ data, center }) {
   const t = chartTheme();
   const W = 320, H = 260;
   const cx = W / 2, cy = H / 2;
@@ -255,8 +255,9 @@ function DonutChart({ data }) {
         {slices.map((s, i) => (
           <path key={i} d={s.path} fill={s.color} stroke={t.tooltipBg === '#0F1420' ? '#171D2B' : 'white'} strokeWidth="2" />
         ))}
-        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="13" fill={t.inkSub} fontWeight="500">Total</text>
-        <text x={cx} y={cy + 16} textAnchor="middle" fontSize="18" fill={t.ink} fontWeight="700">{total}</text>
+        {center && (
+          <text x={cx} y={cy + 6} textAnchor="middle" fontSize="15" fill={t.ink} fontWeight="700">{center}</text>
+        )}
       </svg>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12.5 }}>
         {slices.map((s, i) => (
