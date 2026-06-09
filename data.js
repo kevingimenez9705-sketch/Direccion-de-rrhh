@@ -1,6 +1,7 @@
-// data.js — SOLO datos reales del xlsx datos_dash_cesar.xlsx
-// S/D = sin dato en la fuente. Dotación no existe en el xlsx → S/D en todos los meses/sectores.
-// Rotación: existe solo en hojas de ausentismo (por mes) y en el xlsx de Cesar no hay desglose
+// data.js — SOLO datos reales del xlsx datos_dash_cesar.xlsx + indicadores mayo 2026
+// S/D = sin dato en la fuente.
+// Dotación: solo existe dato de May 2026 (Empleados Fin del Período) → Ene–Abr S/D.
+// Rotación: existe solo en hojas de ausentismo (por mes) y no hay desglose
 //   por zona/sector/gerencia → esos gráficos usan S/D o se omiten con nota.
 
 window.MONTHS = [
@@ -22,14 +23,14 @@ const acc = {
 window.ACCENTS = acc;
 
 window.SECTORS = [
-  { id:'empresa',         group:'UNIDADES', name:'Empresa Total',    sub:'Visión consolidada · todas las razones sociales', accent:'blue',   iconKey:'building',  logo:'assets/empresa total.png',       headerSub:'Consolidado de todas las unidades operativas',       tags:['Ausentismo 5.37%','May 2026'] },
+  { id:'empresa',         group:'UNIDADES', name:'Empresa Total',    sub:'Visión consolidada · todas las razones sociales', accent:'blue',   iconKey:'building',  logo:'assets/empresa total.png',       headerSub:'Consolidado de todas las unidades operativas',       tags:['Dotación 4.235','Ausentismo 5.37%'] },
   { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · May 2026',         tags:['Ausentismo 3.99%','Rotación 8.50%'] },
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · May 2026',      tags:['Ausentismo 4.13%','Rotación 12.15%'] },
   { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · May 2026',     tags:['Ausentismo 5.28%','Rotación 5.66%'] },
   { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · May 2026',                     tags:['Ausentismo 9.61%','Rotación 7.51%'] },
   { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['39 acuerdos','$389.8M'] },
   { id:'inspecciones',    group:'GESTIÓN',  name:'Inspecciones',     sub:'Visitas, observaciones y cumplimiento',          accent:'green',  iconKey:'search',    logo:'assets/inspecciones.png',        headerSub:'Visitas regulatorias y de cumplimiento · Mayo 2026', tags:['20 inspecciones','5 multas'] },
-  { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · Abr 2026',      tags:['4.169 hs','$49.2M'] },
+  { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · May 2026',      tags:['3.922 hs','$43.9M'] },
   { id:'accidentabilidad',group:'GESTIÓN',  name:'Accidentabilidad', sub:'Tasa, días caídos y reporte de siniestros',      accent:'red',    iconKey:'alert',     logo:'assets/accidentabilidad.png',    headerSub:'Tasa, días caídos y reporte de siniestros',          tags:['477 siniestros hist.','13.160 días caídos'] },
 ];
 
@@ -41,15 +42,22 @@ const ausStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:6.56},{x:'Mar',y:5.74},{x:'
 const ausFabricaTend  = [{x:'Ene',y:8.60},{x:'Feb',y:6.67},{x:'Mar',y:9.21},{x:'Abr',y:11.43},{x:'May',y:9.61}];
 
 // ─── TENDENCIAS ROTACIÓN (datos reales del xlsx) ───
-const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}]; // no existe consolidado empresa
+const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:9.96}]; // May: rotación a nivel empresa 9.96%
 const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50}];
 const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15}];
 const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66}];
 const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:'Abr',y:6.54},{x:'May',y:7.51}];
 
-// ─── HORAS EXTRAS TENDENCIA ───
-const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169}];
-const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'Abr',y:49.2}];
+// ─── TENDENCIAS DOTACIÓN (solo May 2026 con dato — Empleados Fin del Período) ───
+const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:4235}];
+const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:1845}];
+const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:1121}];
+const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:374}];
+const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:895}];
+
+// ─── HORAS EXTRAS TENDENCIA (May = período pagado 20/4 al 19/5) ───
+const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922}];
+const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'Abr',y:49.2},{x:'May',y:43.9}];
 
 // ══════════════════════════════════════════════════════
 window.SECTOR_DATA = {
@@ -57,8 +65,8 @@ window.SECTOR_DATA = {
   // ════════════════════════════════════
   // EMPRESA TOTAL
   // Ausentismo real: xlsx hoja ausentismo por mes
-  // Rotación: no hay dato consolidado empresa → S/D
-  // Dotación: no existe en xlsx → S/D
+  // Rotación: consolidado empresa solo May (9.96%)
+  // Dotación: solo May 2026 (4.235) → Ene–Abr S/D
   // ════════════════════════════════════
   empresa: {
     ene: {
@@ -68,7 +76,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Ene' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:13.90},{x:'Extremas',y:17.80},{x:'Staff',y:5.20},{x:'Fábrica',y:11.60}] },
@@ -81,7 +89,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Feb' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:13.05},{x:'Extremas',y:11.48},{x:'Staff',y:2.63},{x:'Fábrica',y:7.82}] },
@@ -94,7 +102,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Mar' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:18.81},{x:'Extremas',y:12.16},{x:'Staff',y:4.54},{x:'Fábrica',y:7.46}] },
@@ -107,7 +115,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Abr' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:14.52},{x:'Extremas',y:13.58},{x:'Staff',y:4.64},{x:'Fábrica',y:6.54}] },
@@ -115,12 +123,12 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato May 2026' } },
+        { label:'Dotación',   value:'4.235', delta:{ dir:'up',      text:'+134 vs. inicio del mes (4.101)' } },
         { label:'Ausentismo', value:'5.37%', delta:{ dir:'down',    text:'−0.62 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado May' } },
+        { label:'Rotación',   value:'9.96%', delta:{ dir:'neutral', text:'364 bajas · 466 altas · May 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:8.50},{x:'Extremas',y:12.15},{x:'Staff',y:5.66},{x:'Fábrica',y:7.51}] },
@@ -132,7 +140,7 @@ window.SECTOR_DATA = {
   // SABORES EXPRESS
   // Ausentismo: hoja ausentismo por mes (sabores locales)
   // Rotación: hoja ausentismo por mes (SABORES %)
-  // Dotación: no existe → S/D
+  // Dotación: solo May 2026 (1.845)
   // Rotación por zona: no existe en xlsx → S/D
   // ════════════════════════════════════
   sabores: {
@@ -143,7 +151,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'13.9%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         { type:'bar',  title:'Rotación por zona',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -156,7 +164,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'13.05%',delta:{ dir:'down',    text:'−0.85 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         { type:'bar',  title:'Rotación por zona',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -169,7 +177,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'18.81%',delta:{ dir:'up',      text:'+5.76 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         { type:'bar',  title:'Rotación por zona',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -182,7 +190,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'14.52%',delta:{ dir:'down',    text:'−4.29 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         { type:'bar',  title:'Rotación por zona',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -190,12 +198,12 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato May 2026' } },
+        { label:'Dotación',   value:'1.845', delta:{ dir:'up',      text:'+91 vs. inicio del mes (1.754)' } },
         { label:'Ausentismo', value:'3.99%', delta:{ dir:'up',      text:'+0.43 pp vs. mes ant.' } },
         { label:'Rotación',   value:'8.50%', delta:{ dir:'down',    text:'−6.02 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         { type:'bar',  title:'Rotación por zona',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -207,7 +215,7 @@ window.SECTOR_DATA = {
   // EXTREMAS
   // Ausentismo: hoja ausentismo por mes (extremas locales)
   // Rotación: hoja ausentismo por mes (EXTREMAS %)
-  // Dotación: no existe → S/D
+  // Dotación: solo May 2026 (1.121)
   // Rotación por sector: no existe → S/D
   // ════════════════════════════════════
   extremas: {
@@ -218,7 +226,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'17.80%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -231,7 +239,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'11.48%', delta:{ dir:'down',    text:'−6.32 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -244,7 +252,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'12.16%', delta:{ dir:'up',      text:'+0.68 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -257,7 +265,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'13.58%', delta:{ dir:'up',      text:'+1.42 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -265,12 +273,12 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Dotación',   value:'S/D',    delta:{ dir:'neutral', text:'Sin dato May 2026' } },
+        { label:'Dotación',   value:'1.121',  delta:{ dir:'up',      text:'+19 vs. inicio del mes (1.102)' } },
         { label:'Ausentismo', value:'4.13%',  delta:{ dir:'down',    text:'−0.25 pp vs. mes ant.' } },
         { label:'Rotación',   value:'12.15%', delta:{ dir:'down',    text:'−1.43 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -282,7 +290,7 @@ window.SECTOR_DATA = {
   // STAFF
   // Ausentismo: hoja ausentismo por mes (staff)
   // Rotación: hoja ausentismo por mes (STAFF %)
-  // Dotación: no existe → S/D
+  // Dotación: solo May 2026 (374)
   // Rotación por gerencia: no existe → S/D
   // ════════════════════════════════════
   staff: {
@@ -293,7 +301,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'5.20%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         { type:'bar',  title:'Rotación por gerencia', sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -306,7 +314,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'2.63%', delta:{ dir:'down',    text:'−2.57 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         { type:'bar',  title:'Rotación por gerencia', sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -319,7 +327,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'4.54%', delta:{ dir:'up',      text:'+1.91 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         { type:'bar',  title:'Rotación por gerencia', sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -332,7 +340,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'4.64%', delta:{ dir:'up',      text:'+0.10 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         { type:'bar',  title:'Rotación por gerencia', sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -340,12 +348,12 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato May 2026' } },
+        { label:'Dotación',   value:'374',   delta:{ dir:'up',      text:'+6 vs. inicio del mes (368)' } },
         { label:'Ausentismo', value:'5.28%', delta:{ dir:'down',    text:'−4.00 pp vs. mes ant.' } },
         { label:'Rotación',   value:'5.66%', delta:{ dir:'up',      text:'+1.02 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         { type:'bar',  title:'Rotación por gerencia', sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -357,7 +365,7 @@ window.SECTOR_DATA = {
   // FÁBRICA
   // Ausentismo: hoja ausentismo por mes (fábricas)
   // Rotación: hoja ausentismo por mes (FÁBRICAS %)
-  // Dotación: no existe → S/D
+  // Dotación: solo May 2026 (895)
   // Rotación por sector: no existe → S/D
   // ════════════════════════════════════
   fabrica: {
@@ -368,7 +376,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'11.60%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -381,7 +389,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'7.82%', delta:{ dir:'down',    text:'−3.78 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -394,7 +402,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'7.46%', delta:{ dir:'down',    text:'−0.36 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -407,7 +415,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'6.54%',  delta:{ dir:'down',    text:'−0.92 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -415,12 +423,12 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Dotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato May 2026' } },
+        { label:'Dotación',   value:'895',   delta:{ dir:'up',      text:'+18 vs. inicio del mes (877)' } },
         { label:'Ausentismo', value:'9.61%', delta:{ dir:'down',    text:'−1.82 pp vs. mes ant.' } },
         { label:'Rotación',   value:'7.51%', delta:{ dir:'up',      text:'+0.97 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data:[{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:null},{x:'May',y:null}] },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         { type:'bar',  title:'Rotación por sector',   sub:'% mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -635,7 +643,8 @@ window.SECTOR_DATA = {
   },
 
   // ════════════════════════════════════
-  // HORAS EXTRAS — datos reales Ene–Abr 2026 (May no disponible)
+  // HORAS EXTRAS — datos reales Ene–May 2026
+  // May 2026 = período pagado 20/4 al 19/5 (xlsx indicadores mayo)
   // ════════════════════════════════════
   horasextras: {
     ene: {
@@ -645,7 +654,7 @@ window.SECTOR_DATA = {
         { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–Abr 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Ene 2026',
           data:[{label:'Logística',value:53.8},{label:'Extremas',value:12.6},{label:'San Martín',value:12.7},{label:'San Miguel',value:5.7},{label:'Otros',value:15.2}] },
       ],
@@ -671,7 +680,7 @@ window.SECTOR_DATA = {
         { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Feb 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–Abr 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Feb 2026',
           data:[{label:'Logística',value:69.5},{label:'Extremas',value:13.6},{label:'JYQ',value:7.0},{label:'Otros',value:9.9}] },
       ],
@@ -695,7 +704,7 @@ window.SECTOR_DATA = {
         { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–Abr 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Mar 2026',
           data:[{label:'Logística',value:61.0},{label:'Extremas',value:10.0},{label:'Medialunas',value:6.8},{label:'JYQ',value:6.2},{label:'Otros',value:16.0}] },
       ],
@@ -720,7 +729,7 @@ window.SECTOR_DATA = {
         { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–Abr 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Abr 2026',
           data:[{label:'Logística',value:56.7},{label:'JYQ',value:13.3},{label:'Extremas',value:10.0},{label:'Medialunas',value:9.5},{label:'Otros',value:10.5}] },
       ],
@@ -738,14 +747,25 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Horas extras — mes activo', value:'S/D',      delta:{ dir:'neutral', text:'Sin dato May 2026' } },
-        { label:'Costo del mes',              value:'S/D',      delta:{ dir:'neutral', text:'Sin dato May 2026' } },
-        { label:'% sobre horas normales',     value:'S/D',      delta:{ dir:'neutral', text:'Sin dato May 2026' } },
+        { label:'Horas extras — mes activo', value:'3.922',  delta:{ dir:'down',    text:'−5.9% vs. mes anterior' } },
+        { label:'Costo del mes',              value:'$43.9M', delta:{ dir:'down',    text:'−10.8% vs. mes anterior' } },
+        { label:'% sobre horas normales',     value:'S/D',    delta:{ dir:'neutral', text:'Sin dato May 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–Abr 2026 · total de horas (May sin dato)', data: hsTendencia },
-        { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras — sin dato May', data:[{label:'S/D',value:100}] },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
+        { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · May 2026 (período 20/4 al 19/5)',
+          data:[{label:'Logística',value:49.5},{label:'Panificadora',value:30.4},{label:'JYQ',value:14.2},{label:'San Martín',value:3.3},{label:'Extremas',value:2.6}] },
       ],
+      details: [{
+        key:'he-may', title:'Detalle horas extras por unidad — May 2026 (pagadas 20/4 al 19/5)', iconEmoji:'⏱️', accent:'amber', type:'table',
+        columns:[{key:'sector',label:'SECTOR'},{key:'horas',label:'HORAS',align:'right'},{key:'costo',label:'COSTO',align:'right',strong:true}],
+        rows:[
+          {sector:'LOGÍSTICA',    horas:'1.941', costo:'$22.898.240'},{sector:'PANIFICADORA', horas:'1.191', costo:'$12.013.509'},
+          {sector:'JYQ',          horas:'556',   costo:'$6.391.073'}, {sector:'SAN MARTÍN',   horas:'131',   costo:'$1.349.200'},
+          {sector:'EXTREMAS',     horas:'101',   costo:'$1.209.626'}, {sector:'PAPELERA',     horas:'2',     costo:'$27.023'},
+        ],
+        totalRow:{ label:'TOTAL MAY', value:'$43.888.671' },
+      }],
     },
   },
 
