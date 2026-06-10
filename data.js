@@ -28,7 +28,7 @@ window.SECTORS = [
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · May 2026',      tags:['Ausentismo 4.13%','Rotación 12.15%'] },
   { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · May 2026',     tags:['Ausentismo 5.28%','Rotación 5.66%'] },
   { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · May 2026',                     tags:['Ausentismo 9.61%','Rotación 7.51%'] },
-  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['39 acuerdos','$389.8M'] },
+  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['39 acuerdos','$194.9M'] },
   { id:'inspecciones',    group:'GESTIÓN',  name:'Inspecciones',     sub:'Visitas, observaciones y cumplimiento',          accent:'green',  iconKey:'search',    logo:'assets/inspecciones.png',        headerSub:'Visitas regulatorias y de cumplimiento · Mayo 2026', tags:['20 inspecciones','5 multas'] },
   { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · May 2026',      tags:['3.922 hs','$43.9M'] },
   { id:'accidentabilidad',group:'GESTIÓN',  name:'Accidentabilidad', sub:'Tasa, días caídos y reporte de siniestros',      accent:'red',    iconKey:'alert',     logo:'assets/accidentabilidad.png',    headerSub:'Tasa, días caídos y reporte de siniestros',          tags:['477 siniestros hist.','13.160 días caídos'] },
@@ -42,20 +42,20 @@ const ausStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:6.56},{x:'Mar',y:5.74},{x:'
 const ausFabricaTend  = [{x:'Ene',y:8.60},{x:'Feb',y:6.67},{x:'Mar',y:9.21},{x:'Abr',y:11.43},{x:'May',y:9.61}];
 
 // ─── TENDENCIAS ROTACIÓN (datos reales del xlsx) ───
-const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96}]; // Abr calculado ((bajas+altas)/2 ÷ dot. promedio) · May del xlsx (9.96%)
+const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96}];
 const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50}];
 const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15}];
 const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66}];
 const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:'Abr',y:6.54},{x:'May',y:7.51}];
 
-// ─── TENDENCIAS DOTACIÓN (Empleados Fin del Período · Mar derivado de Empleados Iniciales Abr) ───
+// ─── TENDENCIAS DOTACIÓN ───
 const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235}];
 const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845}];
 const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121}];
 const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'Abr',y:368},{x:'May',y:374}];
 const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895}];
 
-// ─── HORAS EXTRAS TENDENCIA (May = período pagado 20/4 al 19/5) ───
+// ─── HORAS EXTRAS TENDENCIA ───
 const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922}];
 const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'Abr',y:49.2},{x:'May',y:43.9}];
 
@@ -64,9 +64,6 @@ window.SECTOR_DATA = {
 
   // ════════════════════════════════════
   // EMPRESA TOTAL
-  // Ausentismo real: xlsx hoja ausentismo por mes
-  // Rotación: consolidado empresa solo May (9.96%)
-  // Dotación: solo May 2026 (4.235) → Ene–Abr S/D
   // ════════════════════════════════════
   empresa: {
     ene: {
@@ -138,10 +135,6 @@ window.SECTOR_DATA = {
 
   // ════════════════════════════════════
   // SABORES EXPRESS
-  // Ausentismo: hoja ausentismo por mes (sabores locales)
-  // Rotación: hoja ausentismo por mes (SABORES %)
-  // Dotación: solo May 2026 (1.845)
-  // Rotación por zona: no existe en xlsx → S/D
   // ════════════════════════════════════
   sabores: {
     ene: {
@@ -213,10 +206,6 @@ window.SECTOR_DATA = {
 
   // ════════════════════════════════════
   // EXTREMAS
-  // Ausentismo: hoja ausentismo por mes (extremas locales)
-  // Rotación: hoja ausentismo por mes (EXTREMAS %)
-  // Dotación: solo May 2026 (1.121)
-  // Rotación por sector: no existe → S/D
   // ════════════════════════════════════
   extremas: {
     ene: {
@@ -288,10 +277,6 @@ window.SECTOR_DATA = {
 
   // ════════════════════════════════════
   // STAFF
-  // Ausentismo: hoja ausentismo por mes (staff)
-  // Rotación: hoja ausentismo por mes (STAFF %)
-  // Dotación: solo May 2026 (374)
-  // Rotación por gerencia: no existe → S/D
   // ════════════════════════════════════
   staff: {
     ene: {
@@ -363,10 +348,6 @@ window.SECTOR_DATA = {
 
   // ════════════════════════════════════
   // FÁBRICA
-  // Ausentismo: hoja ausentismo por mes (fábricas)
-  // Rotación: hoja ausentismo por mes (FÁBRICAS %)
-  // Dotación: solo May 2026 (895)
-  // Rotación por sector: no existe → S/D
   // ════════════════════════════════════
   fabrica: {
     ene: {
@@ -442,119 +423,186 @@ window.SECTOR_DATA = {
   judiciales: {
     ene: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'S/D',      delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'S/D',      delta:{ dir:'neutral', text:'Sin informe Ene 2025' } },
-        { label:'Variación interanual',        value:'S/D',      delta:{ dir:'neutral', text:'Sin dato comparable' } },
+        { label:'Total acuerdos — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2025' } },
+        { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:152.6},{x:'May 25',y:114.8},{x:'Abr 26',y:255.3},{x:'May 26',y:389.8}] },
-        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:194.9}] },
+        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:54.7},{label:'Fábrica',value:24.9},{label:'Extremas',value:20.4}] },
       ],
     },
     feb: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'S/D',      delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'S/D',      delta:{ dir:'neutral', text:'Sin informe Feb 2025' } },
-        { label:'Variación interanual',        value:'S/D',      delta:{ dir:'neutral', text:'Sin dato comparable' } },
+        { label:'Total acuerdos — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2025' } },
+        { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:152.6},{x:'May 25',y:114.8},{x:'Abr 26',y:255.3},{x:'May 26',y:389.8}] },
-        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:194.9}] },
+        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:54.7},{label:'Fábrica',value:24.9},{label:'Extremas',value:20.4}] },
       ],
     },
     mar: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'S/D',      delta:{ dir:'neutral', text:'Sin informe Mar 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'S/D',      delta:{ dir:'neutral', text:'Sin informe Mar 2025' } },
-        { label:'Variación interanual',        value:'S/D',      delta:{ dir:'neutral', text:'Sin dato comparable' } },
+        { label:'Total acuerdos — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Mar 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'S/D', delta:{ dir:'neutral', text:'Sin informe Mar 2025' } },
+        { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:152.6},{x:'May 25',y:114.8},{x:'Abr 26',y:255.3},{x:'May 26',y:389.8}] },
-        { type:'donut',title:'Distribución por tipo — May 2026 (ref.)', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:194.9}] },
+        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:54.7},{label:'Fábrica',value:24.9},{label:'Extremas',value:20.4}] },
       ],
     },
     abr: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'$255.3M', delta:{ dir:'up',      text:'31 acuerdos · Abr 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'$152.6M', delta:{ dir:'neutral', text:'28 acuerdos · Abr 2025' } },
-        { label:'Variación interanual',        value:'+67.3%',  delta:{ dir:'up',      text:'$152.6M → $255.3M' }, valueClass:'is-down' },
+        { label:'Total acuerdos — mes activo', value:'$127.6M', delta:{ dir:'up',      text:'30 acuerdos · Abr 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'$76.3M',  delta:{ dir:'neutral', text:'29 acuerdos · Abr 2025' } },
+        { label:'Variación interanual',        value:'+67.3%',  delta:{ dir:'up',      text:'$76.3M → $127.6M' }, valueClass:'is-down' },
       ],
       charts: [
         { type:'hbar', title:'Monto por razón social — mes activo', sub:'Millones $', data:[
-          {x:'PISANIELLO IVO',y:14.5},{x:'LA EMPANADERIA S.A',y:11.6},{x:'CASUT FRIJON',y:9.8},
-          {x:'BOLLOS Y RELLENOS',y:6.3},{x:'SORIA FRANCISCO',y:6.1},{x:'CASTRO CINTIA',y:5.8},
-          {x:'RIOS BRUNO',y:5.1},{x:'SAYAGO MARCIO',y:4.9},{x:'COMACHI V.',y:3.8},
-          {x:'VICTORICA B.',y:3.7},{x:'RUANO ROJAS',y:2.5},{x:'GONZALEZ M.',y:1.2},
+          {x:'PISANIELLO IVO',                    y:27.02},
+          {x:'LA EMPANADERIA S.A',                y:25.45},
+          {x:'CASUT FRIJON MATIAS EZEQUIEL',      y:16.38},
+          {x:'CASTRO CINTIA NOEMI',               y:13.50},
+          {x:'SAYAGO MARCIO HUMBERTO NICOLAS',    y:11.48},
+          {x:'RUANO ROJAS GREISSI',               y:7.57},
+          {x:'BOLLOS Y RELLENOS S.A',             y:6.34},
+          {x:'SORIA FRANCISCO ADRIAN',            y:6.13},
+          {x:'RIOS BRUNO',                        y:5.13},
+          {x:'COMACHI VALERIA SABRINA',           y:3.76},
+          {x:'VICTORICA BARBARA ALEJANDRA',       y:3.73},
+          {x:'GONZALEZ MIGUEL ANGEL',             y:1.17},
         ]},
-        { type:'donut',title:'Distribución por tipo (monto)', sub:'% del total · Abr 2026', center:'$255.3M', data:[{label:'Fábrica',value:18.1},{label:'Sabores',value:21.7},{label:'Extremas',value:10.2},{label:'Otros',value:50.0}] },
+        { type:'donut', title:'Distribución por tipo (monto)', sub:'% del total · Abr 2026', center:'$127.6M', data:[
+          {label:'Sabores',  value:54.7},
+          {label:'Fábrica',  value:24.9},
+          {label:'Extremas', value:20.4},
+        ]},
       ],
       details: [{
         key:'detalle-abr', title:'Detalle acuerdos — Abr 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
-        topChips:[{label:'Fábrica',value:'18.1%',tone:'blue'},{label:'Sabores',value:'21.7%',tone:'green'},{label:'Extremas',value:'10.2%',tone:'purple'}],
+        topChips:[{label:'Fábrica',value:'24.9%',tone:'blue'},{label:'Sabores',value:'54.7%',tone:'green'},{label:'Extremas',value:'20.4%',tone:'purple'}],
         columns:[{key:'razon',label:'RAZÓN SOCIAL'},{key:'unidad',label:'LOCAL / FÁBRICA'},{key:'tipo',label:'TIPO',badge:true},{key:'actor',label:'ACTOR',align:'right'},{key:'total',label:'TOTAL',align:'right',strong:true}],
         rows:[
-          {razon:'PISANIELLO IVO',           unidad:'MANTENIMIENTO LOCALES',  tipo:'Fábrica',  actor:'$12.000.000', total:'$14.528.708'},
-          {razon:'LA EMPANADERIA S.A',        unidad:'FABRICA SAN MARTIN',     tipo:'Fábrica',  actor:'$8.800.000',  total:'$11.596.658'},
-          {razon:'CASUT FRIJON',              unidad:'HURLINGHAM SABORES II',  tipo:'Sabores',  actor:'$8.000.000',  total:'$9.756.658'},
-          {razon:'BOLLOS Y RELLENOS S.A',     unidad:'MANTENIMIENTO FABRICA',  tipo:'Fábrica',  actor:'$5.000.000',  total:'$6.339.470'},
-          {razon:'SORIA FRANCISCO ADRIAN',    unidad:'SABORES BOULOGNE',       tipo:'Sabores',  actor:'$5.000.000',  total:'$6.131.670'},
-          {razon:'CASTRO CINTIA NOEMI',       unidad:'EXTREMAS SAN FERNANDO',  tipo:'Extremas', actor:'$5.000.000',  total:'$5.782.294'},
-          {razon:'RIOS BRUNO',                unidad:'SABORES HURLINGHAM II',  tipo:'Sabores',  actor:'$4.000.000',  total:'$5.127.321'},
-          {razon:'SAYAGO MARCIO H.N.',        unidad:'SABORES PALOMAR',        tipo:'Sabores',  actor:'$4.000.000',  total:'$4.946.677'},
-          {razon:'CASTRO CINTIA NOEMI',       unidad:'SABORES ENTRE RIOS',     tipo:'Sabores',  actor:'$4.000.000',  total:'$4.931.670'},
-          {razon:'LA EMPANADERIA S.A',        unidad:'LOGISTICA FABRICA',      tipo:'Fábrica',  actor:'$3.500.000',  total:'$4.679.470'},
-          {razon:'CASUT FRIJON',              unidad:'SABORES LANUS',          tipo:'Sabores',  actor:'$3.600.000',  total:'$4.595.390'},
-          {razon:'COMACHI VALERIA SABRINA',   unidad:'SABORES BALLESTER II',   tipo:'Sabores',  actor:'$3.000.000',  total:'$3.759.320'},
-          {razon:'VICTORICA BARBARA A.',      unidad:'EXTREMAS FLORES',        tipo:'Extremas', actor:'$3.000.000',  total:'$3.730.000'},
+          {razon:'BOLLOS Y RELLENOS S.A',          unidad:'MANTENIMIENTO FABRICA',    tipo:'Fábrica',  actor:'$5.000.000',  total:'$6.339.470'},
+          {razon:'CASTRO CINTIA NOEMI',            unidad:'SABORES ENTRE RIOS',       tipo:'Sabores',  actor:'$4.000.000',  total:'$4.931.670'},
+          {razon:'CASTRO CINTIA NOEMI',            unidad:'EXTREMAS SAN FERNANDO',    tipo:'Extremas', actor:'$2.000.000',  total:'$2.782.294'},
+          {razon:'CASTRO CINTIA NOEMI',            unidad:'EXTREMAS SAN FERNANDO',    tipo:'Extremas', actor:'$5.000.000',  total:'$5.782.294'},
+          {razon:'CASUT FRIJON MATIAS EZEQUIEL',   unidad:'SABORES LANUS',            tipo:'Sabores',  actor:'$3.600.000',  total:'$4.595.390'},
+          {razon:'CASUT FRIJON MATIAS EZEQUIEL',   unidad:'HURLINGHAM SABORES II',    tipo:'Sabores',  actor:'$8.000.000',  total:'$9.756.658'},
+          {razon:'CASUT FRIJON MATIAS EZEQUIEL',   unidad:'EXTREMAS LUJAN',           tipo:'Extremas', actor:'$2.018.000',  total:'$2.026.035'},
+          {razon:'COMACHI VALERIA SABRINA',        unidad:'SABORES BALLESTER II',     tipo:'Sabores',  actor:'$3.000.000',  total:'$3.759.320'},
+          {razon:'GONZALEZ MIGUEL ANGEL',          unidad:'SABORES MDQ I',            tipo:'Sabores',  actor:'$1.157.360',  total:'$1.165.395'},
+          {razon:'LA EMPANADERIA S.A',             unidad:'FABRICA SAN MARTIN',       tipo:'Fábrica',  actor:'$2.200.000',  total:'$3.016.659'},
+          {razon:'LA EMPANADERIA S.A',             unidad:'FABRICA SAN MARTIN',       tipo:'Fábrica',  actor:'$5.000.000',  total:'$6.156.659'},
+          {razon:'LA EMPANADERIA S.A',             unidad:'LOGISTICA FABRICA',        tipo:'Fábrica',  actor:'$3.500.000',  total:'$4.679.470'},
+          {razon:'LA EMPANADERIA S.A',             unidad:'FABRICA SAN MARTIN',       tipo:'Fábrica',  actor:'$8.800.000',  total:'$11.596.658'},
+          {razon:'PISANIELLO IVO',                 unidad:'EXTREMAS SAN ISIDRO',      tipo:'Extremas', actor:'$2.000.000',  total:'$2.529.470'},
+          {razon:'PISANIELLO IVO',                 unidad:'MANTENIMIENTO LOCALES',    tipo:'Sabores',  actor:'$12.000.000', total:'$14.528.708'},
+          {razon:'PISANIELLO IVO',                 unidad:'SABORES PACHECO',          tipo:'Sabores',  actor:'$2.300.000',  total:'$2.831.666'},
+          {razon:'PISANIELLO IVO',                 unidad:'SABORES PACHECO',          tipo:'Sabores',  actor:'$2.500.000',  total:'$3.031.666'},
+          {razon:'PISANIELLO IVO',                 unidad:'SABORES PACHECO',          tipo:'Sabores',  actor:'$2.000.000',  total:'$2.531.666'},
+          {razon:'PISANIELLO IVO',                 unidad:'EXTREMAS SAN ISIDRO',      tipo:'Extremas', actor:'$1.200.000',  total:'$1.569.470'},
+          {razon:'RIOS BRUNO',                     unidad:'SABORES HURLINGHAM II',    tipo:'Sabores',  actor:'$4.000.000',  total:'$5.127.321'},
+          {razon:'RUANO ROJAS GREISSI',            unidad:'EXTREMAS SAN FERNANDO',    tipo:'Extremas', actor:'$1.800.000',  total:'$2.144.995'},
+          {razon:'RUANO ROJAS GREISSI',            unidad:'EXTREMAS SAN FERNANDO',    tipo:'Extremas', actor:'$1.100.000',  total:'$1.444.995'},
+          {razon:'RUANO ROJAS GREISSI',            unidad:'EXTREMAS SAN FERNANDO',    tipo:'Extremas', actor:'$1.100.000',  total:'$1.444.995'},
+          {razon:'RUANO ROJAS GREISSI',            unidad:'EXTREMAS POMPEYA',         tipo:'Extremas', actor:'$2.000.000',  total:'$2.531.670'},
+          {razon:'SAYAGO MARCIO HUMBERTO NICOLAS', unidad:'SABORES PALOMAR',          tipo:'Sabores',  actor:'$4.000.000',  total:'$4.946.677'},
+          {razon:'SAYAGO MARCIO HUMBERTO NICOLAS', unidad:'SABORES SAN FERNANDO',     tipo:'Sabores',  actor:'$2.000.000',  total:'$2.397.911'},
+          {razon:'SAYAGO MARCIO HUMBERTO NICOLAS', unidad:'SABORES SAN FERNANDO',     tipo:'Sabores',  actor:'$1.200.000',  total:'$1.597.912'},
+          {razon:'SAYAGO MARCIO HUMBERTO NICOLAS', unidad:'SABORES SAN FERNANDO',     tipo:'Sabores',  actor:'$2.000.000',  total:'$2.533.000'},
+          {razon:'SORIA FRANCISCO ADRIAN',         unidad:'SABORES BOULOGNE',         tipo:'Sabores',  actor:'$5.000.000',  total:'$6.131.670'},
+          {razon:'VICTORICA BARBARA ALEJANDRA',    unidad:'EXTREMAS FLORES',          tipo:'Extremas', actor:'$3.000.000',  total:'$3.730.000'},
         ],
-        totalRow:{ label:'TOTAL ABR 2026', value:'$255.283.528' },
+        totalRow:{ label:'TOTAL ABR 2026', value:'$127.641.764' },
       }],
     },
     may: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'$389.8M', delta:{ dir:'up',      text:'39 acuerdos · May 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'$114.8M', delta:{ dir:'neutral', text:'22 acuerdos · May 2025' } },
-        { label:'Variación interanual',        value:'+239.7%', delta:{ dir:'up',      text:'$114.8M → $389.8M' }, valueClass:'is-down' },
+        { label:'Total acuerdos — mes activo', value:'$194.9M', delta:{ dir:'up',      text:'39 acuerdos · May 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'$57.4M',  delta:{ dir:'neutral', text:'22 acuerdos · May 2025' } },
+        { label:'Variación interanual',        value:'+239.7%', delta:{ dir:'up',      text:'$57.4M → $194.9M' }, valueClass:'is-down' },
       ],
       charts: [
         { type:'hbar', title:'Monto por razón social — mes activo', sub:'Millones $', data:[
-          {x:'CHUSPITA MARTIN',y:46.79},{x:'LA EMPANADERIA',y:29.76},{x:'BOLLOS Y RELLENOS',y:13.0},
-          {x:'IVO PISANIELLO',y:11.93},{x:'BRUNO RIOS',y:11.45},{x:'VILLA MARIANO',y:11.37},
-          {x:'CASTRO CINTIA',y:11.13},{x:'RUANO ROJAS',y:9.93},{x:'GONZALEZ MIGUEL',y:8.22},
-          {x:'COMACHI V.',y:7.33},{x:'SAYAGO MARCIO',y:7.20},{x:'VICTORICA ANA',y:4.93},
-          {x:'TABEIRA GABRIEL',y:4.48},{x:'CERTALDO',y:3.76},{x:'VICTORICA BARBARA',y:3.27},
-          {x:'SORIA ADRIAN',y:2.60},{x:'MOSCARELLA',y:1.86},
+          {x:'CHUSPITA MARTIN DANIEL',            y:46.79},
+          {x:'LA EMPANADERIA',                    y:29.76},
+          {x:'BOLLOS Y RELLENOS',                 y:13.00},
+          {x:'IVO PISANIELLO',                    y:11.93},
+          {x:'BRUNO RIOS',                        y:11.45},
+          {x:'VILLA MARIANO DAVID',               y:11.37},
+          {x:'CASTRO CINTIA NOEMI',               y:11.13},
+          {x:'RUANO ROJAS GREISSI',               y:9.93},
+          {x:'GONZALEZ MIGUEL ANGEL',             y:8.22},
+          {x:'COMACHI VALERIA SABRINA',           y:7.33},
+          {x:'SAYAGO MARCIO HUMBERTO NICOLAS',    y:7.20},
+          {x:'VICTORICA ANA MACARENA',            y:4.93},
+          {x:'TABEIRA DELGADO GABRIEL',           y:4.48},
+          {x:'CERTALDO S.A.',                     y:3.76},
+          {x:'VICTORICA BARBARA ALEJANDRA',       y:3.27},
+          {x:'SORIA ADRIAN FRANCISCO',            y:2.60},
+          {x:'CLAUDIO ARIEL MOSCARELLA',          y:1.86},
         ]},
-        { type:'donut',title:'Distribución por tipo (monto)', sub:'% del total · May 2026', center:'$389.8M', data:[{label:'Sabores',value:29.7},{label:'Otros',value:50.5},{label:'Fábrica',value:11.9},{label:'Extremas',value:7.9}] },
+        { type:'donut', title:'Distribución por tipo (monto)', sub:'% del total · May 2026', center:'$194.9M', data:[
+          {label:'Sabores',  value:59.4},
+          {label:'Fábrica',  value:23.9},
+          {label:'Extremas', value:16.8},
+        ]},
       ],
       details: [{
         key:'detalle-may', title:'Detalle acuerdos — May 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
-        topChips:[{label:'Fábrica',value:'11.9%',tone:'blue'},{label:'Sabores',value:'29.7%',tone:'green'},{label:'Extremas',value:'7.9%',tone:'purple'}],
+        topChips:[{label:'Fábrica',value:'23.9%',tone:'blue'},{label:'Sabores',value:'59.4%',tone:'green'},{label:'Extremas',value:'16.8%',tone:'purple'}],
         columns:[{key:'razon',label:'RAZÓN SOCIAL'},{key:'unidad',label:'LOCAL / FÁBRICA'},{key:'tipo',label:'TIPO',badge:true},{key:'actor',label:'ACTOR',align:'right'},{key:'total',label:'TOTAL',align:'right',strong:true}],
         rows:[
-          {razon:'CHUSPITA MARTIN DANIEL',    unidad:'SABORES MDQ 3',          tipo:'Sabores',  actor:'$22.500.000', total:'$38.054.500'},
-          {razon:'LA EMPANADERIA',            unidad:'FABRICA SAN MARTIN',     tipo:'Fábrica',  actor:'$18.000.000', total:'$21.733.000'},
-          {razon:'CHUSPITA MARTIN DANIEL',    unidad:'SABORES MDQ 4',          tipo:'Sabores',  actor:'$7.000.000',  total:'$8.732.500'},
-          {razon:'COMACHI VALERIA SABRINA',   unidad:'SABORES SAN MARTIN',     tipo:'Sabores',  actor:'$6.000.000',  total:'$7.333.650'},
-          {razon:'BOLLOS Y RELLENOS',         unidad:'FABRICA SAN MIGUEL',     tipo:'Fábrica',  actor:'$6.000.000',  total:'$7.331.670'},
-          {razon:'SAYAGO MARCIO H.N.',        unidad:'SABORES BOEDO',          tipo:'Sabores',  actor:'$6.000.000',  total:'$7.200.000'},
-          {razon:'IVO PISANIELLO',            unidad:'EXTREMAS OLIVOS',        tipo:'Extremas', actor:'$4.000.000',  total:'$5.280.960'},
-          {razon:'VICTORICA ANA MACARENA',    unidad:'SABORES BERAZATEGUI II', tipo:'Sabores',  actor:'$4.000.000',  total:'$4.931.670'},
-          {razon:'TABEIRA DELGADO GABRIEL',   unidad:'SABORES CORRIENTES II',  tipo:'Sabores',  actor:'$3.500.000',  total:'$4.480.650'},
-          {razon:'VILLA MARIANO DAVID',       unidad:'SABORES PACHECO II',     tipo:'Sabores',  actor:'$3.500.000',  total:'$4.361.741'},
-          {razon:'GONZALEZ MIGUEL ANGEL',     unidad:'SABORES DEL VISO',       tipo:'Sabores',  actor:'$3.500.000',  total:'$4.333.650'},
-          {razon:'LA EMPANADERIA',            unidad:'FABRICA SAN MARTIN',     tipo:'Fábrica',  actor:'$3.200.000',  total:'$4.293.650'},
-          {razon:'RUANO ROJAS GREISSI',       unidad:'EXTREMAS SAN FERNANDO',  tipo:'Extremas', actor:'$3.500.000',  total:'$4.283.531'},
-          {razon:'CASTRO CINTIA NOEMI',       unidad:'SABORES PACHECO I',      tipo:'Sabores',  actor:'$3.500.000',  total:'$4.283.500'},
-          {razon:'VILLA MARIANO DAVID',       unidad:'SABORES POLVORINES',     tipo:'Sabores',  actor:'$3.000.000',  total:'$3.870.300'},
+          {razon:'BOLLOS Y RELLENOS',             unidad:'FABRICA PROCESADORA',       tipo:'Fábrica',  actor:'$2.000.000',  total:'$2.531.670'},
+          {razon:'BOLLOS Y RELLENOS',             unidad:'FABRICA SAN MIGUEL',        tipo:'Fábrica',  actor:'$6.000.000',  total:'$7.331.670'},
+          {razon:'BOLLOS Y RELLENOS',             unidad:'FABRICA MEDIALUNAS',        tipo:'Fábrica',  actor:'$2.500.000',  total:'$3.133.650'},
+          {razon:'BRUNO RIOS',                    unidad:'SABORES ROSARIO II',        tipo:'Sabores',  actor:'$3.200.000',  total:'$4.808.793'},
+          {razon:'BRUNO RIOS',                    unidad:'SABORES ROSARIO I',         tipo:'Sabores',  actor:'$1.200.000',  total:'$1.680.960'},
+          {razon:'BRUNO RIOS',                    unidad:'SABORES HURLINGHAM II',     tipo:'Sabores',  actor:'$4.000.000',  total:'$4.961.720'},
+          {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES PACHECO I',         tipo:'Sabores',  actor:'$2.500.000',  total:'$3.083.500'},
+          {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES PACHECO I',         tipo:'Sabores',  actor:'$3.500.000',  total:'$4.283.500'},
+          {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES LAVALLE I',         tipo:'Sabores',  actor:'$3.000.000',  total:'$3.761.717'},
+          {razon:'CERTALDO S.A.',                 unidad:'FABRICA TAPAS II',          tipo:'Fábrica',  actor:'$3.000.000',  total:'$3.759.321'},
+          {razon:'CHUSPITA MARTIN DANIEL',        unidad:'SABORES MDQ 3',             tipo:'Sabores',  actor:'$22.500.000', total:'$38.054.500'},
+          {razon:'CHUSPITA MARTIN DANIEL',        unidad:'SABORES MDQ 4',             tipo:'Sabores',  actor:'$7.000.000',  total:'$8.732.500'},
+          {razon:'CLAUDIO ARIEL MOSCARELLA',      unidad:'EXTREMAS LANUS II',         tipo:'Extremas', actor:'$1.500.000',  total:'$1.856.670'},
+          {razon:'COMACHI VALERIA SABRINA',       unidad:'SABORES SAN MARTIN',        tipo:'Sabores',  actor:'$6.000.000',  total:'$7.333.650'},
+          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS MUNRO',            tipo:'Extremas', actor:'$2.000.000',  total:'$2.523.650'},
+          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS MUNRO',            tipo:'Extremas', actor:'$2.500.000',  total:'$3.133.650'},
+          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS MUNRO',            tipo:'Extremas', actor:'$2.000.000',  total:'$2.559.321'},
+          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS CABALLITO',        tipo:'Extremas', actor:'$1.200.000',  total:'$1.576.071'},
+          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'SABORES DEL VISO',          tipo:'Sabores',  actor:'$3.500.000',  total:'$4.333.650'},
+          {razon:'IVO PISANIELLO',                unidad:'SABORES ZARATE',            tipo:'Sabores',  actor:'$2.500.000',  total:'$3.080.860'},
+          {razon:'IVO PISANIELLO',                unidad:'SABORES ZARATE',            tipo:'Sabores',  actor:'$800.000',    total:'$1.040.860'},
+          {razon:'IVO PISANIELLO',                unidad:'EXTREMAS BOULOGNE',         tipo:'Extremas', actor:'$2.000.000',  total:'$2.531.670'},
+          {razon:'IVO PISANIELLO',                unidad:'EXTREMAS OLIVOS',           tipo:'Extremas', actor:'$4.000.000',  total:'$5.280.960'},
+          {razon:'LA EMPANADERIA',                unidad:'FABRICA SAN MARTIN',        tipo:'Fábrica',  actor:'$3.200.000',  total:'$4.293.650'},
+          {razon:'LA EMPANADERIA',                unidad:'FABRICA SAN MARTIN',        tipo:'Fábrica',  actor:'$18.000.000', total:'$21.733.000'},
+          {razon:'LA EMPANADERIA',                unidad:'FABRICA SAN MARTIN',        tipo:'Fábrica',  actor:'$3.000.000',  total:'$3.731.670'},
+          {razon:'RUANO ROJAS GREISSI',           unidad:'EXTREMAS RODRIGUEZ',        tipo:'Extremas', actor:'$2.500.000',  total:'$3.159.320'},
+          {razon:'RUANO ROJAS GREISSI',           unidad:'EXTREMAS SAN FERNANDO',     tipo:'Extremas', actor:'$2.000.000',  total:'$2.483.532'},
+          {razon:'RUANO ROJAS GREISSI',           unidad:'EXTREMAS SAN FERNANDO',     tipo:'Extremas', actor:'$3.500.000',  total:'$4.283.531'},
+          {razon:'SAYAGO MARCIO HUMBERTO NICOLAS',unidad:'SABORES BOEDO',             tipo:'Sabores',  actor:'$6.000.000',  total:'$7.200.000'},
+          {razon:'SORIA ADRIAN FRANCISCO',        unidad:'SABORES SAN FERNANDO',      tipo:'Sabores',  actor:'$1.200.000',  total:'$1.541.074'},
+          {razon:'SORIA ADRIAN FRANCISCO',        unidad:'SABORES SAN FERNANDO',      tipo:'Sabores',  actor:'$800.000',    total:'$1.061.073'},
+          {razon:'TABEIRA DELGADO GABRIEL',       unidad:'SABORES CORRIENTES II',     tipo:'Sabores',  actor:'$3.500.000',  total:'$4.480.650'},
+          {razon:'VICTORICA ANA MACARENA',        unidad:'SABORES BERAZATEGUI II',    tipo:'Sabores',  actor:'$4.000.000',  total:'$4.931.670'},
+          {razon:'VICTORICA BARBARA ALEJANDRA',   unidad:'EXTREMAS FLORES',           tipo:'Extremas', actor:'$2.500.000',  total:'$3.266.717'},
+          {razon:'VILLA MARIANO DAVID',           unidad:'SABORES PACHECO II',        tipo:'Sabores',  actor:'$3.500.000',  total:'$4.361.741'},
+          {razon:'VILLA MARIANO DAVID',           unidad:'SABORES MORENO',            tipo:'Sabores',  actor:'$2.500.000',  total:'$3.133.650'},
+          {razon:'VILLA MARIANO DAVID',           unidad:'SABORES POLVORINES',        tipo:'Sabores',  actor:'$3.000.000',  total:'$3.870.300'},
         ],
-        totalRow:{ label:'TOTAL MAY 2026', value:'$389.812.182' },
+        totalRow:{ label:'TOTAL MAY 2026', value:'$194.906.091' },
       }],
     },
   },
 
   // ════════════════════════════════════
-  // INSPECCIONES — datos reales Mar/Abr/May 2026
+  // INSPECCIONES
   // ════════════════════════════════════
   inspecciones: {
     ene: {
@@ -643,8 +691,7 @@ window.SECTOR_DATA = {
   },
 
   // ════════════════════════════════════
-  // HORAS EXTRAS — datos reales Ene–May 2026
-  // May 2026 = período pagado 20/4 al 19/5 (xlsx indicadores mayo)
+  // HORAS EXTRAS
   // ════════════════════════════════════
   horasextras: {
     ene: {
@@ -765,10 +812,7 @@ window.SECTOR_DATA = {
   },
 
   // ════════════════════════════════════
-  // ACCIDENTABILIDAD — datos reales del xlsx
-  // KPIs: Tasa / Siniestros del mes / Días caídos
-  // Charts: bar siniestros por mes · donut tipo siniestro (histórico)
-  // Nota: Tasa mensual no existe en xlsx para Ene–Abr → S/D
+  // ACCIDENTABILIDAD
   // ════════════════════════════════════
   accidentabilidad: {
     ene: {
