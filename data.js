@@ -28,7 +28,7 @@ window.SECTORS = [
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · May 2026',      tags:['Ausentismo 4.13%','Rotación 12.15%'] },
   { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · May 2026',     tags:['Ausentismo 5.28%','Rotación 5.66%'] },
   { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · May 2026',                     tags:['Ausentismo 9.61%','Rotación 7.51%'] },
-  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['39 acuerdos','$194.9M'] },
+  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['38 acuerdos','$186.3M'] },
   { id:'inspecciones',    group:'GESTIÓN',  name:'Inspecciones',     sub:'Visitas, observaciones y cumplimiento',          accent:'green',  iconKey:'search',    logo:'assets/inspecciones.png',        headerSub:'Visitas regulatorias y de cumplimiento · Mayo 2026', tags:['20 inspecciones','5 multas'] },
   { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · May 2026',      tags:['3.922 hs','$43.9M'] },
   { id:'accidentabilidad',group:'GESTIÓN',  name:'Accidentabilidad', sub:'Tasa, días caídos y reporte de siniestros',      accent:'red',    iconKey:'alert',     logo:'assets/accidentabilidad.png',    headerSub:'Tasa, días caídos y reporte de siniestros',          tags:['477 siniestros hist.','13.160 días caídos'] },
@@ -428,8 +428,8 @@ window.SECTOR_DATA = {
         { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:194.9}] },
-        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:54.7},{label:'Fábrica',value:24.9},{label:'Extremas',value:20.4}] },
+        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:186.3}] },
+        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:57.5},{label:'Fábrica',value:25.0},{label:'Extremas',value:17.5}] },
       ],
     },
     feb: {
@@ -439,8 +439,8 @@ window.SECTOR_DATA = {
         { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:194.9}] },
-        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:54.7},{label:'Fábrica',value:24.9},{label:'Extremas',value:20.4}] },
+        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:186.3}] },
+        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:57.5},{label:'Fábrica',value:25.0},{label:'Extremas',value:17.5}] },
       ],
     },
     mar: {
@@ -450,8 +450,8 @@ window.SECTOR_DATA = {
         { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:194.9}] },
-        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:54.7},{label:'Fábrica',value:24.9},{label:'Extremas',value:20.4}] },
+        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:186.3}] },
+        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:57.5},{label:'Fábrica',value:25.0},{label:'Extremas',value:17.5}] },
       ],
     },
     abr: {
@@ -522,21 +522,21 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'$194.9M', delta:{ dir:'up',      text:'38 acuerdos · May 2026' } },
+        { label:'Total acuerdos — mes activo', value:'$186.3M', delta:{ dir:'up',      text:'38 acuerdos · May 2026' } },
         { label:'Total acuerdos — año ant.',   value:'$57.4M',  delta:{ dir:'neutral', text:'21 acuerdos · May 2025' } },
-        { label:'Variación interanual',        value:'+239.7%', delta:{ dir:'up',      text:'$57.4M → $194.9M' }, valueClass:'is-down' },
+        { label:'Variación interanual',        value:'+224.6%', delta:{ dir:'up',      text:'$57.4M → $186.3M' }, valueClass:'is-down' },
       ],
       charts: [
         { type:'hbar', title:'Monto por razón social — mes activo', sub:'Millones $', data:[
-          {x:'CHUSPITA MARTIN DANIEL',            y:46.79},
+          {x:'CHUSPITA MARTIN DANIEL',            y:38.18},
           {x:'LA EMPANADERIA',                    y:29.76},
+          {x:'GONZALEZ MIGUEL ANGEL',             y:14.13},
           {x:'BOLLOS Y RELLENOS',                 y:13.00},
           {x:'IVO PISANIELLO',                    y:11.93},
           {x:'BRUNO RIOS',                        y:11.45},
           {x:'VILLA MARIANO DAVID',               y:11.37},
           {x:'CASTRO CINTIA NOEMI',               y:11.13},
           {x:'RUANO ROJAS GREISSI',               y:9.93},
-          {x:'GONZALEZ MIGUEL ANGEL',             y:8.22},
           {x:'COMACHI VALERIA SABRINA',           y:7.33},
           {x:'SAYAGO MARCIO HUMBERTO NICOLAS',    y:7.20},
           {x:'VICTORICA ANA MACARENA',            y:4.93},
@@ -546,15 +546,15 @@ window.SECTOR_DATA = {
           {x:'SORIA ADRIAN FRANCISCO',            y:2.60},
           {x:'CLAUDIO ARIEL MOSCARELLA',          y:1.86},
         ]},
-        { type:'donut', title:'Distribución por tipo (monto)', sub:'% del total · May 2026', center:'$194.9M', data:[
-          {label:'Sabores',  value:59.4},
-          {label:'Fábrica',  value:23.9},
-          {label:'Extremas', value:16.8},
+        { type:'donut', title:'Distribución por tipo (monto)', sub:'% del total · May 2026', center:'$186.3M', data:[
+          {label:'Sabores',  value:57.5},
+          {label:'Fábrica',  value:25.0},
+          {label:'Extremas', value:17.5},
         ]},
       ],
       details: [{
         key:'detalle-may', title:'Detalle acuerdos — May 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
-        topChips:[{label:'Fábrica',value:'23.9%',tone:'blue'},{label:'Sabores',value:'59.4%',tone:'green'},{label:'Extremas',value:'16.8%',tone:'purple'}],
+        topChips:[{label:'Fábrica',value:'25.0%',tone:'blue'},{label:'Sabores',value:'57.5%',tone:'green'},{label:'Extremas',value:'17.5%',tone:'purple'}],
         columns:[{key:'razon',label:'RAZÓN SOCIAL'},{key:'unidad',label:'LOCAL / FÁBRICA'},{key:'tipo',label:'TIPO',badge:true},{key:'actor',label:'ACTOR',align:'right'},{key:'total',label:'TOTAL',align:'right',strong:true}],
         rows:[
           {razon:'BOLLOS Y RELLENOS',             unidad:'FABRICA PROCESADORA',       tipo:'Fábrica',  actor:'$2.000.000',  total:'$2.531.670'},
@@ -567,7 +567,7 @@ window.SECTOR_DATA = {
           {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES PACHECO I',         tipo:'Sabores',  actor:'$3.500.000',  total:'$4.283.500'},
           {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES LAVALLE I',         tipo:'Sabores',  actor:'$3.000.000',  total:'$3.761.717'},
           {razon:'CERTALDO S.A.',                 unidad:'FABRICA TAPAS II',          tipo:'Fábrica',  actor:'$3.000.000',  total:'$3.759.321'},
-          {razon:'CHUSPITA MARTIN DANIEL',        unidad:'SABORES MDQ 3',             tipo:'Sabores',  actor:'$22.500.000', total:'$38.054.500'},
+          {razon:'CHUSPITA MARTIN DANIEL',        unidad:'SABORES MDQ 3',             tipo:'Sabores',  actor:'$22.500.000', total:'$29.446.000'},
           {razon:'CHUSPITA MARTIN DANIEL',        unidad:'SABORES MDQ 4',             tipo:'Sabores',  actor:'$7.000.000',  total:'$8.732.500'},
           {razon:'CLAUDIO ARIEL MOSCARELLA',      unidad:'EXTREMAS LANUS II',         tipo:'Extremas', actor:'$1.500.000',  total:'$1.856.670'},
           {razon:'COMACHI VALERIA SABRINA',       unidad:'SABORES SAN MARTIN',        tipo:'Sabores',  actor:'$6.000.000',  total:'$7.333.650'},
@@ -596,7 +596,7 @@ window.SECTOR_DATA = {
           {razon:'VILLA MARIANO DAVID',           unidad:'SABORES MORENO',            tipo:'Sabores',  actor:'$2.500.000',  total:'$3.133.650'},
           {razon:'VILLA MARIANO DAVID',           unidad:'SABORES POLVORINES',        tipo:'Sabores',  actor:'$3.000.000',  total:'$3.870.300'},
         ],
-        totalRow:{ label:'TOTAL MAY 2026', value:'$194.906.091' },
+        totalRow:{ label:'TOTAL MAY 2026', value:'$186.297.591' },
       }],
     },
   },
