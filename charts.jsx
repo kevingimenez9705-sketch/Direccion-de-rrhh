@@ -177,7 +177,8 @@ function HBarChart({ data }) {
   const W = 560;
   const rowH = 22;
   const gap = 6;
-  const padL = 130, padR = 28, padT = 8, padB = 22;
+  const padL = 200; // aumentado desde 130 para evitar que se corten los nombres
+  const padR = 28, padT = 8, padB = 22;
   const innerH = data.length * (rowH + gap);
   const H = padT + innerH + padB;
   const innerW = W - padL - padR;
