@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dirección de RRHH — Acceso</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: #3b82f6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+
+    .logo-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+      line-height: 1.2;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+
+    input:focus {
+      border-color: #3b82f6;
+    }
+
+    button {
+      width: 100%;
+      background: #3b82f6;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #2563eb; }
+    button:active { background: #1d4ed8; }
+
+    .error {
+      display: none;
+      background: #450a0a;
+      border: 1px solid #7f1d1d;
+      color: #fca5a5;
+      font-size: 13px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .error.visible { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text">GastroBA</div>
+      <div class="logo-sub">Dirección de RRHH</div>
+    </div>
+  </div>
+
+  <h1>Bienvenido</h1>
+  <p class="subtitle">Ingresá tus credenciales para continuar</p>
+
+  <label for="usuario">Usuario</label>
+  <input type="text" id="usuario" placeholder="nombre de usuario" autocomplete="username" />
+
+  <label for="clave">Contraseña</label>
+  <input type="password" id="clave" placeholder="••••••••" autocomplete="current-password" />
+
+  <button onclick="login()">Ingresar</button>
+
+  <div class="error" id="error">Usuario o contraseña incorrectos.</div>
+</div>
+
+<script>
+  // ─── CONFIGURACIÓN ───────────────────────────────────────────
+  const USUARIO = "admin";       // ← cambiá esto
+  const CLAVE   = "rrhh2024";   // ← cambiá esto
+  const DESTINO = "index.html";  // ← página principal
+  // ─────────────────────────────────────────────────────────────
+
+  function login() {
+    const u = document.getElementById("usuario").value.trim();
+    const c = document.getElementById("clave").value;
+
+    if (u === USUARIO && c === CLAVE) {
+      sessionStorage.setItem("rrhh_auth", "true");
+      window.location.href = DESTINO;
+    } else {
+      document.getElementById("error").classList.add("visible");
+    }
+  }
+
+  // Permitir Enter para enviar
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter") login();
+  });
+
+  // Si ya está autenticado, redirigir directo
+  if (sessionStorage.getItem("rrhh_auth") === "true") {
+    window.location.href = DESTINO;
+  }
+</script>
+
+</body>
+</html>
