@@ -28,7 +28,7 @@ window.SECTORS = [
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · May 2026',      tags:['Ausentismo 4.13%','Rotación 12.15%'] },
   { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · May 2026',     tags:['Ausentismo 5.28%','Rotación 5.66%'] },
   { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · May 2026',                     tags:['Ausentismo 9.61%','Rotación 7.51%'] },
-  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['38 acuerdos','$186.3M'] },
+  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['36 acuerdos','$141.6M'] },
   { id:'inspecciones',    group:'GESTIÓN',  name:'Inspecciones',     sub:'Visitas, observaciones y cumplimiento',          accent:'green',  iconKey:'search',    logo:'assets/inspecciones.png',        headerSub:'Visitas regulatorias y de cumplimiento · Mayo 2026', tags:['20 inspecciones','5 multas'] },
   { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · May 2026',      tags:['3.922 hs','$43.9M'] },
   { id:'accidentabilidad',group:'GESTIÓN',  name:'Accidentabilidad', sub:'Tasa, días caídos y reporte de siniestros',      accent:'red',    iconKey:'alert',     logo:'assets/accidentabilidad.png',    headerSub:'Tasa, días caídos y reporte de siniestros',          tags:['477 siniestros hist.','13.160 días caídos'] },
@@ -418,47 +418,53 @@ window.SECTOR_DATA = {
   },
 
   // ════════════════════════════════════
-  // JUDICIALES — datos reales Abr y May 2026
+  // JUDICIALES — KPIs: acuerdos mes + año ant + variación + pago mes + pendientes
+  // Total acuerdo mes activo: fuente informe judicial (xlsx)
+  // Total pago / pendientes: fuente Excel cuotas (son conceptos independientes)
   // ════════════════════════════════════
   judiciales: {
     ene: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2025' } },
-        { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
+        { label:'Total acuerdos — mes activo', value:'$65.2M',  delta:{ dir:'neutral', text:'16 acuerdos · Ene 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'S/D',     delta:{ dir:'neutral', text:'Sin dato Ene 2025' } },
+        { label:'Total pago — mes activo',     value:'$25.5M',  delta:{ dir:'neutral', text:'Cuotas con vto. Ene 2026' } },
+        { label:'Cuotas pendientes',           value:'$394.3M', delta:{ dir:'neutral', text:'Vto. Feb 2026 en adelante' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:186.3}] },
-        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:57.5},{label:'Fábrica',value:25.0},{label:'Extremas',value:17.5}] },
+        { type:'bar', title:'Evolución acuerdos', sub:'Millones $ · total acuerdo por mes', data:[{x:'Ene',y:65.2},{x:'Feb',y:48.5},{x:'Mar',y:58.0},{x:'Abr',y:127.6},{x:'May',y:186.3}] },
+        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:25.5},{x:'Feb',y:44.2},{x:'Mar',y:67.3},{x:'Abr',y:98.1},{x:'May',y:108.2}] },
       ],
     },
     feb: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2025' } },
-        { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
+        { label:'Total acuerdos — mes activo', value:'$48.5M',  delta:{ dir:'down',    text:'5 acuerdos · Feb 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'S/D',     delta:{ dir:'neutral', text:'Sin dato Feb 2025' } },
+        { label:'Total pago — mes activo',     value:'$44.2M',  delta:{ dir:'up',      text:'+$18.7M vs. mes ant.' } },
+        { label:'Cuotas pendientes',           value:'$350.1M', delta:{ dir:'down',    text:'Vto. Mar 2026 en adelante' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:186.3}] },
-        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:57.5},{label:'Fábrica',value:25.0},{label:'Extremas',value:17.5}] },
+        { type:'bar', title:'Evolución acuerdos', sub:'Millones $ · total acuerdo por mes', data:[{x:'Ene',y:65.2},{x:'Feb',y:48.5},{x:'Mar',y:58.0},{x:'Abr',y:127.6},{x:'May',y:186.3}] },
+        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:25.5},{x:'Feb',y:44.2},{x:'Mar',y:67.3},{x:'Abr',y:98.1},{x:'May',y:108.2}] },
       ],
     },
     mar: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Mar 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'S/D', delta:{ dir:'neutral', text:'Sin informe Mar 2025' } },
-        { label:'Variación interanual',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato comparable' } },
+        { label:'Total acuerdos — mes activo', value:'$58.0M',  delta:{ dir:'up',      text:'21 acuerdos · Mar 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'S/D',     delta:{ dir:'neutral', text:'Sin dato Mar 2025' } },
+        { label:'Total pago — mes activo',     value:'$67.3M',  delta:{ dir:'up',      text:'+$23.1M vs. mes ant.' } },
+        { label:'Cuotas pendientes',           value:'$282.8M', delta:{ dir:'down',    text:'Vto. Abr 2026 en adelante' } },
       ],
       charts: [
-        { type:'bar',  title:'Evolución monto acuerdos', sub:'Millones $ — meses con datos', data:[{x:'Abr 25',y:76.3},{x:'May 25',y:57.4},{x:'Abr 26',y:127.6},{x:'May 26',y:186.3}] },
-        { type:'donut',title:'Distribución por tipo — referencia', sub:'% del total', center:'S/D', data:[{label:'Sabores',value:57.5},{label:'Fábrica',value:25.0},{label:'Extremas',value:17.5}] },
+        { type:'bar', title:'Evolución acuerdos', sub:'Millones $ · total acuerdo por mes', data:[{x:'Ene',y:65.2},{x:'Feb',y:48.5},{x:'Mar',y:58.0},{x:'Abr',y:127.6},{x:'May',y:186.3}] },
+        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:25.5},{x:'Feb',y:44.2},{x:'Mar',y:67.3},{x:'Abr',y:98.1},{x:'May',y:108.2}] },
       ],
     },
     abr: {
       kpis: [
         { label:'Total acuerdos — mes activo', value:'$127.6M', delta:{ dir:'up',      text:'30 acuerdos · Abr 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'$76.3M',  delta:{ dir:'neutral', text:'29 acuerdos · Abr 2025' } },
-        { label:'Variación interanual',        value:'+67.3%',  delta:{ dir:'up',      text:'$76.3M → $127.6M' }, valueClass:'is-down' },
+        { label:'Total acuerdos — año ant.',   value:'$76.3M',  delta:{ dir:'neutral', text:'+67.3% interanual · 29 acuerdos 2025' } },
+        { label:'Total pago — mes activo',     value:'$98.1M',  delta:{ dir:'up',      text:'+$30.8M vs. mes ant.' } },
+        { label:'Cuotas pendientes',           value:'$184.7M', delta:{ dir:'down',    text:'Vto. May 2026 en adelante' } },
       ],
       charts: [
         { type:'hbar', title:'Monto por razón social — mes activo', sub:'Millones $', data:[
@@ -523,8 +529,9 @@ window.SECTOR_DATA = {
     may: {
       kpis: [
         { label:'Total acuerdos — mes activo', value:'$186.3M', delta:{ dir:'up',      text:'38 acuerdos · May 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'$57.4M',  delta:{ dir:'neutral', text:'21 acuerdos · May 2025' } },
-        { label:'Variación interanual',        value:'+224.6%', delta:{ dir:'up',      text:'$57.4M → $186.3M' }, valueClass:'is-down' },
+        { label:'Total acuerdos — año ant.',   value:'$57.4M',  delta:{ dir:'neutral', text:'+224.6% interanual · 21 acuerdos 2025' } },
+        { label:'Total pago — mes activo',     value:'$108.2M', delta:{ dir:'up',      text:'+$10.1M vs. mes ant.' } },
+        { label:'Cuotas pendientes',           value:'$76.5M',  delta:{ dir:'down',    text:'Vto. Jun 2026 en adelante' } },
       ],
       charts: [
         { type:'hbar', title:'Monto por razón social — mes activo', sub:'Millones $', data:[
