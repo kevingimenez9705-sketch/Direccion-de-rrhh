@@ -522,8 +522,8 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'$194.9M', delta:{ dir:'up',      text:'39 acuerdos · May 2026' } },
-        { label:'Total acuerdos — año ant.',   value:'$57.4M',  delta:{ dir:'neutral', text:'22 acuerdos · May 2025' } },
+        { label:'Total acuerdos — mes activo', value:'$194.9M', delta:{ dir:'up',      text:'38 acuerdos · May 2026' } },
+        { label:'Total acuerdos — año ant.',   value:'$57.4M',  delta:{ dir:'neutral', text:'21 acuerdos · May 2025' } },
         { label:'Variación interanual',        value:'+239.7%', delta:{ dir:'up',      text:'$57.4M → $194.9M' }, valueClass:'is-down' },
       ],
       charts: [
