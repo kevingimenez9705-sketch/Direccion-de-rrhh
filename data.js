@@ -822,7 +822,7 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'926',  delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:22},{x:'Jun',y:22},{x:'Jul',y:18},{x:'Ago',y:23},{x:'Sep',y:22},{x:'Oct',y:37},{x:'Nov',y:49},{x:'Dic',y:49}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34}] },
         { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
       ],
     },
@@ -833,7 +833,7 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'396',  delta:{ dir:'down',    text:'−530 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:22},{x:'Jun',y:22},{x:'Jul',y:18},{x:'Ago',y:23},{x:'Sep',y:22},{x:'Oct',y:37},{x:'Nov',y:49},{x:'Dic',y:49}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24}] },
         { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
       ],
     },
@@ -844,7 +844,7 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'846',  delta:{ dir:'up',      text:'+450 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:22},{x:'Jun',y:22},{x:'Jul',y:18},{x:'Ago',y:23},{x:'Sep',y:22},{x:'Oct',y:37},{x:'Nov',y:49},{x:'Dic',y:49}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24}] },
         { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
       ],
     },
@@ -855,7 +855,7 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'607',  delta:{ dir:'down',    text:'−239 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:22},{x:'Jun',y:22},{x:'Jul',y:18},{x:'Ago',y:23},{x:'Sep',y:22},{x:'Oct',y:37},{x:'Nov',y:49},{x:'Dic',y:49}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28}] },
         { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
       ],
     },
@@ -866,7 +866,7 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'186',   delta:{ dir:'down',    text:'−24 vs. mes anterior' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:22},{x:'Jun',y:22},{x:'Jul',y:18},{x:'Ago',y:23},{x:'Sep',y:22},{x:'Oct',y:37},{x:'Nov',y:49},{x:'Dic',y:49}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:12}] },
         { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
       ],
     },
