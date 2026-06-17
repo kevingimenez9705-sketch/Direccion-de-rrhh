@@ -528,10 +528,15 @@ window.SECTOR_DATA = {
       details: [
         {
           key:'cierre-may', title:'Cierre de acuerdos — Mayo 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
-          columns:[{key:'concepto',label:'CONCEPTO'},{key:'detalle',label:'DETALLE'},{key:'monto',label:'MONTO',align:'right',strong:true}],
+          columns:[
+            {key:'concepto',label:'CONCEPTO'},
+            {key:'detalle',label:'DETALLE'},
+            {key:'monto',label:'MONTO',align:'right',strong:true},
+            {key:'spm',label:'SE PAGA EN MAYO',align:'right'},
+          ],
           rows:[
-            {concepto:'Fábricas',                     detalle:'18% de 38', monto:'$46.514.631'},
-            {concepto:'Locales / Sabores / Extremas', detalle:'82% de 38', monto:'$139.435.650'},
+            {concepto:'Fábricas',                     detalle:'18% de 38', monto:'$46.514.631',  spm:'$28.414.631'},
+            {concepto:'Locales / Sabores / Extremas', detalle:'82% de 38', monto:'$139.435.650', spm:'$89.188.896'},
           ],
           totalRow:{ label:'Total acuerdos cerrados en mayo — 38 acuerdos celebrados', value:'$185.950.281' },
         },
