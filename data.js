@@ -28,7 +28,7 @@ window.SECTORS = [
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · May 2026',      tags:['Ausentismo 4.13%','Rotación 12.15%'] },
   { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · May 2026',     tags:['Ausentismo 5.28%','Rotación 5.66%'] },
   { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · May 2026',                     tags:['Ausentismo 9.61%','Rotación 7.51%'] },
-  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['38 acuerdos','$186.3M'] },
+  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['38 acuerdos','$185.9M'] },
   { id:'inspecciones',    group:'GESTIÓN',  name:'Inspecciones',     sub:'Visitas, observaciones y cumplimiento',          accent:'green',  iconKey:'search',    logo:'assets/inspecciones.png',        headerSub:'Visitas regulatorias y de cumplimiento · Mayo 2026', tags:['20 inspecciones','5 multas'] },
   { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · May 2026',      tags:['3.922 hs','$43.9M'] },
   { id:'accidentabilidad',group:'GESTIÓN',  name:'Accidentabilidad', sub:'Tasa, días caídos y reporte de siniestros',      accent:'red',    iconKey:'alert',     logo:'assets/accidentabilidad.png',    headerSub:'Tasa, días caídos y reporte de siniestros',          tags:['477 siniestros hist.','13.160 días caídos'] },
@@ -419,7 +419,7 @@ window.SECTOR_DATA = {
   // ════════════════════════════════════
   // JUDICIALES — KPIs: acuerdos mes + año ant + variación + pago mes + pendientes
   // Total acuerdo mes activo (Ene–Abr): suma SOLO ACTOR del Excel de cuotas (sin honorarios).
-  // Total acuerdo May: $186.3M con honorarios (fuente informe judicial).
+  // Total acuerdo May: $186.0M con honorarios (fuente informe judicial).
   // Total pago: cuotas con vto. en el mes. Pendientes: cuotas futuras de acuerdos del mes.
   // ════════════════════════════════════
   judiciales: {
@@ -432,7 +432,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar', title:'Evolución acuerdos', sub:'Millones $ · total por mes (actor)', data:[{x:'Ene',y:95.2},{x:'Feb',y:18.5},{x:'Mar',y:55.9},{x:'Abr',y:85.7},{x:'May',y:140.8}] },
-        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:39.5},{x:'Feb',y:46.2},{x:'Mar',y:67.3},{x:'Abr',y:84.4},{x:'May',y:121.9}] },
+        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:39.5},{x:'Feb',y:46.2},{x:'Mar',y:67.3},{x:'Abr',y:84.4},{x:'May',y:145.4}] },
       ],
     },
     feb: {
@@ -444,7 +444,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar', title:'Evolución acuerdos', sub:'Millones $ · total por mes (actor)', data:[{x:'Ene',y:95.2},{x:'Feb',y:18.5},{x:'Mar',y:55.9},{x:'Abr',y:85.7},{x:'May',y:140.8}] },
-        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:39.5},{x:'Feb',y:46.2},{x:'Mar',y:67.3},{x:'Abr',y:84.4},{x:'May',y:121.9}] },
+        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:39.5},{x:'Feb',y:46.2},{x:'Mar',y:67.3},{x:'Abr',y:84.4},{x:'May',y:145.4}] },
       ],
     },
     mar: {
@@ -456,7 +456,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar', title:'Evolución acuerdos', sub:'Millones $ · total por mes (actor)', data:[{x:'Ene',y:95.2},{x:'Feb',y:18.5},{x:'Mar',y:55.9},{x:'Abr',y:85.7},{x:'May',y:140.8}] },
-        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:39.5},{x:'Feb',y:46.2},{x:'Mar',y:67.3},{x:'Abr',y:84.4},{x:'May',y:121.9}] },
+        { type:'bar', title:'Evolución pagos mensuales', sub:'Millones $ · cuotas vencidas por mes', data:[{x:'Ene',y:39.5},{x:'Feb',y:46.2},{x:'Mar',y:67.3},{x:'Abr',y:84.4},{x:'May',y:145.4}] },
       ],
     },
     abr: {
@@ -520,83 +520,41 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Total acuerdos — mes activo', value:'$186.3M', delta:{ dir:'up',      text:'38 acuerdos · May 2026 · c/honorarios' } },
-        { label:'Total acuerdos — año ant.',   value:'$57.4M',  delta:{ dir:'neutral', text:'+224.6% interanual · 21 acuerdos May 2025' } },
-        { label:'Total pago — mes activo',     value:'$121.9M', delta:{ dir:'up',      text:'+$37.5M vs. mes ant. · cuotas vencidas May' } },
-        { label:'Cuotas pendientes',           value:'$46.7M',  delta:{ dir:'up',      text:'Vto. Jun 2026 en adelante · acuerdos de May' } },
+        { label:'Total acuerdos cerrados en mayo', value:'$185.950.281', delta:{ dir:'neutral', text:'38 acuerdos celebrados' } },
+        { label:'Total pagado en mayo',            value:'$145.420.194', delta:{ dir:'neutral', text:'Acuerdos anteriores + acuerdos mayo' } },
+        { label:'Total a pagar (Jun–Ago)',         value:'$80.613.421',  delta:{ dir:'neutral', text:'Cuotas pendientes de acuerdos cerrados' } },
       ],
-      charts: [
-        { type:'hbar', title:'Monto por razón social — mes activo', sub:'Millones $ · c/honorarios', data:[
-          {x:'CHUSPITA MARTIN DANIEL',            y:38.18},
-          {x:'LA EMPANADERIA',                    y:29.76},
-          {x:'GONZALEZ MIGUEL ANGEL',             y:14.13},
-          {x:'BOLLOS Y RELLENOS',                 y:13.00},
-          {x:'IVO PISANIELLO',                    y:11.93},
-          {x:'BRUNO RIOS',                        y:11.45},
-          {x:'VILLA MARIANO DAVID',               y:11.37},
-          {x:'CASTRO CINTIA NOEMI',               y:11.13},
-          {x:'RUANO ROJAS GREISSI',               y:9.93},
-          {x:'COMACHI VALERIA SABRINA',           y:7.33},
-          {x:'SAYAGO MARCIO HUMBERTO NICOLAS',    y:7.20},
-          {x:'VICTORICA ANA MACARENA',            y:4.93},
-          {x:'TABEIRA DELGADO GABRIEL',           y:4.48},
-          {x:'CERTALDO S.A.',                     y:3.76},
-          {x:'VICTORICA BARBARA ALEJANDRA',       y:3.27},
-          {x:'SORIA ADRIAN FRANCISCO',            y:2.60},
-          {x:'CLAUDIO ARIEL MOSCARELLA',          y:1.86},
-        ]},
-        { type:'donut', title:'Distribución por tipo (monto)', sub:'% del total · May 2026', center:'$186.3M', data:[
-          {label:'Sabores',  value:57.5},
-          {label:'Fábrica',  value:25.0},
-          {label:'Extremas', value:17.5},
-        ]},
+      charts: [],
+      details: [
+        {
+          key:'cierre-may', title:'Cierre de acuerdos — Mayo 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
+          columns:[{key:'concepto',label:'CONCEPTO'},{key:'detalle',label:'DETALLE'},{key:'monto',label:'MONTO',align:'right',strong:true}],
+          rows:[
+            {concepto:'Fábricas',                     detalle:'18% de 38', monto:'$46.514.631'},
+            {concepto:'Locales / Sabores / Extremas', detalle:'82% de 38', monto:'$139.435.650'},
+          ],
+          totalRow:{ label:'Total acuerdos cerrados en mayo — 38 acuerdos celebrados', value:'$185.950.281' },
+        },
+        {
+          key:'pagos-may', title:'Pagos emitidos en mayo 2026', iconEmoji:'💰', accent:'green', type:'table',
+          columns:[{key:'concepto',label:'CONCEPTO'},{key:'detalle',label:'DETALLE'},{key:'monto',label:'MONTO',align:'right',strong:true}],
+          rows:[
+            {concepto:'Acuerdos de meses anteriores', detalle:'Cuotas correspondientes a acuerdos previos a mayo', monto:'$27.816.667'},
+            {concepto:'Acuerdos celebrados en mayo',  detalle:'Cuotas abonadas de acuerdos firmados en mayo',      monto:'$117.603.527'},
+          ],
+          totalRow:{ label:'TOTAL PAGADO EN MAYO', value:'$145.420.194' },
+        },
+        {
+          key:'pagos-pendientes-may', title:'Pagos a emitir — acuerdos cerrados en mayo y anteriores', iconEmoji:'📅', accent:'amber', type:'table',
+          columns:[{key:'mes',label:'CONCEPTO'},{key:'detalle',label:'DETALLE'},{key:'monto',label:'MONTO',align:'right',strong:true}],
+          rows:[
+            {mes:'Junio 2026',  detalle:'Cuotas de acuerdos cerrados en mayo y anteriores', monto:'$57.363.421'},
+            {mes:'Julio 2026',  detalle:'Cuotas de acuerdos cerrados en mayo y anteriores', monto:'$13.125.000'},
+            {mes:'Agosto 2026', detalle:'Cuotas de acuerdos cerrados en mayo',              monto:'$10.125.000'},
+          ],
+          totalRow:{ label:'TOTAL A PAGAR (Jun–Ago)', value:'$80.613.421' },
+        },
       ],
-      details: [{
-        key:'detalle-may', title:'Detalle acuerdos — May 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
-        topChips:[{label:'Sabores',value:'57.5%',tone:'green'},{label:'Fábrica',value:'25.0%',tone:'blue'},{label:'Extremas',value:'17.5%',tone:'purple'}],
-        columns:[{key:'razon',label:'RAZÓN SOCIAL'},{key:'unidad',label:'LOCAL / FÁBRICA'},{key:'tipo',label:'TIPO',badge:true},{key:'actor',label:'ACTOR',align:'right'},{key:'total',label:'TOTAL',align:'right',strong:true}],
-        rows:[
-          {razon:'BOLLOS Y RELLENOS',             unidad:'FABRICA PROCESADORA',       tipo:'Fábrica',  actor:'$2.000.000',  total:'$2.531.670'},
-          {razon:'BOLLOS Y RELLENOS',             unidad:'FABRICA SAN MIGUEL',        tipo:'Fábrica',  actor:'$6.000.000',  total:'$7.331.670'},
-          {razon:'BOLLOS Y RELLENOS',             unidad:'FABRICA MEDIALUNAS',        tipo:'Fábrica',  actor:'$2.500.000',  total:'$3.133.650'},
-          {razon:'BRUNO RIOS',                    unidad:'SABORES ROSARIO II',        tipo:'Sabores',  actor:'$3.200.000',  total:'$4.808.793'},
-          {razon:'BRUNO RIOS',                    unidad:'SABORES ROSARIO I',         tipo:'Sabores',  actor:'$1.200.000',  total:'$1.680.960'},
-          {razon:'BRUNO RIOS',                    unidad:'SABORES HURLINGHAM II',     tipo:'Sabores',  actor:'$4.000.000',  total:'$4.961.720'},
-          {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES PACHECO I',         tipo:'Sabores',  actor:'$2.500.000',  total:'$3.083.500'},
-          {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES PACHECO I',         tipo:'Sabores',  actor:'$3.500.000',  total:'$4.283.500'},
-          {razon:'CASTRO CINTIA NOEMI',           unidad:'SABORES LAVALLE I',         tipo:'Sabores',  actor:'$3.000.000',  total:'$3.761.717'},
-          {razon:'CERTALDO S.A.',                 unidad:'FABRICA TAPAS II',          tipo:'Fábrica',  actor:'$3.000.000',  total:'$3.759.321'},
-          {razon:'CHUSPITA MARTIN DANIEL',        unidad:'SABORES MDQ 3',             tipo:'Sabores',  actor:'$22.500.000', total:'$29.446.000'},
-          {razon:'CHUSPITA MARTIN DANIEL',        unidad:'SABORES MDQ 4',             tipo:'Sabores',  actor:'$7.000.000',  total:'$8.732.500'},
-          {razon:'CLAUDIO ARIEL MOSCARELLA',      unidad:'EXTREMAS LANUS II',         tipo:'Extremas', actor:'$1.500.000',  total:'$1.856.670'},
-          {razon:'COMACHI VALERIA SABRINA',       unidad:'SABORES SAN MARTIN',        tipo:'Sabores',  actor:'$6.000.000',  total:'$7.333.650'},
-          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS MUNRO',            tipo:'Extremas', actor:'$2.000.000',  total:'$2.523.650'},
-          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS MUNRO',            tipo:'Extremas', actor:'$2.500.000',  total:'$3.133.650'},
-          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS MUNRO',            tipo:'Extremas', actor:'$2.000.000',  total:'$2.559.321'},
-          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'EXTREMAS CABALLITO',        tipo:'Extremas', actor:'$1.200.000',  total:'$1.576.071'},
-          {razon:'GONZALEZ MIGUEL ANGEL',         unidad:'SABORES DEL VISO',          tipo:'Sabores',  actor:'$3.500.000',  total:'$4.333.650'},
-          {razon:'IVO PISANIELLO',                unidad:'SABORES ZARATE',            tipo:'Sabores',  actor:'$2.500.000',  total:'$3.080.860'},
-          {razon:'IVO PISANIELLO',                unidad:'SABORES ZARATE',            tipo:'Sabores',  actor:'$800.000',    total:'$1.040.860'},
-          {razon:'IVO PISANIELLO',                unidad:'EXTREMAS BOULOGNE',         tipo:'Extremas', actor:'$2.000.000',  total:'$2.531.670'},
-          {razon:'IVO PISANIELLO',                unidad:'EXTREMAS OLIVOS',           tipo:'Extremas', actor:'$4.000.000',  total:'$5.280.960'},
-          {razon:'LA EMPANADERIA',                unidad:'FABRICA SAN MARTIN',        tipo:'Fábrica',  actor:'$3.200.000',  total:'$4.293.650'},
-          {razon:'LA EMPANADERIA',                unidad:'FABRICA SAN MARTIN',        tipo:'Fábrica',  actor:'$18.000.000', total:'$21.733.000'},
-          {razon:'LA EMPANADERIA',                unidad:'FABRICA SAN MARTIN',        tipo:'Fábrica',  actor:'$3.000.000',  total:'$3.731.670'},
-          {razon:'RUANO ROJAS GREISSI',           unidad:'EXTREMAS RODRIGUEZ',        tipo:'Extremas', actor:'$2.500.000',  total:'$3.159.320'},
-          {razon:'RUANO ROJAS GREISSI',           unidad:'EXTREMAS SAN FERNANDO',     tipo:'Extremas', actor:'$2.000.000',  total:'$2.483.532'},
-          {razon:'RUANO ROJAS GREISSI',           unidad:'EXTREMAS SAN FERNANDO',     tipo:'Extremas', actor:'$3.500.000',  total:'$4.283.531'},
-          {razon:'SAYAGO MARCIO HUMBERTO NICOLAS',unidad:'SABORES BOEDO',             tipo:'Sabores',  actor:'$6.000.000',  total:'$7.200.000'},
-          {razon:'SORIA ADRIAN FRANCISCO',        unidad:'SABORES SAN FERNANDO',      tipo:'Sabores',  actor:'$1.200.000',  total:'$1.541.074'},
-          {razon:'SORIA ADRIAN FRANCISCO',        unidad:'SABORES SAN FERNANDO',      tipo:'Sabores',  actor:'$800.000',    total:'$1.061.073'},
-          {razon:'TABEIRA DELGADO GABRIEL',       unidad:'SABORES CORRIENTES II',     tipo:'Sabores',  actor:'$3.500.000',  total:'$4.480.650'},
-          {razon:'VICTORICA ANA MACARENA',        unidad:'SABORES BERAZATEGUI II',    tipo:'Sabores',  actor:'$4.000.000',  total:'$4.931.670'},
-          {razon:'VICTORICA BARBARA ALEJANDRA',   unidad:'EXTREMAS FLORES',           tipo:'Extremas', actor:'$2.500.000',  total:'$3.266.717'},
-          {razon:'VILLA MARIANO DAVID',           unidad:'SABORES PACHECO II',        tipo:'Sabores',  actor:'$3.500.000',  total:'$4.361.741'},
-          {razon:'VILLA MARIANO DAVID',           unidad:'SABORES MORENO',            tipo:'Sabores',  actor:'$2.500.000',  total:'$3.133.650'},
-          {razon:'VILLA MARIANO DAVID',           unidad:'SABORES POLVORINES',        tipo:'Sabores',  actor:'$3.000.000',  total:'$3.870.300'},
-        ],
-        totalRow:{ label:'TOTAL MAY 2026 (c/honorarios)', value:'$186.297.591' },
-      }],
     },
   },
 
