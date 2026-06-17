@@ -570,7 +570,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo — sin dato', data:[{x:'S/D',y:null}] },
-        { type:'donut',title:'Resultado de visitas',    sub:'% del total — sin dato', data:[{label:'S/D',value:100}] },
+        { type:'donut',title:'Composición de actividad', sub:'Inspecciones + audiencias — sin dato', data:[{label:'S/D',value:100}] },
       ],
     },
     feb: {
@@ -581,7 +581,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo — sin dato', data:[{x:'S/D',y:null}] },
-        { type:'donut',title:'Resultado de visitas',    sub:'% del total — sin dato', data:[{label:'S/D',value:100}] },
+        { type:'donut',title:'Composición de actividad', sub:'Inspecciones + audiencias — sin dato', data:[{label:'S/D',value:100}] },
       ],
     },
     mar: {
@@ -592,7 +592,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo', data:[{x:'Sabores',y:32},{x:'Extremas',y:4},{x:'Fábrica',y:2},{x:'Staff',y:0}] },
-        { type:'donut',title:'Resultado de visitas',    sub:'% del total', data:[{label:'Conformes',value:26},{label:'Obs. menores',value:11},{label:'No conformes',value:1}] },
+        { type:'donut',title:'Composición de actividad', sub:'Inspecciones · Mar 2026 (audiencias S/D)', center:'38', data:[{label:'Inspecciones',value:38}] },
       ],
       details: [{
         key:'multas-mar', title:'Multas — Mar 2026', iconEmoji:'🔍', accent:'red', type:'table',
@@ -609,7 +609,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo', data:[{x:'Sabores',y:12},{x:'Extremas',y:5},{x:'Fábrica',y:0},{x:'Staff',y:0}] },
-        { type:'donut',title:'Resultado de visitas',    sub:'% del total', data:[{label:'Conformes',value:10},{label:'Obs. menores',value:3},{label:'No conformes',value:4}] },
+        { type:'donut',title:'Composición de actividad', sub:'Inspecciones + audiencias · Abr 2026', center:'24', data:[{label:'Inspecciones',value:17},{label:'Audiencias',value:7}] },
       ],
       details: [{
         key:'multas-abr', title:'Multas — Abr 2026', iconEmoji:'🔍', accent:'red', type:'table',
@@ -631,7 +631,7 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo', data:[{x:'Sabores',y:16},{x:'Extremas',y:1},{x:'Fábrica',y:3},{x:'Staff',y:0}] },
-        { type:'donut',title:'Resultado de visitas',    sub:'% del total', data:[{label:'Conformes',value:2},{label:'Obs. menores',value:13},{label:'No conformes',value:5}] },
+        { type:'donut',title:'Composición de actividad', sub:'Inspecciones + audiencias · May 2026', center:'38', data:[{label:'Inspecciones',value:20},{label:'Audiencias',value:18}] },
       ],
       details: [{
         key:'multas-may', title:'Multas — May 2026', iconEmoji:'🔍', accent:'red', type:'table',
