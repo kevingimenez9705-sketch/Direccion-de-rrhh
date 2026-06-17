@@ -564,9 +564,9 @@ window.SECTOR_DATA = {
   inspecciones: {
     ene: {
       kpis: [
-        { label:'Visitas realizadas',     value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
-        { label:'Conformidad',            value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
-        { label:'Observaciones abiertas', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
+        { label:'Inspecciones MT',           value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
+        { label:'Documentación entregada MT', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
+        { label:'Audiencias',                 value:'S/D', delta:{ dir:'neutral', text:'Sin informe Ene 2026' } },
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -575,9 +575,9 @@ window.SECTOR_DATA = {
     },
     feb: {
       kpis: [
-        { label:'Visitas realizadas',     value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
-        { label:'Conformidad',            value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
-        { label:'Observaciones abiertas', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
+        { label:'Inspecciones MT',           value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
+        { label:'Documentación entregada MT', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
+        { label:'Audiencias',                 value:'S/D', delta:{ dir:'neutral', text:'Sin informe Feb 2026' } },
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo — sin dato', data:[{x:'S/D',y:null}] },
@@ -586,9 +586,9 @@ window.SECTOR_DATA = {
     },
     mar: {
       kpis: [
-        { label:'Visitas realizadas',     value:'38',    delta:{ dir:'neutral', text:'Mar 2026' } },
-        { label:'Conformidad',            value:'97.4%', delta:{ dir:'neutral', text:'Obs. abiertas: 11' } },
-        { label:'Observaciones abiertas', value:'11',    delta:{ dir:'neutral', text:'Mar 2026' } },
+        { label:'Inspecciones MT',           value:'38',  delta:{ dir:'neutral', text:'Mar 2026' } },
+        { label:'Documentación entregada MT', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
+        { label:'Audiencias',                 value:'S/D', delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo', data:[{x:'Sabores',y:32},{x:'Extremas',y:4},{x:'Fábrica',y:2},{x:'Staff',y:0}] },
@@ -603,9 +603,9 @@ window.SECTOR_DATA = {
     },
     abr: {
       kpis: [
-        { label:'Visitas realizadas',     value:'17',    delta:{ dir:'down',    text:'−21 vs. mes anterior' } },
-        { label:'Conformidad',            value:'76.5%', delta:{ dir:'down',    text:'−20.9 pp vs. mes ant.' } },
-        { label:'Observaciones abiertas', value:'3',     delta:{ dir:'down',    text:'−8 vs. mes ant.' } },
+        { label:'Inspecciones MT',           value:'17',   delta:{ dir:'neutral', text:'−21 vs. mes anterior' } },
+        { label:'Documentación entregada MT', value:'100%', delta:{ dir:'neutral', text:'Abr 2026' } },
+        { label:'Audiencias',                 value:'7',    delta:{ dir:'neutral', text:'Abr 2026' } },
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo', data:[{x:'Sabores',y:12},{x:'Extremas',y:5},{x:'Fábrica',y:0},{x:'Staff',y:0}] },
@@ -625,9 +625,9 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Visitas realizadas',     value:'20',    delta:{ dir:'up',      text:'+3 vs. mes anterior' } },
-        { label:'Conformidad',            value:'75.0%', delta:{ dir:'down',    text:'−1.5 pp vs. mes ant.' } },
-        { label:'Observaciones abiertas', value:'13',    delta:{ dir:'up',      text:'+10 vs. mes ant.' } },
+        { label:'Inspecciones MT',           value:'20',   delta:{ dir:'down',    text:'+3 vs. mes anterior' } },
+        { label:'Documentación entregada MT', value:'100%', delta:{ dir:'up',      text:'Entregada al MT · May 2026' } },
+        { label:'Audiencias',                 value:'18',   delta:{ dir:'neutral', text:'+11 vs. mes anterior' } },
       ],
       charts: [
         { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo', data:[{x:'Sabores',y:16},{x:'Extremas',y:1},{x:'Fábrica',y:3},{x:'Staff',y:0}] },
