@@ -829,12 +829,12 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Tasa — mes activo',  value:'4.38%', delta:{ dir:'down',    text:'−38.9% vs. mes anterior' } },
-        { label:'Siniestros del mes', value:'12',    delta:{ dir:'down',    text:'−3 vs. mes anterior' } },
-        { label:'Días caídos',        value:'186',   delta:{ dir:'down',    text:'−24 vs. mes anterior' } },
+        { label:'Tasa — mes activo',  value:'4.72%', delta:{ dir:'neutral', text:'May 2026 · sin tasa Abr para comparar' } },
+        { label:'Siniestros del mes', value:'20',    delta:{ dir:'down',    text:'−8 vs. mes anterior' } },
+        { label:'Días caídos',        value:'241',   delta:{ dir:'down',    text:'−366 vs. mes anterior' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:12}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:20}] },
         { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
       ],
     },
