@@ -551,11 +551,17 @@ window.SECTOR_DATA = {
         },
         {
           key:'pagos-pendientes-may', title:'Pagos a emitir — acuerdos cerrados en mayo y anteriores', iconEmoji:'📅', accent:'amber', type:'table',
-          columns:[{key:'mes',label:'CONCEPTO'},{key:'detalle',label:'DETALLE'},{key:'monto',label:'MONTO',align:'right',strong:true}],
+          columns:[
+            {key:'mes',label:'CONCEPTO'},
+            {key:'detalle',label:'DETALLE'},
+            {key:'fabrica',label:'FÁBRICA',align:'right'},
+            {key:'locales',label:'LOCALES',align:'right'},
+            {key:'monto',label:'MONTO',align:'right',strong:true},
+          ],
           rows:[
-            {mes:'Junio 2026',  detalle:'Cuotas de acuerdos cerrados en mayo y anteriores', monto:'$57.363.421'},
-            {mes:'Julio 2026',  detalle:'Cuotas de acuerdos cerrados en mayo y anteriores', monto:'$13.125.000'},
-            {mes:'Agosto 2026', detalle:'Cuotas de acuerdos cerrados en mayo',              monto:'$10.125.000'},
+            {mes:'Junio 2026',  detalle:'Cuotas de acuerdos cerrados en mayo y anteriores', fabrica:'$13.700.000', locales:'$43.663.421', monto:'$57.363.421'},
+            {mes:'Julio 2026',  detalle:'Cuotas de acuerdos cerrados en mayo y anteriores', fabrica:'$4.500.000',  locales:'$8.625.000',  monto:'$13.125.000'},
+            {mes:'Agosto 2026', detalle:'Cuotas de acuerdos cerrados en mayo',              fabrica:'$4.500.000',  locales:'$5.625.000',  monto:'$10.125.000'},
           ],
           totalRow:{ label:'TOTAL A PAGAR (Jun–Ago)', value:'$80.613.421' },
         },
