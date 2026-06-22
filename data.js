@@ -616,25 +616,62 @@ window.SECTOR_DATA = {
     },
     may: {
       kpis: [
-        { label:'Inspecciones MT',           value:'20',   delta:{ dir:'down',    text:'+3 vs. mes anterior' } },
-        { label:'Documentación entregada MT', value:'100%', delta:{ dir:'up',      text:'Entregada al MT · May 2026' } },
-        { label:'Audiencias',                 value:'18',   delta:{ dir:'neutral', text:'+11 vs. mes anterior' } },
+        { label:'Inspecciones totales',  value:'20',           delta:{ dir:'down',    text:'+3 vs. mes anterior' } },
+        { label:'Documentación (audiencias)', value:'18 de 18', delta:{ dir:'up',      text:'100% entregada al MT · May 2026' } },
+        { label:'Multas',                value:'5',            delta:{ dir:'neutral', text:'$15.441.748 · monto total' } },
+        { label:'Demandas',              value:'1',            delta:{ dir:'neutral', text:'$1.126.740,80 · La Empanadería S.A.' } },
       ],
       charts: [
-        { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo', data:[{x:'Sabores',y:16},{x:'Extremas',y:1},{x:'Fábrica',y:3},{x:'Staff',y:0}] },
-        { type:'donut',title:'Composición de actividad', sub:'Inspecciones + audiencias · May 2026', center:'38', data:[{label:'Inspecciones',value:20},{label:'Audiencias',value:18}] },
+        { type:'donut', title:'Composición de infracciones', sub:'Cantidad · multas vs. demandas · May 2026', center:'6', data:[
+          {label:'Multas',   value:5},
+          {label:'Demandas', value:1},
+        ]},
+        { type:'hbar', title:'Monto de multas por razón social', sub:'Millones $ · May 2026', data:[
+          {x:'Bollos y Rellenos',            y:8.19},
+          {x:'Casut Frijon Matías E.',       y:3.00},
+          {x:'Sayago Leandro M.A.',          y:2.41},
+          {x:'Victorica Bárbara A.',         y:1.84},
+        ]},
       ],
-      details: [{
-        key:'multas-may', title:'Multas — May 2026', iconEmoji:'🔍', accent:'red', type:'table',
-        columns:[{key:'razon',label:'RAZÓN SOCIAL'},{key:'cant',label:'MULTAS',align:'right'},{key:'monto',label:'MONTO',align:'right',strong:true}],
-        rows:[
-          {razon:'BOLLOS Y RELLENOS',             cant:'2', monto:'S/D'},
-          {razon:'CASUT FRIJON MATIAS EZEQUIEL',  cant:'1', monto:'S/D'},
-          {razon:'SAYAGO LEANDRO M.A.',           cant:'1', monto:'S/D'},
-          {razon:'VICTORICA BARBARA ALEJANDRA',   cant:'1', monto:'S/D'},
-        ],
-        totalRow:{ label:'TOTAL (5 multas)', value:'$15.441.748' },
-      }],
+      details: [
+        {
+          key:'multas-razon-may', title:'Multas y demandas por razón social — May 2026', iconEmoji:'🔍', accent:'red', type:'table',
+          topChips:[{label:'Multas',value:'$15.441.748',tone:'red'},{label:'Demandas',value:'$1.126.741',tone:'purple'},{label:'Audiencias',value:'18 de 18',tone:'green'}],
+          columns:[
+            {key:'razon',label:'RAZÓN SOCIAL'},
+            {key:'cmultas',label:'CANT. MULTAS',align:'right'},
+            {key:'mmultas',label:'MONTO MULTAS',align:'right',strong:true},
+            {key:'cdem',label:'CANT. DEM.',align:'right'},
+            {key:'mdem',label:'MONTO DEM.',align:'right'},
+          ],
+          rows:[
+            {razon:'Bollos y Rellenos',             cmultas:'2', mmultas:'$8.192.070', cdem:'0', mdem:'$0'},
+            {razon:'Casut Frijon Matías Ezequiel',  cmultas:'1', mmultas:'$3.000.000', cdem:'0', mdem:'$0'},
+            {razon:'Sayago Leandro Miguel Agustín', cmultas:'1', mmultas:'$2.407.235', cdem:'0', mdem:'$0'},
+            {razon:'Victorica Bárbara Alejandra',   cmultas:'1', mmultas:'$1.842.443', cdem:'0', mdem:'$0'},
+            {razon:'La Empanadería S.A.',           cmultas:'0', mmultas:'$0',         cdem:'1', mdem:'$1.126.740,80'},
+          ],
+          totalRow:{ label:'TOTAL — 5 multas + 1 demanda', value:'$16.568.488,80' },
+        },
+        {
+          key:'multas-sucursal-may', title:'Detalle por sucursal — May 2026', iconEmoji:'📍', accent:'amber', type:'table',
+          columns:[
+            {key:'sucursal',label:'SUCURSAL'},
+            {key:'razon',label:'RAZÓN SOCIAL'},
+            {key:'tipo',label:'TIPO',badge:true},
+            {key:'monto',label:'MONTO',align:'right',strong:true},
+          ],
+          rows:[
+            {sucursal:'Oficina 228 Paralelo Sur',   razon:'Bollos y Rellenos',             tipo:'Multa',   monto:'$6.164.035'},
+            {sucursal:'SE - Munro',                 razon:'Casut Frijon Matías Ezequiel',  tipo:'Multa',   monto:'$3.000.000'},
+            {sucursal:'SE - Cruce Castelar',        razon:'Sayago Leandro Miguel Agustín', tipo:'Multa',   monto:'$2.407.235'},
+            {sucursal:'Fáb. Empanadas San Miguel',  razon:'Bollos y Rellenos',             tipo:'Multa',   monto:'$2.028.035'},
+            {sucursal:'BR - Pinamar',               razon:'Victorica Bárbara Alejandra',   tipo:'Multa',   monto:'$1.842.443'},
+            {sucursal:'S/ sucursal (Poder Judicial)', razon:'La Empanadería S.A.',         tipo:'Demanda', monto:'$1.126.740,80'},
+          ],
+          totalRow:{ label:'TOTAL GENERAL', value:'$16.568.488,80' },
+        },
+      ],
     },
   },
 
