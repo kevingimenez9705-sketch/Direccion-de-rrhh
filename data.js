@@ -814,8 +814,12 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'926',  delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'bar',   title:'Siniestros por mes',          sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',         sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+          {label:'Laboral',    value:81},
+          {label:'In Itinere', value:19},
+        ]},
       ],
     },
     feb: {
@@ -825,8 +829,12 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'396',  delta:{ dir:'up',      text:'−530 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'bar',   title:'Siniestros por mes',          sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',         sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+          {label:'Laboral',    value:81},
+          {label:'In Itinere', value:19},
+        ]},
       ],
     },
     mar: {
@@ -836,8 +844,12 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'846',  delta:{ dir:'down',    text:'+450 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'bar',   title:'Siniestros por mes',          sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',         sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+          {label:'Laboral',    value:81},
+          {label:'In Itinere', value:19},
+        ]},
       ],
     },
     abr: {
@@ -847,8 +859,12 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'607',  delta:{ dir:'up',      text:'−239 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'bar',   title:'Siniestros por mes',          sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',         sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+          {label:'Laboral',    value:81},
+          {label:'In Itinere', value:19},
+        ]},
       ],
     },
     may: {
@@ -858,18 +874,23 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'246',   delta:{ dir:'up',      text:'−361 vs. mes anterior' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
-        { type:'bar',  title:'Siniestros por sector — May 2026', sub:'Cantidad', data:[
-          {x:'Fábrica', y:11},
-          {x:'Locales', y:7},
-          {x:'Staff',   y:2},
+        { type:'bar',   title:'Siniestros por mes',              sub:'Cantidad · Ene–May 2026',                    data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',             sub:'Cantidad · Ene–May 2026',                    data: diasTendencia },
+        { type:'donut', title:'Siniestros por sector — May 2026',sub:'% del total · 20 siniestros',  center:'20',  data:[
+          {label:'Fábrica', value:55},
+          {label:'Locales', value:35},
+          {label:'Staff',   value:10},
         ]},
-        { type:'donut', title:'Tipo de siniestro — May 2026', sub:'% del total · 20 siniestros', center:'20', data:[
+        { type:'bar',   title:'Días caídos por sector — May 2026', sub:'Días · por unidad',                        data:[
+          {x:'Fábrica', y:120},
+          {x:'Locales', y:101},
+          {x:'Staff',   y:25},
+        ]},
+        { type:'donut', title:'Tipo de siniestro — May 2026',    sub:'% del total · 20 siniestros',  center:'20',  data:[
           {label:'Laboral',    value:75},
           {label:'In Itinere', value:25},
         ]},
-        { type:'donut', title:'Tipo de lesión — May 2026', sub:'% del total · 20 siniestros', center:'20', data:[
+        { type:'donut', title:'Tipo de lesión — May 2026',       sub:'% del total · 20 siniestros',  center:'20',  data:[
           {label:'Traumatismo', value:70},
           {label:'Corte',       value:20},
           {label:'Herida',      value:5},
