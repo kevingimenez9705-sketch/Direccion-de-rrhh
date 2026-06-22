@@ -59,6 +59,10 @@ const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'A
 const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922}];
 const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'Abr',y:49.2},{x:'May',y:43.9}];
 
+// ─── TENDENCIAS ACCIDENTABILIDAD ───
+const sinTendencia    = [{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:20}];
+const diasTendencia   = [{x:'Ene',y:926},{x:'Feb',y:396},{x:'Mar',y:846},{x:'Abr',y:607},{x:'May',y:246}];
+
 // ══════════════════════════════════════════════════════
 window.SECTOR_DATA = {
 
@@ -396,11 +400,9 @@ window.SECTOR_DATA = {
       ],
     },
   },
+
   // ════════════════════════════════════
-  // JUDICIALES — KPIs: acuerdos mes + año ant + variación + pago mes + pendientes
-  // Total acuerdo mes activo (Ene–Abr): suma SOLO ACTOR del Excel de cuotas (sin honorarios).
-  // Total acuerdo May: $186.0M con honorarios (fuente informe judicial).
-  // Total pago: cuotas con vto. en el mes. Pendientes: cuotas futuras de acuerdos del mes.
+  // JUDICIALES
   // ════════════════════════════════════
   judiciales: {
     ene: {
@@ -797,7 +799,12 @@ window.SECTOR_DATA = {
   },
 
   // ════════════════════════════════════
-  // ACCIDENTABILIDAD
+  // ACCIDENTABILIDAD — Mayo 2026
+  // Fuente: Siniestralidad_Mayo_2026.xlsx
+  // Siniestros: 20 · Días caídos: 246
+  // Por sector: FABRICA 11 sin. / 120 días · LOCALES 7 sin. / 101 días · STAFF 2 sin. / 25 días
+  // Tipo lesión: TRAUMATISMO 14 (70%) · CORTE 4 (20%) · HERIDA 1 (5%) · AMPUTACION 1 (5%)
+  // Tipo siniestro: LABORAL 15 (75%) · IN ITINERE 5 (25%)
   // ════════════════════════════════════
   accidentabilidad: {
     ene: {
@@ -807,53 +814,108 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'926',  delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34}] },
-        { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
       ],
     },
     feb: {
       kpis: [
         { label:'Tasa — mes activo',  value:'S/D',  delta:{ dir:'neutral', text:'Sin dato Feb 2026' } },
-        { label:'Siniestros del mes', value:'24',   delta:{ dir:'down',    text:'396 días caídos' } },
-        { label:'Días caídos',        value:'396',  delta:{ dir:'down',    text:'−530 vs. mes ant.' } },
+        { label:'Siniestros del mes', value:'24',   delta:{ dir:'down',    text:'−10 vs. mes ant.' } },
+        { label:'Días caídos',        value:'396',  delta:{ dir:'up',      text:'−530 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24}] },
-        { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
       ],
     },
     mar: {
       kpis: [
         { label:'Tasa — mes activo',  value:'S/D',  delta:{ dir:'neutral', text:'Sin dato Mar 2026' } },
-        { label:'Siniestros del mes', value:'24',   delta:{ dir:'neutral', text:'846 días caídos' } },
-        { label:'Días caídos',        value:'846',  delta:{ dir:'up',      text:'+450 vs. mes ant.' } },
+        { label:'Siniestros del mes', value:'24',   delta:{ dir:'neutral', text:'Igual que mes ant.' } },
+        { label:'Días caídos',        value:'846',  delta:{ dir:'down',    text:'+450 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24}] },
-        { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
       ],
     },
     abr: {
       kpis: [
         { label:'Tasa — mes activo',  value:'S/D',  delta:{ dir:'neutral', text:'Sin dato Abr 2026' } },
-        { label:'Siniestros del mes', value:'28',   delta:{ dir:'up',      text:'607 días caídos' } },
-        { label:'Días caídos',        value:'607',  delta:{ dir:'down',    text:'−239 vs. mes ant.' } },
+        { label:'Siniestros del mes', value:'28',   delta:{ dir:'down',    text:'+4 vs. mes ant.' } },
+        { label:'Días caídos',        value:'607',  delta:{ dir:'up',      text:'−239 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28}] },
-        { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
       ],
     },
     may: {
       kpis: [
         { label:'Tasa — mes activo',  value:'4.72%', delta:{ dir:'neutral', text:'May 2026 · sin tasa Abr para comparar' } },
-        { label:'Siniestros del mes', value:'20',    delta:{ dir:'down',    text:'−8 vs. mes anterior' } },
-        { label:'Días caídos',        value:'241',   delta:{ dir:'down',    text:'−366 vs. mes anterior' } },
+        { label:'Siniestros del mes', value:'20',    delta:{ dir:'up',      text:'−8 vs. mes anterior' } },
+        { label:'Días caídos',        value:'246',   delta:{ dir:'up',      text:'−361 vs. mes anterior' } },
       ],
       charts: [
-        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad', data:[{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:20}] },
-        { type:'donut',title:'Tipo de siniestro — histórico', sub:'% del total', data:[{label:'Laboral',value:81.0},{label:'In Itinere',value:18.5},{label:'Otro',value:0.5}] },
+        { type:'bar',  title:'Siniestros por mes', sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',  title:'Días caídos por mes', sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'bar',  title:'Siniestros por sector — May 2026', sub:'Cantidad', data:[
+          {x:'Fábrica', y:11},
+          {x:'Locales', y:7},
+          {x:'Staff',   y:2},
+        ]},
+        { type:'donut', title:'Tipo de siniestro — May 2026', sub:'% del total · 20 siniestros', center:'20', data:[
+          {label:'Laboral',    value:75},
+          {label:'In Itinere', value:25},
+        ]},
+        { type:'donut', title:'Tipo de lesión — May 2026', sub:'% del total · 20 siniestros', center:'20', data:[
+          {label:'Traumatismo', value:70},
+          {label:'Corte',       value:20},
+          {label:'Herida',      value:5},
+          {label:'Amputación',  value:5},
+        ]},
       ],
+      details: [{
+        key:'detalle-sin-may', title:'Detalle de siniestros — Mayo 2026', iconEmoji:'🦺', accent:'red', type:'table',
+        topChips:[
+          {label:'Fábrica',    value:'11 sin. · 120 días', tone:'red'},
+          {label:'Locales',    value:'7 sin. · 101 días',  tone:'purple'},
+          {label:'Staff',      value:'2 sin. · 25 días',   tone:'blue'},
+        ],
+        columns:[
+          {key:'nombre',  label:'APELLIDO Y NOMBRE'},
+          {key:'fecha',   label:'FECHA'},
+          {key:'estado',  label:'ESTADO',   badge:true},
+          {key:'sector',  label:'SECTOR',   badge:true},
+          {key:'lesion',  label:'LESIÓN'},
+          {key:'tipo',    label:'TIPO'},
+          {key:'dias',    label:'DÍAS CAÍDOS', align:'right', strong:true},
+        ],
+        rows:[
+          {nombre:'VERNA ALBORNOZ GIANLUCA LAUTARO', fecha:'04/05/2026', estado:'Fin Trat.',     sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'14'},
+          {nombre:'SANDOVAL MARCOS ALEJANDRO',       fecha:'04/05/2026', estado:'Fin Trat.',     sector:'LOCALES', lesion:'Traumatismo', tipo:'In Itinere', dias:'1'},
+          {nombre:'JADE ARIANA RAMIREZ HUAMAN',      fecha:'05/05/2026', estado:'En Tratam.',    sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'26'},
+          {nombre:'LEDESMA DEMIAN NAHUEL YAIR',      fecha:'05/05/2026', estado:'Fin Trat.',     sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'26'},
+          {nombre:'LUNA SERGIO',                     fecha:'05/05/2026', estado:'Fin Trat.',     sector:'FÁBRICA', lesion:'Herida',      tipo:'Laboral',    dias:'1'},
+          {nombre:'SANTANDER MAXIMILIANO',           fecha:'05/05/2026', estado:'En Tratam.',    sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'26'},
+          {nombre:'LUZ MAITENA GOMEZ',               fecha:'08/05/2026', estado:'En Tratam.',    sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'23'},
+          {nombre:'TORRES GUSTAVO ARIEL',            fecha:'08/05/2026', estado:'En Tratam.',    sector:'FÁBRICA', lesion:'Corte',       tipo:'Laboral',    dias:'23'},
+          {nombre:'CHIVEL WALTER',                   fecha:'15/05/2026', estado:'En Tratam.',    sector:'FÁBRICA', lesion:'Amputación',  tipo:'Laboral',    dias:'16'},
+          {nombre:'JUAREZ JOAQUIN',                  fecha:'16/05/2026', estado:'Fin Trat.',     sector:'LOCALES', lesion:'Corte',       tipo:'Laboral',    dias:'15'},
+          {nombre:'PAEZ VALDEZ GONZALO FERNANDO',    fecha:'17/05/2026', estado:'Fin Trat.',     sector:'FÁBRICA', lesion:'Corte',       tipo:'Laboral',    dias:'2'},
+          {nombre:'CACERES DAIANA BELEN',            fecha:'19/05/2026', estado:'Fin Trat.',     sector:'FÁBRICA', lesion:'Traumatismo', tipo:'In Itinere', dias:'3'},
+          {nombre:'GONZALEZ SANTIAGO',               fecha:'18/05/2026', estado:'En Tratam.',    sector:'FÁBRICA', lesion:'Corte',       tipo:'Laboral',    dias:'13'},
+          {nombre:'OJEDA GONZALO DAMIAN',            fecha:'19/05/2026', estado:'Fin Trat.',     sector:'STAFF',   lesion:'Traumatismo', tipo:'Laboral',    dias:'12'},
+          {nombre:'MUÑOZ DAIANA JEANETTE',           fecha:'25/05/2026', estado:'Fin Trat.',     sector:'LOCALES', lesion:'Traumatismo', tipo:'In Itinere', dias:'2'},
+          {nombre:'ALVARENGA JULIO',                 fecha:'22/05/2026', estado:'En Tratam.',    sector:'FÁBRICA', lesion:'Traumatismo', tipo:'In Itinere', dias:'9'},
+          {nombre:'LAZARTE NICOLAS',                 fecha:'25/05/2026', estado:'En Tratam.',    sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'6'},
+          {nombre:'FLORES MIÑO JOHANNA',             fecha:'23/05/2026', estado:'Fin Trat.',     sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'8'},
+          {nombre:'VEGA THOMAS',                     fecha:'24/05/2026', estado:'Fin Trat.',     sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'7'},
+          {nombre:'ROJAS NOELIA',                    fecha:'26/05/2026', estado:'Fin Trat.',     sector:'STAFF',   lesion:'Traumatismo', tipo:'In Itinere', dias:'13'},
+        ],
+        totalRow:{ label:'TOTAL — 20 siniestros', value:'246 días caídos' },
+      }],
     },
   },
 
