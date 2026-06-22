@@ -24,7 +24,7 @@ function chartTheme() {
 
 // --- helpers --- //
 function niceMax(max) {
-  if (!max || max <= 0) return 1;
+  if (max <= 0) return 1;
   const pow = Math.pow(10, Math.floor(Math.log10(max)));
   const norm = max / pow;
   let n;
@@ -49,53 +49,25 @@ function LineChart({ data, activeIndex }) {
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 
-  // ── FIX: filtrar nulls antes de calcular min/max ──
-  const validYs = data.map(d => d.y).filter(v => v != null && !isNaN(v));
-  if (validYs.length === 0) {
-    // Sin datos válidos: mostrar placeholder
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: 260 }}>
-        <text x={W/2} y={H/2} textAnchor="middle" fontSize="13" fill={t.axis}>Sin datos disponibles</text>
-      </svg>
-    );
-  }
-
-  const yMin = Math.min(...validYs);
-  const yMax = Math.max(...validYs);
+  const ys = data.map(d => d.y);
+  const yMin = Math.min(...ys);
+  const yMax = Math.max(...ys);
   const span = Math.max(yMax - yMin, 1);
   const padY = span * 0.6;
   const yLo = Math.floor(yMin - padY);
   const yHi = Math.ceil(yMax + padY);
-  const yRange = Math.max(yHi - yLo, 1);
+  const yRange = yHi - yLo;
 
-  const xStep = innerW / Math.max(data.length - 1, 1);
+  const xStep = innerW / (data.length - 1);
+  const pts = data.map((d, i) => ({
+    x: padL + i * xStep,
+    y: padT + (1 - (d.y - yLo) / yRange) * innerH,
+    d,
+    i,
+  }));
 
-  // Calcular posiciones; los puntos null quedan como null
-  const pts = data.map((d, i) => {
-    if (d.y == null || isNaN(d.y)) return { x: padL + i * xStep, y: null, d, i };
-    return {
-      x: padL + i * xStep,
-      y: padT + (1 - (d.y - yLo) / yRange) * innerH,
-      d,
-      i,
-    };
-  });
-
-  // Construir path solo con puntos válidos, usando M para saltos por nulls
-  let path = '';
-  pts.forEach((p) => {
-    if (p.y == null) return;
-    const prev = pts[p.i - 1];
-    const needMove = p.i === 0 || prev == null || prev.y == null;
-    path += `${needMove ? 'M' : 'L'}${p.x},${p.y} `;
-  });
-
-  // Area: solo si hay segmento continuo desde primer punto válido
-  const firstValid = pts.find(p => p.y != null);
-  const lastValid  = [...pts].reverse().find(p => p.y != null);
-  const areaPath = firstValid && lastValid && path
-    ? `${path} L${lastValid.x},${padT+innerH} L${firstValid.x},${padT+innerH} Z`
-    : '';
+  const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
+  const areaPath = `${path} L${pts[pts.length-1].x},${padT+innerH} L${pts[0].x},${padT+innerH} Z`;
 
   const tickCount = 5;
   const yTicks = [];
@@ -115,35 +87,25 @@ function LineChart({ data, activeIndex }) {
       {/* gridlines */}
       {yTicks.map((tk, i) => (
         <g key={i}>
-          <line x1={padL} x2={W - padR} y1={tk.y} y2={tk.y} stroke={t.grid} />
+          <line x1={padL} x2={W - padR} y1={tk.y} y2={tk.y} stroke={t.grid} strokeDasharray={i === tickCount ? '' : '0'} />
           <text x={padL - 8} y={tk.y + 4} fontSize="10" textAnchor="end" fill={t.axis}>{tk.v}</text>
         </g>
       ))}
       {/* area + line */}
-      {areaPath && <path d={areaPath} fill="url(#lineFill)" />}
-      {path && <path d={path} fill="none" stroke={t.blueDark} strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" />}
+      <path d={areaPath} fill="url(#lineFill)" />
+      <path d={path} fill="none" stroke={t.blueDark} strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" />
       {/* points */}
-      {pts.map((p, i) => {
-        if (p.y == null) return null;
-        const isActive = i === activeIndex;
-        return (
-          <g key={i}>
-            <circle
-              cx={p.x} cy={p.y}
-              r={isActive ? 6 : 4}
-              fill={t.tooltipBg === '#0F1420' ? '#171D2B' : 'white'}
-              stroke={t.blueDark}
-              strokeWidth={isActive ? 3 : 2}
-            />
-            {isActive && (
-              <g>
-                <rect x={p.x - 22} y={p.y - 30} width="44" height="20" rx="5" fill={t.tooltipBg} />
-                <text x={p.x} y={p.y - 16} fontSize="10.5" textAnchor="middle" fill="white" fontWeight="600">{p.d.y}</text>
-              </g>
-            )}
-          </g>
-        );
-      })}
+      {pts.map((p, i) => (
+        <g key={i}>
+          <circle cx={p.x} cy={p.y} r={i === activeIndex ? 6 : 4} fill={t.tooltipBg === '#0F1420' ? '#171D2B' : 'white'} stroke={t.blueDark} strokeWidth={i === activeIndex ? 3 : 2} />
+          {i === activeIndex && (
+            <g>
+              <rect x={p.x - 22} y={p.y - 30} width="44" height="20" rx="5" fill={t.tooltipBg} />
+              <text x={p.x} y={p.y - 16} fontSize="10.5" textAnchor="middle" fill="white" fontWeight="600">{p.d.y}</text>
+            </g>
+          )}
+        </g>
+      ))}
       {/* x labels */}
       {pts.map((p, i) => (
         <text key={i} x={p.x} y={H - 8} fontSize="11" textAnchor="middle" fill={t.axis}>{p.d.x}</text>
@@ -160,17 +122,7 @@ function BarChart({ data, activeLabel }) {
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 
-  // ── FIX: filtrar nulls para el max ──
-  const validVals = data.map(d => d.y).filter(v => v != null && !isNaN(v));
-  if (validVals.length === 0) {
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: 280 }}>
-        <text x={W/2} y={H/2} textAnchor="middle" fontSize="13" fill={t.axis}>Sin datos disponibles</text>
-      </svg>
-    );
-  }
-
-  const max = niceMax(Math.max(...validVals));
+  const max = niceMax(Math.max(...data.map(d => d.y)));
   const yTicks = ticks(max, 5);
 
   const gap = 14;
@@ -200,17 +152,7 @@ function BarChart({ data, activeLabel }) {
       })}
       {/* bars */}
       {data.map((d, i) => {
-        // ── FIX: saltar barras sin dato ──
-        if (d.y == null || isNaN(d.y)) {
-          const x = padL + i * (barW + gap);
-          return (
-            <g key={i}>
-              <text x={x + barW/2} y={H - 10} fontSize="11" textAnchor="middle" fill={t.axis}>{d.x}</text>
-              <text x={x + barW/2} y={padT + innerH/2} fontSize="10" textAnchor="middle" fill={t.axis}>S/D</text>
-            </g>
-          );
-        }
-        const h = Math.max((d.y / max) * innerH, 0);
+        const h = (d.y / max) * innerH;
         const x = padL + i * (barW + gap);
         const y = padT + innerH - h;
         const isActive = activeLabel != null && d.x === activeLabel;
@@ -235,15 +177,13 @@ function HBarChart({ data }) {
   const W = 560;
   const rowH = 22;
   const gap = 6;
-  const padL = 200;
+  const padL = 200; // aumentado desde 130 para evitar que se corten los nombres
   const padR = 28, padT = 8, padB = 22;
   const innerH = data.length * (rowH + gap);
   const H = padT + innerH + padB;
   const innerW = W - padL - padR;
 
-  // ── FIX: filtrar nulls para el max ──
-  const validVals = data.map(d => d.y).filter(v => v != null && !isNaN(v));
-  const max = niceMax(validVals.length > 0 ? Math.max(...validVals) : 1);
+  const max = niceMax(Math.max(...data.map(d => d.y)));
   const tickVals = ticks(max, 6);
 
   return (
@@ -267,14 +207,11 @@ function HBarChart({ data }) {
       {/* rows */}
       {data.map((d, i) => {
         const y = padT + i * (rowH + gap);
-        const w = d.y != null ? (d.y / max) * innerW : 0;
+        const w = (d.y / max) * innerW;
         return (
           <g key={i}>
             <text x={padL - 8} y={y + rowH/2 + 3.5} fontSize="10.5" textAnchor="end" fill={t.axis}>{d.x}</text>
-            {d.y != null
-              ? <rect x={padL} y={y} width={w} height={rowH} rx="3" fill="url(#hbarFill)" />
-              : <text x={padL + 6} y={y + rowH/2 + 4} fontSize="10" fill={t.axis}>S/D</text>
-            }
+            <rect x={padL} y={y} width={w} height={rowH} rx="3" fill="url(#hbarFill)" />
           </g>
         );
       })}
@@ -289,21 +226,11 @@ function DonutChart({ data, center }) {
   const cx = W / 2, cy = H / 2;
   const R = 92, r = 58;
 
-  // ── FIX: filtrar entradas sin valor ──
-  const validData = data.filter(d => d.value != null && !isNaN(d.value) && d.value > 0);
-  if (validData.length === 0) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: H }}>
-        <span style={{ color: t.axis, fontSize: 13 }}>Sin datos disponibles</span>
-      </div>
-    );
-  }
-
-  const total = validData.reduce((a, d) => a + d.value, 0);
+  const total = data.reduce((a, d) => a + d.value, 0);
   const palette = ['#7BA8F0', '#A6B4F0', '#C7D5F9', '#8DB3F7', '#B7CFFB', '#D7E5FD'];
 
   let angle = -Math.PI / 2;
-  const slices = validData.map((d, i) => {
+  const slices = data.map((d, i) => {
     const portion = d.value / total;
     const a0 = angle;
     const a1 = angle + portion * Math.PI * 2;
