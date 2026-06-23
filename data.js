@@ -344,7 +344,6 @@ window.SECTOR_DATA = {
         {
           type:'bar',
           title:'Rotación por gerencia regional — May 2026',
-          sub:'% · 110 bajas sobre base 1.111,5 · desglose por regional',
           data: rotExtremasPorGerencia,
         },
         {
