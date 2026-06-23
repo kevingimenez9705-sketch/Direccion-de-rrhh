@@ -254,7 +254,7 @@ window.SECTOR_DATA = {
         {
           type:'bar',
           title:'Rotación por gerencia regional — May 2026',
-          sub:'% · 151 bajas sobre base 1.799,5 · desglose por regional',
+          sub:'%· desglose por regional',
           data: rotSaboresPorGerencia,
         },
         {
@@ -502,7 +502,7 @@ window.SECTOR_DATA = {
         {
           type:'bar',
           title:'Rotación por sector / línea — May 2026',
-          sub:'% · 55 bajas sobre base 879 · desglose por línea productiva',
+          sub:''% · desglose por línea productiva',
           data: rotFabricaPorSector,
         },
         {
