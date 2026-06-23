@@ -498,14 +498,7 @@ window.SECTOR_DATA = {
       charts: [
         { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
-        // ── Rotación por sector/línea productiva — queda sola, primero ──
-        {
-          type:'bar',
-          title:'Rotación por sector / línea — May 2026',
-          sub:'% · desglose por línea productiva',
-          data: rotFabricaPorSector,
-        },
-        // ── Abajo: Rotación (tendencia) y Distribución de bajas por sector ──
+        // ── Rotación (tendencia) y Distribución de bajas por sector — misma fila ──
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         {
           type:'donut',
@@ -513,6 +506,13 @@ window.SECTOR_DATA = {
           sub:'Personas × cese · Fábrica total: 55 bajas',
           center:'55',
           data: rotFabricaBajasPorSector,
+        },
+        // ── Rotación por sector/línea productiva — queda sola ──
+        {
+          type:'bar',
+          title:'Rotación por sector / línea — May 2026',
+          sub:'% · desglose por línea productiva',
+          data: rotFabricaPorSector,
         },
       ],
     },
