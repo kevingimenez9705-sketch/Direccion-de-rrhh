@@ -117,19 +117,23 @@ function LineChart({ data, activeIndex }) {
 // ============ Vertical bar chart ============
 function BarChart({ data, activeLabel }) {
   const t = chartTheme();
-  const W = 560, H = 240;
-  const padL = 44, padR = 14, padT = 14, padB = 30;
+  // Rota etiquetas 45° cuando hay muchas barras (p. ej. Rotación por sector — Fábrica, 14 sectores).
+  const rotate = data.length > 7;
+  const W = 560;
+  const padL = 44, padR = 14, padT = 14;
+  const padB = rotate ? 64 : 30; // más espacio abajo para las etiquetas rotadas
+  const H = 240 + (rotate ? 44 : 0);
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 
   const max = niceMax(Math.max(...data.map(d => d.y)));
   const yTicks = ticks(max, 5);
 
-  const gap = 14;
+  const gap = rotate ? 8 : 14;
   const barW = (innerW - gap * (data.length - 1)) / data.length;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: 280 }}>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280 }}>
       <defs>
         <linearGradient id="barFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#8DB3F7" />
@@ -156,6 +160,8 @@ function BarChart({ data, activeLabel }) {
         const x = padL + i * (barW + gap);
         const y = padT + innerH - h;
         const isActive = activeLabel != null && d.x === activeLabel;
+        const lx = x + barW / 2;
+        const ly = padT + innerH + (rotate ? 12 : 20);
         return (
           <g key={i}>
             <rect
@@ -163,7 +169,13 @@ function BarChart({ data, activeLabel }) {
               rx="4"
               fill={isActive ? 'url(#barFillActive)' : 'url(#barFill)'}
             />
-            <text x={x + barW/2} y={H - 10} fontSize="11" textAnchor="middle" fill={t.axis}>{d.x}</text>
+            <text
+              x={lx} y={ly}
+              fontSize={rotate ? 9.5 : 11}
+              textAnchor={rotate ? 'end' : 'middle'}
+              fill={t.axis}
+              transform={rotate ? `rotate(-45, ${lx}, ${ly})` : undefined}
+            >{d.x}</text>
           </g>
         );
       })}
