@@ -1,6 +1,7 @@
 // data.js — datos reales xlsx + indicadores mayo 2026
-// Actualizado: gráficos de rotación por gerencia/local/fábrica agregados
-// a Sabores Express, Extremas, Fábrica y Staff (May 2026 desde xlsx ROTACION).
+// Actualizado: agregado mes JUNIO 2026.
+//   · Judiciales: datos reales desde xlsx INFORME_DISCRIMINADO_JUNIO_2026.
+//   · Resto de sectores: estructura replicada con KPIs en S/D (sin fuente para Jun).
 
 window.MONTHS = [
   { key: 'ene', short: 'ENE', year: 2026 },
@@ -8,6 +9,7 @@ window.MONTHS = [
   { key: 'mar', short: 'MAR', year: 2026 },
   { key: 'abr', short: 'ABR', year: 2026 },
   { key: 'may', short: 'MAY', year: 2026 },
+  { key: 'jun', short: 'JUN', year: 2026 },
 ];
 
 const acc = {
@@ -182,6 +184,19 @@ window.SECTOR_DATA = {
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:8.50},{x:'Extremas',y:12.15},{x:'Staff',y:5.66},{x:'Fábrica',y:7.51}] },
       ],
     },
+    jun: {
+      kpis: [
+        { label:'Dotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Ausentismo', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Rotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+      ],
+      charts: [
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
+        { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
+        { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
+        { type:'bar',  title:'Rotación por unidad', sub:'S/D — sin dato para Jun 2026', data:[{x:'S/D',y:null}] },
+      ],
+    },
   },
 
   // ════════════════════════════════════
@@ -272,6 +287,19 @@ window.SECTOR_DATA = {
         },
       ],
     },
+    jun: {
+      kpis: [
+        { label:'Dotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Ausentismo', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Rotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+      ],
+      charts: [
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
+        { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
+        { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
+        sdGerencia,
+      ],
+    },
   },
 
   // ════════════════════════════════════
@@ -360,6 +388,19 @@ window.SECTOR_DATA = {
         },
       ],
     },
+    jun: {
+      kpis: [
+        { label:'Dotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Ausentismo', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Rotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+      ],
+      charts: [
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
+        { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
+        { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
+        sdGerencia,
+      ],
+    },
   },
 
   // ════════════════════════════════════
@@ -423,6 +464,19 @@ window.SECTOR_DATA = {
         { label:'Dotación',   value:'374',   delta:{ dir:'down',      text:'+6 vs. inicio del mes (368)' } },
         { label:'Ausentismo', value:'5.28%', delta:{ dir:'up',    text:'−4.00 pp vs. mes ant.' } },
         { label:'Rotación',   value:'5.66%', delta:{ dir:'down',      text:'+1.02 pp vs. mes ant.' } },
+      ],
+      charts: [
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
+        { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
+        { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
+        sdGerenciaStaff,
+      ],
+    },
+    jun: {
+      kpis: [
+        { label:'Dotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Ausentismo', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Rotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
@@ -514,6 +568,19 @@ window.SECTOR_DATA = {
           sub:'% · desglose por línea productiva',
           data: rotFabricaPorSector,
         },
+      ],
+    },
+    jun: {
+      kpis: [
+        { label:'Dotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Ausentismo', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Rotación',   value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+      ],
+      charts: [
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
+        { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
+        { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
+        sdGerencia,
       ],
     },
   },
@@ -663,6 +730,56 @@ window.SECTOR_DATA = {
             {mes:'Agosto 2026', detalle:'Cuotas de acuerdos cerrados en mayo',              fabrica:'$4.500.000',  locales:'$5.625.000',  monto:'$10.125.000'},
           ],
           totalRow:{ label:'TOTAL A PAGAR (Jun–Ago)', value:'$80.613.421' },
+        },
+      ],
+    },
+    jun: {
+      kpis: [
+        { label:'Total acuerdos cerrados en junio', value:'$128.592.933', delta:{ dir:'neutral', text:'20 acuerdos celebrados' } },
+        { label:'Total pagado en junio',            value:'$132.084.409', delta:{ dir:'neutral', text:'Acuerdos anteriores + acuerdos junio' } },
+        { label:'Total a pagar (Jul–Oct)',          value:'$73.400.000',  delta:{ dir:'neutral', text:'Cuotas pendientes de acuerdos cerrados' } },
+      ],
+      charts: [],
+      details: [
+        {
+          key:'cierre-jun', title:'Cierre de acuerdos — Junio 2026', iconEmoji:'⚖️', accent:'purple', type:'table',
+          columns:[
+            {key:'concepto',label:'CONCEPTO'},
+            {key:'detalle',label:'DETALLE'},
+            {key:'monto',label:'MONTO',align:'right',strong:true},
+            {key:'spm',label:'SE PAGA EN JUNIO',align:'right'},
+          ],
+          rows:[
+            {concepto:'Fábricas',                     detalle:'20% de 20', monto:'$28.018.750',  spm:'$11.530.100'},
+            {concepto:'Locales / Sabores / Extremas', detalle:'80% de 20', monto:'$100.574.183', spm:'$63.190.888'},
+          ],
+          totalRow:{ label:'Total acuerdos cerrados en junio — 20 acuerdos celebrados', value:'$128.592.933' },
+        },
+        {
+          key:'pagos-jun', title:'Pagos emitidos en junio 2026', iconEmoji:'💰', accent:'green', type:'table',
+          columns:[{key:'concepto',label:'CONCEPTO'},{key:'detalle',label:'DETALLE'},{key:'monto',label:'MONTO',align:'right',strong:true}],
+          rows:[
+            {concepto:'Acuerdos de meses anteriores', detalle:'Cuotas correspondientes a acuerdos previos a junio', monto:'$57.363.421'},
+            {concepto:'Acuerdos celebrados en junio',  detalle:'Cuotas abonadas de acuerdos firmados en junio',     monto:'$74.720.988'},
+          ],
+          totalRow:{ label:'TOTAL PAGADO EN JUNIO', value:'$132.084.409' },
+        },
+        {
+          key:'pagos-pendientes-jun', title:'Pagos a emitir — acuerdos cerrados en junio y anteriores', iconEmoji:'📅', accent:'amber', type:'table',
+          columns:[
+            {key:'mes',label:'CONCEPTO'},
+            {key:'detalle',label:'DETALLE'},
+            {key:'fabrica',label:'FÁBRICA',align:'right'},
+            {key:'locales',label:'LOCALES',align:'right'},
+            {key:'monto',label:'MONTO',align:'right',strong:true},
+          ],
+          rows:[
+            {mes:'Julio 2026',      detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$10.850.000', locales:'$19.875.000', monto:'$30.725.000'},
+            {mes:'Agosto 2026',     detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$9.500.000',  locales:'$16.625.000', monto:'$26.125.000'},
+            {mes:'Septiembre 2026', detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$4.550.000',  locales:'$6.000.000',  monto:'$10.550.000'},
+            {mes:'Octubre 2026',    detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$0',          locales:'$6.000.000',  monto:'$6.000.000'},
+          ],
+          totalRow:{ label:'TOTAL A PAGAR (Jul–Oct)', value:'$73.400.000' },
         },
       ],
     },
@@ -882,6 +999,18 @@ window.SECTOR_DATA = {
         },
       ],
     },
+    jun: {
+      kpis: [
+        { label:'Inspecciones totales',       value:'S/D', delta:{ dir:'neutral', text:'Sin informe Jun 2026' } },
+        { label:'Documentación (audiencias)', value:'S/D', delta:{ dir:'neutral', text:'Sin informe Jun 2026' } },
+        { label:'Multas',                     value:'S/D', delta:{ dir:'neutral', text:'Sin informe Jun 2026' } },
+        { label:'Demandas',                   value:'S/D', delta:{ dir:'neutral', text:'Sin informe Jun 2026' } },
+      ],
+      charts: [
+        { type:'bar',  title:'Inspecciones por unidad', sub:'Mes activo — sin dato', data:[{x:'S/D',y:null}] },
+        { type:'donut',title:'Composición de actividad', sub:'Inspecciones + audiencias — sin dato', data:[{label:'S/D',value:100}] },
+      ],
+    },
   },
 
   // ════════════════════════════════════
@@ -1002,6 +1131,16 @@ window.SECTOR_DATA = {
         ],
         totalRow:{ label:'TOTAL MAY', value:'$43.888.671' },
       }],
+    },
+    jun: {
+      kpis: [
+        { label:'Horas extras — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Costo del mes',              value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+      ],
+      charts: [
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
+        { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras — sin dato Jun 2026', data:[{label:'S/D',value:100}] },
+      ],
     },
   },
 
@@ -1150,6 +1289,22 @@ window.SECTOR_DATA = {
         ],
         totalRow:{ label:'TOTAL — 20 siniestros', value:'246 días caídos' },
       }],
+    },
+    jun: {
+      kpis: [
+        { label:'Siniestralidad locales / staff', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Siniestralidad fábricas',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Siniestros del mes', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Días caídos',        value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+      ],
+      charts: [
+        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–May 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–May 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+          {label:'Laboral',    value:81},
+          {label:'In Itinere', value:19},
+        ]},
+      ],
     },
   },
 
