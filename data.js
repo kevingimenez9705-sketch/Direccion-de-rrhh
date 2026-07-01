@@ -1020,7 +1020,7 @@ window.SECTOR_DATA = {
       details: [
         {
           key:'insp-locales-jun', title:'Inspecciones — Locales · Jun 2026', iconEmoji:'🏪', accent:'green', type:'table',
-          topChips:[{label:'Inspecciones',value:'19',tone:'green'},{label:'Pers. relevado',value:'48',tone:'blue'},{label:'No registrado',value:'24',tone:'red'}],
+          topChips:[{label:'Inspecciones',value:'19',tone:'green'},{label:'Pers. relevado',value:'64',tone:'blue'},{label:'No registrado',value:'26',tone:'red'}],
           columns:[
             {key:'razon',     label:'RAZÓN SOCIAL'},
             {key:'sucursal',  label:'SUCURSAL'},
@@ -1032,13 +1032,13 @@ window.SECTOR_DATA = {
             {key:'audiencia', label:'AUDIENCIA',    badge:true},
           ],
           rows:[
-            {razon:'Comachi Valeria Sabrina', sucursal:'Sabores Tristán Suárez', fecha:'02/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-54734070', relevado:'—', noreg:'—', audiencia:'—'},
+            {razon:'Comachi Valeria Sabrina', sucursal:'Sabores Tristán Suárez', fecha:'02/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-54734070', relevado:'3', noreg:'2', audiencia:'Sí · 14/09'},
             {razon:'Bajos de Parla', sucursal:'Sabores Don Torcuato', fecha:'03/06/2026', infraccion:'Relevamiento', expediente:'S/ infracción', relevado:'—', noreg:'—', audiencia:'—'},
-            {razon:'González Miguel Ángel', sucursal:'Sabores Varela', fecha:'03/06/2026', infraccion:'Relevamiento', expediente:'MT Provincia', relevado:'—', noreg:'—', audiencia:'—'},
-            {razon:'Castro Cintia Noemí', sucursal:'Extremas Grand Bourg', fecha:'05/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-19825558', relevado:'8', noreg:'—', audiencia:'Sí'},
+            {razon:'González Miguel Ángel', sucursal:'Sabores Varela', fecha:'03/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-19430333', relevado:'13', noreg:'—', audiencia:'Sí · 11/06'},
+            {razon:'Castro Cintia Noemí', sucursal:'Extremas Grand Bourg', fecha:'05/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-19825558', relevado:'8', noreg:'—', audiencia:'No'},
             {razon:'Chuspita Martín', sucursal:'Sabores Mar del Plata 2', fecha:'08/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-56851181', relevado:'3', noreg:'1', audiencia:'No'},
             {razon:'Chuspita Martín', sucursal:'Sabores Mar del Plata 3', fecha:'09/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-57218038', relevado:'2', noreg:'1', audiencia:'No'},
-            {razon:'Ríos Bruno', sucursal:'Sabores Rosario 1', fecha:'09/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-57415283', relevado:'4', noreg:'3', audiencia:'Sí'},
+            {razon:'Ríos Bruno', sucursal:'Sabores Rosario 1', fecha:'09/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-57415283', relevado:'4', noreg:'3', audiencia:'Sí · 03/07'},
             {razon:'Castro Cintia Noemí', sucursal:'Sabores Entre Ríos', fecha:'11/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-58474256', relevado:'5', noreg:'2', audiencia:'No'},
             {razon:'Sayago Marcio Humberto Nicolás', sucursal:'Sabores San Justo 2', fecha:'12/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-58885482', relevado:'4', noreg:'2', audiencia:'No'},
             {razon:'Sayago Leandro Miguel Agustín', sucursal:'Sabores San Martín 2', fecha:'16/06/2026', infraccion:'Relevamiento', expediente:'S/ infracción', relevado:'—', noreg:'—', audiencia:'—'},
@@ -1052,7 +1052,7 @@ window.SECTOR_DATA = {
             {razon:'Castro Cintia Noemí', sucursal:'Sabores Varela 2', fecha:'29/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-63803338', relevado:'4', noreg:'3', audiencia:'No'},
             {razon:'Sayago Marcio Humberto Nicolás', sucursal:'Sabores Boedo', fecha:'30/06/2026', infraccion:'Relevamiento', expediente:'—', relevado:'—', noreg:'—', audiencia:'—'},
           ],
-          totalRow:{ label:'TOTAL LOCALES — 19 inspecciones · 48 relev. · 24 no reg.', value:'19' },
+          totalRow:{ label:'TOTAL LOCALES — 19 inspecciones · 64 relev. · 26 no reg.', value:'19' },
         },
         {
           key:'insp-fabricas-jun', title:'Inspecciones — Fábricas · Jun 2026', iconEmoji:'🏭', accent:'amber', type:'table',
