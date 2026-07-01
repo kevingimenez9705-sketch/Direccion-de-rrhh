@@ -1020,7 +1020,7 @@ window.SECTOR_DATA = {
       details: [
         {
           key:'insp-locales-jun', title:'Inspecciones — Locales · Jun 2026', iconEmoji:'🏪', accent:'green', type:'table',
-          topChips:[{label:'Inspecciones',value:'20',tone:'green'},{label:'Pers. relevado',value:'48',tone:'blue'},{label:'No registrado',value:'24',tone:'red'}],
+          topChips:[{label:'Inspecciones',value:'19',tone:'green'},{label:'Pers. relevado',value:'48',tone:'blue'},{label:'No registrado',value:'24',tone:'red'}],
           columns:[
             {key:'razon',     label:'RAZÓN SOCIAL'},
             {key:'sucursal',  label:'SUCURSAL'},
@@ -1048,12 +1048,11 @@ window.SECTOR_DATA = {
             {razon:'Moscarella Claudio Ariel', sucursal:'Sabores Berazategui 2', fecha:'18/06/2026', infraccion:'Relevamiento', expediente:'S/ infracción', relevado:'—', noreg:'—', audiencia:'—'},
             {razon:'Tabeira Delgado Gabriel', sucursal:'Sabores Ramos Mejía 3', fecha:'18/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-60248901', relevado:'3', noreg:'2', audiencia:'No'},
             {razon:'Victorica Ana Macarena', sucursal:'Sabores José C. Paz 1', fecha:'23/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-62030886', relevado:'3', noreg:'2', audiencia:'Sí · 21/10'},
-            {razon:'Dick and Mac', sucursal:'Distribuidora Dick and Mac', fecha:'24/06/2026', infraccion:'Obstrucción', expediente:'MT Provincia', relevado:'—', noreg:'—', audiencia:'—'},
             {razon:'Bajos de Parla', sucursal:'Sabores Ituzaingó', fecha:'26/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-63286948', relevado:'3', noreg:'1', audiencia:'No'},
             {razon:'Castro Cintia Noemí', sucursal:'Sabores Varela 2', fecha:'29/06/2026', infraccion:'Relevamiento', expediente:'EX-2026-63803338', relevado:'4', noreg:'3', audiencia:'No'},
             {razon:'Sayago Marcio Humberto Nicolás', sucursal:'Sabores Boedo', fecha:'30/06/2026', infraccion:'Relevamiento', expediente:'—', relevado:'—', noreg:'—', audiencia:'—'},
           ],
-          totalRow:{ label:'TOTAL LOCALES — 20 inspecciones · 48 relev. · 24 no reg.', value:'20' },
+          totalRow:{ label:'TOTAL LOCALES — 19 inspecciones · 48 relev. · 24 no reg.', value:'19' },
         },
         {
           key:'insp-fabricas-jun', title:'Inspecciones — Fábricas · Jun 2026', iconEmoji:'🏭', accent:'amber', type:'table',
@@ -1066,8 +1065,9 @@ window.SECTOR_DATA = {
           ],
           rows:[
             {razon:'La Empanadería', sucursal:'Fábrica Jamón y Queso', fecha:'29/06/2026', infraccion:'Obstrucción', expediente:'MT Provincia'},
+            {razon:'Dick and Mac', sucursal:'Distribuidora Dick and Mac', fecha:'24/06/2026', infraccion:'Obstrucción', expediente:'MT Provincia'},
           ],
-          totalRow:{ label:'TOTAL FÁBRICAS — 1 inspección', value:'1' },
+          totalRow:{ label:'TOTAL FÁBRICAS — 2 inspecciones', value:'2' },
         },
         {
           key:'insp-staff-jun', title:'Inspecciones — Staff · Jun 2026', iconEmoji:'🏢', accent:'purple', type:'table',
