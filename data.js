@@ -49,11 +49,11 @@ const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'
 const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:'Abr',y:6.54},{x:'May',y:7.51},{x:'Jun',y:11.97}];
 
 // ─── TENDENCIAS DOTACIÓN ───
-const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235},{x:'Jun',y:4426}];
-const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845},{x:'Jun',y:1910}];
-const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121},{x:'Jun',y:1180}];
-const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'Abr',y:368},{x:'May',y:374},{x:'Jun',y:376}];
-const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895},{x:'Jun',y:960}];
+const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235},{x:'Jun',y:4526}];
+const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845},{x:'Jun',y:1947}];
+const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121},{x:'Jun',y:1225}];
+const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'Abr',y:368},{x:'May',y:374},{x:'Jun',y:393}];
+const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895},{x:'Jun',y:961}];
 
 // ─── HORAS EXTRAS ───
 const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922}];
@@ -186,7 +186,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'4.426', delta:{ dir:'down',   text:'+202 vs. inicio del mes (4.224)' } },
+        { label:'Dotación',   value:'4.526', delta:{ dir:'down',   text:'+291 vs. mes ant. (4.235)' } },
         { label:'Ausentismo', value:'5.57%', delta:{ dir:'down',   text:'+0.20 pp vs. mes ant.' } },
         { label:'Rotación',   value:'12.02%',delta:{ dir:'down',   text:'+2.06 pp vs. mes ant. · 419 bajas · 621 altas' } },
       ],
@@ -289,7 +289,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'1.910', delta:{ dir:'down',   text:'+65 vs. inicio del mes (1.845)' } },
+        { label:'Dotación',   value:'1.947', delta:{ dir:'down',   text:'+102 vs. mes ant. (1.845)' } },
         { label:'Ausentismo', value:'3.57%', delta:{ dir:'up',     text:'−0.42 pp vs. mes ant.' } },
         { label:'Rotación',   value:'11.00%',delta:{ dir:'down',   text:'+2.50 pp vs. mes ant. · 174 bajas · 239 altas' } },
       ],
@@ -414,7 +414,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'1.180', delta:{ dir:'down',   text:'+59 vs. inicio del mes (1.121)' } },
+        { label:'Dotación',   value:'1.225', delta:{ dir:'down',   text:'+104 vs. mes ant. (1.121)' } },
         { label:'Ausentismo', value:'4.56%', delta:{ dir:'down',   text:'+0.43 pp vs. mes ant.' } },
         { label:'Rotación',   value:'16.30%',delta:{ dir:'down',   text:'+4.15 pp vs. mes ant. · 158 bajas · 217 altas' } },
       ],
@@ -518,7 +518,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'376',   delta:{ dir:'down',   text:'+5 vs. inicio del mes (371)' } },
+        { label:'Dotación',   value:'393',   delta:{ dir:'down',   text:'+19 vs. mes ant. (374)' } },
         { label:'Ausentismo', value:'4.88%', delta:{ dir:'up',     text:'−0.40 pp vs. mes ant.' } },
         { label:'Rotación',   value:'4.15%', delta:{ dir:'up',     text:'−1.51 pp vs. mes ant. · 13 bajas · 18 altas' } },
       ],
@@ -616,7 +616,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'960',   delta:{ dir:'down',   text:'+73 vs. inicio del mes (887)' } },
+        { label:'Dotación',   value:'961',   delta:{ dir:'down',   text:'+66 vs. mes ant. (895)' } },
         { label:'Ausentismo', value:'10.94%',delta:{ dir:'down',   text:'+1.33 pp vs. mes ant.' } },
         { label:'Rotación',   value:'11.97%',delta:{ dir:'down',   text:'+4.46 pp vs. mes ant. · 74 bajas · 147 altas' } },
       ],
