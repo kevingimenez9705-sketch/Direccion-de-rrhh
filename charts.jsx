@@ -106,6 +106,24 @@ function LineChart({ data, activeIndex }) {
           )}
         </g>
       ))}
+      {/* value labels — número sobre cada punto (el activo ya muestra su burbuja) */}
+      {pts.map((p, i) => (
+        (Number.isFinite(p.d.y) && i !== activeIndex) ? (
+          <text
+            key={i}
+            x={p.x}
+            y={p.y - 9}
+            fontSize="9.5"
+            textAnchor="middle"
+            fill={t.ink}
+            fontWeight="600"
+            style={{ paintOrder: 'stroke' }}
+            stroke={t.tooltipBg === '#0F1420' ? '#171D2B' : 'white'}
+            strokeWidth="3"
+            strokeLinejoin="round"
+          >{p.d.y}</text>
+        ) : null
+      ))}
       {/* x labels */}
       {pts.map((p, i) => (
         <text key={i} x={p.x} y={H - 8} fontSize="11" textAnchor="middle" fill={t.axis}>{p.d.x}</text>
