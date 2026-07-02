@@ -187,6 +187,15 @@ function BarChart({ data, activeLabel }) {
               rx="4"
               fill={isActive ? 'url(#barFillActive)' : 'url(#barFill)'}
             />
+            {Number.isFinite(d.y) && (
+              <text
+                x={x + barW / 2} y={y - 5}
+                fontSize={rotate ? 9 : 10.5}
+                textAnchor="middle"
+                fill={t.ink}
+                fontWeight="700"
+              >{d.y}</text>
+            )}
             <text
               x={lx} y={ly}
               fontSize={rotate ? 9.5 : 11}
@@ -242,6 +251,9 @@ function HBarChart({ data }) {
           <g key={i}>
             <text x={padL - 8} y={y + rowH/2 + 3.5} fontSize="10.5" textAnchor="end" fill={t.axis}>{d.x}</text>
             <rect x={padL} y={y} width={w} height={rowH} rx="3" fill="url(#hbarFill)" />
+            {Number.isFinite(d.y) && (
+              <text x={padL + w + 6} y={y + rowH/2 + 3.5} fontSize="10.5" textAnchor="start" fill={t.ink} fontWeight="700">{d.y}</text>
+            )}
           </g>
         );
       })}
