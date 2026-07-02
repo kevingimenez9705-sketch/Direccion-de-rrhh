@@ -56,8 +56,8 @@ const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'A
 const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895},{x:'Jun',y:961}];
 
 // ─── HORAS EXTRAS ───
-const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922}];
-const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'Abr',y:49.2},{x:'May',y:43.9}];
+const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922},{x:'Jun',y:4141}];
+const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'Abr',y:49.2},{x:'May',y:43.9},{x:'Jun',y:48.1}];
 
 // ─── ACCIDENTABILIDAD ───
 const sinTendencia    = [{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:20},{x:'Jun',y:22}];
@@ -1322,13 +1322,35 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Horas extras — mes activo', value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
-        { label:'Costo del mes',              value:'S/D', delta:{ dir:'neutral', text:'Sin dato Jun 2026' } },
+        { label:'Horas extras — mes activo', value:'4.141',  delta:{ dir:'up',   text:'+5.6% vs. mes anterior' } },
+        { label:'Costo del mes',              value:'$48.1M', delta:{ dir:'up',   text:'+9.5% vs. mes anterior' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
-        { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras — sin dato Jun 2026', data:[{label:'S/D',value:100}] },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–Jun 2026 · total de horas', data: hsTendencia },
+        { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Jun 2026', data:[
+          {label:'Logística',    value:46.6},
+          {label:'Panificadora', value:20.9},
+          {label:'San Martín',   value:14.5},
+          {label:'Jamón y Queso',value: 9.1},
+          {label:'Extremas',     value: 3.6},
+          {label:'Congelados',   value: 2.7},
+          {label:'Tapas 2',      value: 0.2},
+        ]},
       ],
+      details: [{
+        key:'he-jun', title:'Detalle horas extras por unidad — Jun 2026', iconEmoji:'⏱️', accent:'amber', type:'table',
+        columns:[{key:'sector',label:'SECTOR'},{key:'horas',label:'HORAS',align:'right'},{key:'costo',label:'COSTO',align:'right',strong:true}],
+        rows:[
+          {sector:'LOGÍSTICA',     horas:'1.921', costo:'$23.541.447,00'},
+          {sector:'PANIFICADORA',  horas:'957',   costo:'$10.057.016,00'},
+          {sector:'SAN MARTÍN',    horas:'610',   costo:'$6.982.682,50'},
+          {sector:'JAMÓN Y QUESO', horas:'393',   costo:'$4.393.279,50'},
+          {sector:'EXTREMAS',      horas:'137',   costo:'$1.716.904,50'},
+          {sector:'CONGELADOS',    horas:'118',   costo:'$1.276.949,25'},
+          {sector:'TAPAS 2',       horas:'5',     costo:'$91.350,00'},
+        ],
+        totalRow:{ label:'TOTAL JUN', value:'$48.059.628,75' },
+      }],
     },
   },
 
