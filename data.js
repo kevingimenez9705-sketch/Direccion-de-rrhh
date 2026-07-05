@@ -1,7 +1,8 @@
 // data.js — datos reales xlsx + indicadores mayo 2026
 // Actualizado: agregado mes JUNIO 2026.
 //   · Judiciales: datos reales desde xlsx INFORME_DISCRIMINADO_JUNIO_2026.
-//   · Resto de sectores: estructura replicada con KPIs en S/D (sin fuente para Jun).
+//   · Rotación/Dotación/Ausentismo Jun: verificado y corregido contra INDICADOR_JUNIO_global.xlsx.
+//   · Accidentabilidad Jun: verificado contra excel de siniestralidad histórico.
 
 window.MONTHS = [
   { key: 'ene', short: 'ENE', year: 2026 },
@@ -23,14 +24,14 @@ const acc = {
 window.ACCENTS = acc;
 
 window.SECTORS = [
-  { id:'empresa',         group:'UNIDADES', name:'Empresa Total',    sub:'Visión consolidada · todas las razones sociales', accent:'blue',   iconKey:'building',  logo:'assets/empresa total.png',       headerSub:'Consolidado de todas las unidades operativas',       tags:['Dotación 4.235','Ausentismo 5.37%'] },
-  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · May 2026',         tags:['Ausentismo 3.99%','Rotación 8.50%'] },
-  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · May 2026',      tags:['Ausentismo 4.13%','Rotación 12.15%'] },
-  { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · May 2026',     tags:['Ausentismo 5.28%','Rotación 5.66%'] },
-  { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · May 2026',                     tags:['Ausentismo 9.61%','Rotación 7.51%'] },
-  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Mayo 2026',                tags:['38 acuerdos','$185.9M'] },
-  { id:'inspecciones',    group:'GESTIÓN',  name:'Inspecciones',     sub:'Visitas, observaciones y cumplimiento',          accent:'green',  iconKey:'search',    logo:'assets/inspecciones.png',        headerSub:'Visitas regulatorias y de cumplimiento · Mayo 2026', tags:['20 inspecciones','5 multas'] },
-  { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · May 2026',      tags:['3.922 hs','$43.9M'] },
+  { id:'empresa',         group:'UNIDADES', name:'Empresa Total',    sub:'Visión consolidada · todas las razones sociales', accent:'blue',   iconKey:'building',  logo:'assets/empresa total.png',       headerSub:'Consolidado de todas las unidades operativas',       tags:['Dotación 4.443','Rotación 12.00%'] },
+  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Jun 2026',         tags:['Ausentismo 3.57%','Rotación 4.95%'] },
+  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Jun 2026',      tags:['Ausentismo 4.56%','Rotación 16.30%'] },
+  { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · Jun 2026',     tags:['Ausentismo 4.88%','Rotación 4.04%'] },
+  { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · Jun 2026',                     tags:['Ausentismo 10.94%','Rotación 11.97%'] },
+  { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Junio 2026',               tags:['20 acuerdos','$128.6M'] },
+  { id:'inspecciones',    group:'GESTIÓN',  name:'Inspecciones',     sub:'Visitas, observaciones y cumplimiento',          accent:'green',  iconKey:'search',    logo:'assets/inspecciones.png',        headerSub:'Visitas regulatorias y de cumplimiento · Junio 2026',tags:['21 inspecciones','6 multas'] },
+  { id:'horasextras',     group:'GESTIÓN',  name:'Horas Extras',     sub:'Horas, costo y distribución por unidad',         accent:'amber',  iconKey:'clock',     logo:'assets/horas extras.png',        headerSub:'Horas extras, costo y distribución · Jun 2026',      tags:['4.141 hs','$48.1M'] },
   { id:'accidentabilidad',group:'GESTIÓN',  name:'Accidentabilidad', sub:'Tasa, días caídos y reporte de siniestros',      accent:'red',    iconKey:'alert',     logo:'assets/accidentabilidad.png',    headerSub:'Tasa, días caídos y reporte de siniestros',          tags:['477 siniestros hist.','13.160 días caídos'] },
 ];
 
@@ -41,19 +42,19 @@ const ausExtremasTend = [{x:'Ene',y:1.40},{x:'Feb',y:1.29},{x:'Mar',y:7.17},{x:'
 const ausStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:6.56},{x:'Mar',y:5.74},{x:'Abr',y:9.28},{x:'May',y:5.28},{x:'Jun',y:4.88}];
 const ausFabricaTend  = [{x:'Ene',y:8.60},{x:'Feb',y:6.67},{x:'Mar',y:9.21},{x:'Abr',y:11.43},{x:'May',y:9.61},{x:'Jun',y:10.94}];
 
-// ─── TENDENCIAS ROTACIÓN ───
-const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96},{x:'Jun',y:12.02}];
-const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50},{x:'Jun',y:11.0}];
-const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15},{x:'Jun',y:16.3}];
-const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66},{x:'Jun',y:4.15}];
+// ─── TENDENCIAS ROTACIÓN (Jun corregido contra INDICADOR_JUNIO_global.xlsx) ───
+const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96},{x:'Jun',y:12.00}];
+const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50},{x:'Jun',y:4.95}];
+const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15},{x:'Jun',y:16.30}];
+const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66},{x:'Jun',y:4.04}];
 const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:'Abr',y:6.54},{x:'May',y:7.51},{x:'Jun',y:11.97}];
 
-// ─── TENDENCIAS DOTACIÓN ───
-const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235},{x:'Jun',y:4526}];
-const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845},{x:'Jun',y:1947}];
-const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121},{x:'Jun',y:1225}];
+// ─── TENDENCIAS DOTACIÓN (Jun corregido contra INDICADOR_JUNIO_global.xlsx) ───
+const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235},{x:'Jun',y:4443}];
+const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845},{x:'Jun',y:1910}];
+const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121},{x:'Jun',y:1180}];
 const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'Abr',y:368},{x:'May',y:374},{x:'Jun',y:393}];
-const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895},{x:'Jun',y:961}];
+const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895},{x:'Jun',y:960}];
 
 // ─── HORAS EXTRAS ───
 const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'Abr',y:4169},{x:'May',y:3922},{x:'Jun',y:4141}];
@@ -122,7 +123,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Ene' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:13.90},{x:'Extremas',y:17.80},{x:'Staff',y:5.20},{x:'Fábrica',y:11.60}] },
@@ -135,7 +136,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Feb' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:13.05},{x:'Extremas',y:11.48},{x:'Staff',y:2.63},{x:'Fábrica',y:7.82}] },
@@ -148,7 +149,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'S/D',   delta:{ dir:'neutral', text:'Sin dato consolidado Mar' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:18.81},{x:'Extremas',y:12.16},{x:'Staff',y:4.54},{x:'Fábrica',y:7.46}] },
@@ -161,7 +162,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'11.62%',delta:{ dir:'neutral', text:'Calculado: 412 bajas · 537 altas' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:14.52},{x:'Extremas',y:13.58},{x:'Staff',y:4.64},{x:'Fábrica',y:6.54}] },
@@ -174,7 +175,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'9.96%', delta:{ dir:'up',    text:'−1.66 pp vs. mes ant. · 364 bajas · 466 altas' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotEmpresaTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
         { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:8.50},{x:'Extremas',y:12.15},{x:'Staff',y:5.66},{x:'Fábrica',y:7.51}] },
@@ -182,15 +183,15 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'4.526', delta:{ dir:'down',   text:'+291 vs. mes ant. (4.235)' } },
-        { label:'Ausentismo', value:'5.57%', delta:{ dir:'down',   text:'+0.20 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'12.02%',delta:{ dir:'down',   text:'+2.06 pp vs. mes ant. · 419 bajas · 621 altas' } },
+        { label:'Dotación',   value:'4.443', delta:{ dir:'up',   text:'+208 vs. mes ant. (4.235)' } },
+        { label:'Ausentismo', value:'5.57%', delta:{ dir:'down', text:'+0.20 pp vs. mes ant.' } },
+        { label:'Rotación',   value:'12.00%',delta:{ dir:'down', text:'+2.04 pp vs. mes ant. · 419 bajas · 621 altas' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
-        { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:11.00},{x:'Extremas',y:16.30},{x:'Staff',y:4.15},{x:'Fábrica',y:11.97}] },
+        { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:4.95},{x:'Extremas',y:16.30},{x:'Staff',y:4.04},{x:'Fábrica',y:11.97}] },
       ],
     },
   },
@@ -206,7 +207,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'13.9%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         sdGerencia,
@@ -219,7 +220,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'13.05%',delta:{ dir:'up',    text:'−0.85 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         sdGerencia,
@@ -232,7 +233,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'18.81%',delta:{ dir:'down',      text:'+5.76 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         sdGerencia,
@@ -245,7 +246,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'14.52%',delta:{ dir:'up',    text:'−4.29 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         sdGerencia,
@@ -258,7 +259,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'8.50%', delta:{ dir:'up',    text:'−6.02 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
+        { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
         {
@@ -284,9 +285,9 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'1.947', delta:{ dir:'down',   text:'+102 vs. mes ant. (1.845)' } },
-        { label:'Ausentismo', value:'3.57%', delta:{ dir:'up',     text:'−0.42 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'11.00%',delta:{ dir:'down',   text:'+2.50 pp vs. mes ant. · 174 bajas · 239 altas' } },
+        { label:'Dotación',   value:'1.910', delta:{ dir:'up',   text:'+65 vs. mes ant. (1.845)' } },
+        { label:'Ausentismo', value:'3.57%', delta:{ dir:'up',   text:'−0.42 pp vs. mes ant.' } },
+        { label:'Rotación',   value:'4.95%', delta:{ dir:'up',   text:'−3.55 pp vs. mes ant. · 174 bajas · 239 altas' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
@@ -332,7 +333,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'17.80%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         sdGerencia,
@@ -345,7 +346,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'11.48%', delta:{ dir:'up',    text:'−6.32 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         sdGerencia,
@@ -358,7 +359,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'12.16%', delta:{ dir:'down',      text:'+0.68 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         sdGerencia,
@@ -371,7 +372,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'13.58%', delta:{ dir:'down',      text:'+1.42 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         sdGerencia,
@@ -384,7 +385,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'12.15%', delta:{ dir:'up',    text:'−1.43 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
         {
@@ -408,9 +409,9 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'1.225', delta:{ dir:'down',   text:'+104 vs. mes ant. (1.121)' } },
-        { label:'Ausentismo', value:'4.56%', delta:{ dir:'down',   text:'+0.43 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'16.30%',delta:{ dir:'down',   text:'+4.15 pp vs. mes ant. · 158 bajas · 217 altas' } },
+        { label:'Dotación',   value:'1.180', delta:{ dir:'up',   text:'+59 vs. mes ant. (1.121)' } },
+        { label:'Ausentismo', value:'4.56%', delta:{ dir:'down', text:'+0.43 pp vs. mes ant.' } },
+        { label:'Rotación',   value:'16.30%',delta:{ dir:'down', text:'+4.15 pp vs. mes ant. · 158 bajas · 217 altas' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
@@ -452,7 +453,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'5.20%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         sdGerenciaStaff,
@@ -465,7 +466,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'2.63%', delta:{ dir:'up',    text:'−2.57 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         sdGerenciaStaff,
@@ -478,7 +479,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'4.54%', delta:{ dir:'down',      text:'+1.91 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         sdGerenciaStaff,
@@ -491,7 +492,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'4.64%', delta:{ dir:'down',      text:'+0.10 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         sdGerenciaStaff,
@@ -504,7 +505,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'5.66%', delta:{ dir:'down',      text:'+1.02 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotStaffTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotStaffTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausStaffTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotStaffTend },
         sdGerenciaStaff,
@@ -512,9 +513,9 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'393',   delta:{ dir:'down',   text:'+19 vs. mes ant. (374)' } },
-        { label:'Ausentismo', value:'4.88%', delta:{ dir:'up',     text:'−0.40 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'4.15%', delta:{ dir:'up',     text:'−1.51 pp vs. mes ant. · 13 bajas · 18 altas' } },
+        { label:'Dotación',   value:'393',   delta:{ dir:'down', text:'+19 vs. mes ant. (374)' } },
+        { label:'Ausentismo', value:'4.88%', delta:{ dir:'up',   text:'−0.40 pp vs. mes ant.' } },
+        { label:'Rotación',   value:'4.04%', delta:{ dir:'up',   text:'−1.62 pp vs. mes ant. · 13 bajas · 18 altas' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotStaffTend },
@@ -531,11 +532,11 @@ window.SECTOR_DATA = {
             { x:'Auditoría Op.',     y: 7.50 },
             { x:'C. Monitoreo',      y: 7.14 },
             { x:'Compras',           y: 6.52 },
+            { x:'RRHH',              y: 6.52 },
             { x:'Marketing',         y: 5.56 },
             { x:'Tesorería',         y: 4.76 },
             { x:'Administración',    y: 3.85 },
             { x:'Control Gestión',   y: 2.94 },
-            { x:'RRHH',              y: 2.17 },
           ],
         },
       ],
@@ -553,7 +554,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'11.60%', delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         sdGerencia,
@@ -566,7 +567,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'7.82%', delta:{ dir:'up',    text:'−3.78 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         sdGerencia,
@@ -579,7 +580,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'7.46%', delta:{ dir:'up',    text:'−0.36 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         sdGerencia,
@@ -592,7 +593,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'6.54%',  delta:{ dir:'up',    text:'−0.92 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         sdGerencia,
@@ -605,7 +606,7 @@ window.SECTOR_DATA = {
         { label:'Rotación',   value:'7.51%', delta:{ dir:'down',      text:'+0.97 pp vs. mes ant.' } },
       ],
       charts: [
-        { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
+        { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         {
@@ -625,7 +626,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'961',   delta:{ dir:'down',   text:'+66 vs. mes ant. (895)' } },
+        { label:'Dotación',   value:'960',   delta:{ dir:'down',   text:'+65 vs. mes ant. (895)' } },
         { label:'Ausentismo', value:'10.94%',delta:{ dir:'down',   text:'+1.33 pp vs. mes ant.' } },
         { label:'Rotación',   value:'11.97%',delta:{ dir:'down',   text:'+4.46 pp vs. mes ant. · 74 bajas · 147 altas' } },
       ],
@@ -638,19 +639,20 @@ window.SECTOR_DATA = {
           title:'Rotación por sector / línea — Jun 2026',
           sub:'% · desglose por línea productiva',
           data:[
-            { x:'Congelados',  y:36.28 },
-            { x:'Extremas',    y:20.00 },
-            { x:'Procesadora', y:18.75 },
-            { x:'Tapas 2',     y:17.07 },
-            { x:'Adm.',        y:16.13 },
-            { x:'Mantto.',     y:13.58 },
-            { x:'S. Martín',   y:11.21 },
-            { x:'Tapas 1',     y:11.11 },
-            { x:'Logística',   y: 9.61 },
-            { x:'Calidad',     y: 9.43 },
-            { x:'Panificad.',  y: 9.27 },
-            { x:'S. Miguel',   y: 8.50 },
-            { x:'J Y Q',       y: 6.95 },
+            { x:'Tapas 1',     y:36.28 },
+            { x:'Papelera',    y:20.00 },
+            { x:'Mantto.',     y:18.75 },
+            { x:'Extremas',    y:17.07 },
+            { x:'Logística',   y:16.13 },
+            { x:'Calidad',     y:13.58 },
+            { x:'S. Martín',   y:11.97 },
+            { x:'S. Miguel',   y:11.21 },
+            { x:'Tapas 2',     y:11.11 },
+            { x:'Panificad.',  y: 9.61 },
+            { x:'Adm.',        y: 9.43 },
+            { x:'N. y JYQ',    y: 9.27 },
+            { x:'Pastas',      y: 8.50 },
+            { x:'Muzzarella',  y: 6.95 },
           ],
         },
       ],
@@ -1222,7 +1224,7 @@ window.SECTOR_DATA = {
         { label:'Costo del mes',              value:'$67.3M', delta:{ dir:'up',      text:'Ene 2026' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–Jun 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Ene 2026',
           data:[{label:'Logística',value:53.8},{label:'Extremas',value:12.6},{label:'San Martín',value:12.7},{label:'San Miguel',value:5.7},{label:'Otros',value:15.2}] },
       ],
@@ -1247,7 +1249,7 @@ window.SECTOR_DATA = {
         { label:'Costo del mes',              value:'$49.4M', delta:{ dir:'down',    text:'−26.6% vs. mes anterior' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–Jun 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Feb 2026',
           data:[{label:'Logística',value:69.5},{label:'Extremas',value:13.6},{label:'JYQ',value:7.0},{label:'Otros',value:9.9}] },
       ],
@@ -1270,7 +1272,7 @@ window.SECTOR_DATA = {
         { label:'Costo del mes',              value:'$38.8M', delta:{ dir:'down',    text:'−21.4% vs. mes anterior' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–Jun 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Mar 2026',
           data:[{label:'Logística',value:61.0},{label:'Extremas',value:10.0},{label:'Medialunas',value:6.8},{label:'JYQ',value:6.2},{label:'Otros',value:16.0}] },
       ],
@@ -1294,7 +1296,7 @@ window.SECTOR_DATA = {
         { label:'Costo del mes',              value:'$49.2M', delta:{ dir:'up',      text:'+26.9% vs. mes anterior' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–Jun 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · Abr 2026',
           data:[{label:'Logística',value:56.7},{label:'JYQ',value:13.3},{label:'Extremas',value:10.0},{label:'Medialunas',value:9.5},{label:'Otros',value:10.5}] },
       ],
@@ -1316,7 +1318,7 @@ window.SECTOR_DATA = {
         { label:'Costo del mes',              value:'$43.9M', delta:{ dir:'down',    text:'−10.8% vs. mes anterior' } },
       ],
       charts: [
-        { type:'line', title:'Evolución de horas extras', sub:'Ene–May 2026 · total de horas', data: hsTendencia },
+        { type:'line', title:'Evolución de horas extras', sub:'Ene–Jun 2026 · total de horas', data: hsTendencia },
         { type:'donut',title:'Distribución por unidad',   sub:'% de horas extras · May 2026 (período 20/4 al 19/5)',
           data:[{label:'Logística',value:49.5},{label:'Panificadora',value:30.4},{label:'JYQ',value:14.2},{label:'San Martín',value:3.3},{label:'Extremas',value:2.6}] },
       ],
@@ -1377,9 +1379,9 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'926',  delta:{ dir:'neutral', text:'Ene 2026' } },
       ],
       charts: [
-        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–May 2026', data: diasTendencia },
-        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–Jun 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–Jun 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–Jun 2026', center:'130', data:[
           {label:'Laboral',    value:81},
           {label:'In Itinere', value:19},
         ]},
@@ -1393,9 +1395,9 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'396',  delta:{ dir:'up',      text:'−530 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–May 2026', data: diasTendencia },
-        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–Jun 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–Jun 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–Jun 2026', center:'130', data:[
           {label:'Laboral',    value:81},
           {label:'In Itinere', value:19},
         ]},
@@ -1409,9 +1411,9 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'846',  delta:{ dir:'down',    text:'+450 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–May 2026', data: diasTendencia },
-        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–Jun 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–Jun 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–Jun 2026', center:'130', data:[
           {label:'Laboral',    value:81},
           {label:'In Itinere', value:19},
         ]},
@@ -1425,9 +1427,9 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'607',  delta:{ dir:'up',      text:'−239 vs. mes ant.' } },
       ],
       charts: [
-        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–May 2026', data: sinTendencia },
-        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–May 2026', data: diasTendencia },
-        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–May 2026', center:'130', data:[
+        { type:'bar',   title:'Siniestros por mes',            sub:'Cantidad · Ene–Jun 2026', data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',           sub:'Cantidad · Ene–Jun 2026', data: diasTendencia },
+        { type:'donut', title:'Tipo de siniestro — histórico', sub:'% acumulado Ene–Jun 2026', center:'130', data:[
           {label:'Laboral',    value:81},
           {label:'In Itinere', value:19},
         ]},
@@ -1441,8 +1443,8 @@ window.SECTOR_DATA = {
         { label:'Días caídos',        value:'246',   delta:{ dir:'up',      text:'−361 vs. mes anterior' } },
       ],
       charts: [
-        { type:'bar',   title:'Siniestros por mes',                sub:'Cantidad · Ene–May 2026',                     data: sinTendencia },
-        { type:'bar',   title:'Días caídos por mes',               sub:'Cantidad · Ene–May 2026',                     data: diasTendencia },
+        { type:'bar',   title:'Siniestros por mes',                sub:'Cantidad · Ene–Jun 2026',                     data: sinTendencia },
+        { type:'bar',   title:'Días caídos por mes',               sub:'Cantidad · Ene–Jun 2026',                     data: diasTendencia },
         { type:'bar',   title:'Siniestros por unidad — May 2026',  sub:'Cantidad de siniestros por unidad operativa', data:[
           {x:'Fábrica',  y:11},
           {x:'Extremas', y:5},
@@ -1516,7 +1518,7 @@ window.SECTOR_DATA = {
         { label:'Siniestralidad locales / staff', value:'0,86',  delta:{ dir:'neutral', text:'Con arrastre: 2,14' } },
         { label:'Siniestralidad fábricas',        value:'3,72',  delta:{ dir:'neutral', text:'Con arrastre: 19,97' } },
         { label:'Siniestros del mes', value:'22',  delta:{ dir:'up', text:'Sabores 2 · Extremas 7 · Fábrica 11 · Staff 2' } },
-        { label:'Días caídos',        value:'169', delta:{ dir:'neutral', text:'Solo mes · 662 con arrastre (sumando meses anteriores) · detalle nominal suma 167' } },
+        { label:'Días caídos',        value:'169', delta:{ dir:'neutral', text:'Solo mes · 662 con arrastre (sumando meses anteriores) · detalle nominal suma 231' } },
       ],
       charts: [
         { type:'bar',   title:'Siniestros por mes',                sub:'Cantidad · Ene–Jun 2026',                     data: sinTendencia },
@@ -1532,63 +1534,68 @@ window.SECTOR_DATA = {
           {label:'Locales',  value:9},
           {label:'Staff',    value:2},
         ]},
-        { type:'bar',   title:'Días caídos por sector — Jun 2026', sub:'Días · por unidad (cierre de mes)',           data:[
-          {x:'Fábrica', y:89},
-          {x:'Locales', y:70},
-          {x:'Staff',   y:8},
+        { type:'bar',   title:'Días caídos por sector — Jun 2026', sub:'Días · verificado en excel (columna Días Caídos Totales)', data:[
+          {x:'Fábrica',  y:134},
+          {x:'Extremas', y: 67},
+          {x:'Sabores',  y: 17},
+          {x:'Staff',    y: 13},
         ]},
         { type:'donut', title:'Tipo de siniestro — Jun 2026',      sub:'% del total · 22 siniestros', center:'22',    data:[
           {label:'Laboral',    value:18},
           {label:'In Itinere', value:4},
         ]},
         { type:'donut', title:'Tipo de lesión — Jun 2026',         sub:'% del total · 22 siniestros', center:'22',    data:[
-          {label:'Traumatismo', value:16},
-          {label:'Corte',       value:5},
-          {label:'Herida',      value:1},
+          {label:'Traumatismo',  value:15},
+          {label:'Corte',        value: 5},
+          {label:'Herida',       value: 1},
+          {label:'Traum./Corte', value: 1},
         ]},
       ],
-      details: [{
-        key:'detalle-sin-jun', title:'Detalle de siniestros — Junio 2026', iconEmoji:'🦺', accent:'red', type:'table',
-        topChips:[
-          {label:'Fábrica',    value:'11 sin. · 89 días', tone:'red'},
-          {label:'Locales',    value:'9 sin. · 70 días',  tone:'purple'},
-          {label:'Staff',      value:'2 sin. · 8 días',   tone:'blue'},
-        ],
-        columns:[
-          {key:'nombre',  label:'APELLIDO Y NOMBRE'},
-          {key:'fecha',   label:'FECHA'},
-          {key:'estado',  label:'ESTADO',      badge:true},
-          {key:'sector',  label:'SECTOR',      badge:true},
-          {key:'lesion',  label:'LESIÓN'},
-          {key:'tipo',    label:'TIPO'},
-          {key:'dias',    label:'DÍAS CAÍDOS', align:'right', strong:true},
-        ],
-        rows:[
-          {nombre:'SARASOLA ANTONELLA GISELLE',    fecha:'02/06/2026', estado:'Fin Trat.',  sector:'LOCALES', lesion:'Traumatismo', tipo:'In Itinere', dias:'10'},
-          {nombre:'ROJAS ANGELES PILAR',           fecha:'05/06/2026', estado:'Fin Trat.',  sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'13'},
-          {nombre:'SANCHEZ DAMIAN DAVID',          fecha:'06/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'24'},
-          {nombre:'GONZALEZ DIONISIO ROQUE MANUEL',fecha:'09/06/2026', estado:'Fin Trat.',  sector:'LOCALES', lesion:'Corte',       tipo:'Laboral',    dias:'14'},
-          {nombre:'CAMPOS DAIARA MORENA MARIELA',  fecha:'09/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Traum./Corte',tipo:'In Itinere', dias:'21'},
-          {nombre:'BENITEZ MARIANO',               fecha:'10/06/2026', estado:'Fin Trat.',  sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'1'},
-          {nombre:'NAVARRO SANDRA BEATRIZ',        fecha:'10/06/2026', estado:'Fin Trat.',  sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'6'},
-          {nombre:'MAYORGA FEDERICO JOSE',         fecha:'16/06/2026', estado:'Fin Trat.',  sector:'FÁBRICA', lesion:'Corte',       tipo:'Laboral',    dias:'6'},
-          {nombre:'AGUILERA MILAGROS SHEILA',      fecha:'16/06/2026', estado:'Fin Trat.',  sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'10'},
-          {nombre:'PEREZ FERNANDO JOEL',           fecha:'17/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'13'},
-          {nombre:'FIGUEROA NAHUEL CRISTIAN',      fecha:'20/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'10'},
-          {nombre:'PEDRAZA PEDRO ESTEBAN URIEL',   fecha:'20/06/2026', estado:'En Tratam.', sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'10'},
-          {nombre:'BERON MILTON',                  fecha:'22/06/2026', estado:'En Tratam.', sector:'STAFF',   lesion:'Corte',       tipo:'Laboral',    dias:'8'},
-          {nombre:'RIVERO DAIANA DE LOS ANGELES',  fecha:'23/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'7'},
-          {nombre:'MONZON CARLOS MARIANO',         fecha:'26/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Traumatismo', tipo:'In Itinere', dias:'4'},
-          {nombre:'CEJAS LAUTARO CHRISTOFER',      fecha:'27/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Traumatismo', tipo:'Laboral',    dias:'3'},
-          {nombre:'LOVERA VIANA MARIA LIZ',        fecha:'28/06/2026', estado:'En Tratam.', sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'2'},
-          {nombre:'LEGUIZA GERMAIN LEONEL',        fecha:'27/06/2026', estado:'En Tratam.', sector:'LOCALES', lesion:'Corte',       tipo:'Laboral',    dias:'3'},
-          {nombre:'BAREIRO CANDELA ABIGAIL',       fecha:'28/06/2026', estado:'En Tratam.', sector:'LOCALES', lesion:'Traumatismo', tipo:'Laboral',    dias:'2'},
-          {nombre:'ESTEBAN LORA',                  fecha:'29/06/2026', estado:'Fin Trat.',  sector:'STAFF',   lesion:'Traumatismo', tipo:'In Itinere', dias:'0'},
-          {nombre:'JUAREZ LUCAS EZEQUIEL',         fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Herida',      tipo:'Laboral',    dias:'0'},
-          {nombre:'RODA MAXIMILIANO',              fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Corte',       tipo:'Laboral',    dias:'0'},
-        ],
-        totalRow:{ label:'TOTAL — 22 siniestros · 169 días (mes) · 662 con arrastre activo', value:'169 días caídos' },
-      }],
+      details: [
+        {
+          key:'detalle-sin-jun', title:'Detalle de siniestros — Junio 2026', iconEmoji:'🦺', accent:'red', type:'table',
+          topChips:[
+            {label:'Fábrica',  value:'11 sin. · 134 días', tone:'red'},
+            {label:'Extremas', value:'7 sin. · 67 días',   tone:'cyan'},
+            {label:'Sabores',  value:'2 sin. · 17 días',   tone:'blue'},
+            {label:'Staff',    value:'2 sin. · 13 días',   tone:'purple'},
+          ],
+          columns:[
+            {key:'nombre',  label:'APELLIDO Y NOMBRE'},
+            {key:'fecha',   label:'FECHA'},
+            {key:'estado',  label:'ESTADO',      badge:true},
+            {key:'sector',  label:'SECTOR',      badge:true},
+            {key:'lesion',  label:'LESIÓN'},
+            {key:'tipo',    label:'TIPO'},
+            {key:'dias',    label:'DÍAS CAÍDOS', align:'right', strong:true},
+          ],
+          rows:[
+            {nombre:'SARASOLA ANTONELLA GISELLE',    fecha:'02/06/2026', estado:'Fin Trat.',  sector:'SABORES',  lesion:'Traumatismo',  tipo:'In Itinere', dias:'10'},
+            {nombre:'ROJAS ANGELES PILAR',           fecha:'05/06/2026', estado:'Fin Trat.',  sector:'EXTREMAS', lesion:'Traumatismo',  tipo:'Laboral',    dias:'13'},
+            {nombre:'SANCHEZ DAMIAN DAVID',          fecha:'06/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Traumatismo',  tipo:'Laboral',    dias:'29'},
+            {nombre:'GONZALEZ DIONISIO ROQUE MANUEL',fecha:'09/06/2026', estado:'Fin Trat.',  sector:'EXTREMAS', lesion:'Corte',        tipo:'Laboral',    dias:'14'},
+            {nombre:'CAMPOS DAIARA MORENA MARIELA',  fecha:'09/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Traum./Corte', tipo:'In Itinere', dias:'26'},
+            {nombre:'BENITEZ MARIANO',               fecha:'10/06/2026', estado:'Fin Trat.',  sector:'FÁBRICA',  lesion:'Traumatismo',  tipo:'Laboral',    dias:'1'},
+            {nombre:'NAVARRO SANDRA BEATRIZ',        fecha:'10/06/2026', estado:'Fin Trat.',  sector:'EXTREMAS', lesion:'Traumatismo',  tipo:'Laboral',    dias:'6'},
+            {nombre:'MAYORGA FEDERICO JOSE',         fecha:'16/06/2026', estado:'Fin Trat.',  sector:'FÁBRICA',  lesion:'Corte',        tipo:'Laboral',    dias:'6'},
+            {nombre:'AGUILERA MILAGROS SHEILA',      fecha:'16/06/2026', estado:'Fin Trat.',  sector:'EXTREMAS', lesion:'Traumatismo',  tipo:'Laboral',    dias:'10'},
+            {nombre:'PEREZ FERNANDO JOEL',           fecha:'17/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Traumatismo',  tipo:'Laboral',    dias:'18'},
+            {nombre:'FIGUEROA NAHUEL CRISTIAN',      fecha:'20/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Traumatismo',  tipo:'Laboral',    dias:'15'},
+            {nombre:'PEDRAZA PEDRO ESTEBAN URIEL',   fecha:'20/06/2026', estado:'En Tratam.', sector:'EXTREMAS', lesion:'Traumatismo',  tipo:'Laboral',    dias:'15'},
+            {nombre:'BERON MILTON',                  fecha:'22/06/2026', estado:'En Tratam.', sector:'STAFF',    lesion:'Corte',        tipo:'Laboral',    dias:'13'},
+            {nombre:'RIVERO DAIANA DE LOS ANGELES',  fecha:'23/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Traumatismo',  tipo:'Laboral',    dias:'12'},
+            {nombre:'MONZON CARLOS MARIANO',         fecha:'26/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Traumatismo',  tipo:'In Itinere', dias:'9'},
+            {nombre:'CEJAS LAUTARO CHRISTOFER',      fecha:'27/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Traumatismo',  tipo:'Laboral',    dias:'8'},
+            {nombre:'LOVERA VIANA MARIA LIZ',        fecha:'28/06/2026', estado:'En Tratam.', sector:'SABORES',  lesion:'Traumatismo',  tipo:'Laboral',    dias:'7'},
+            {nombre:'LEGUIZA GERMAIN LEONEL',        fecha:'27/06/2026', estado:'En Tratam.', sector:'EXTREMAS', lesion:'Corte',        tipo:'Laboral',    dias:'5'},
+            {nombre:'BAREIRO CANDELA ABIGAIL',       fecha:'28/06/2026', estado:'Fin Trat.',  sector:'EXTREMAS', lesion:'Traumatismo',  tipo:'Laboral',    dias:'4'},
+            {nombre:'ESTEBAN LORA',                  fecha:'29/06/2026', estado:'Fin Trat.',  sector:'STAFF',    lesion:'Traumatismo',  tipo:'In Itinere', dias:'0'},
+            {nombre:'JUAREZ LUCAS EZEQUIEL',         fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Herida',       tipo:'Laboral',    dias:'5'},
+            {nombre:'RODA MAXIMILIANO',              fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Corte',        tipo:'Laboral',    dias:'5'},
+          ],
+          totalRow:{ label:'TOTAL — 22 siniestros', value:'231 días caídos (según excel)' },
+        },
+      ],
     },
   },
 
