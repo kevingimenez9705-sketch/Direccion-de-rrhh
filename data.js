@@ -61,10 +61,9 @@ const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'A
 
 // ─── ACCIDENTABILIDAD ───
 const sinTendencia    = [{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:20},{x:'Jun',y:22}];
-const diasTendencia   = [{x:'Ene',y:926},{x:'Feb',y:396},{x:'Mar',y:846},{x:'Abr',y:607},{x:'May',y:246},{x:'Jun',y:167}];
+const diasTendencia   = [{x:'Ene',y:926},{x:'Feb',y:396},{x:'Mar',y:846},{x:'Abr',y:607},{x:'May',y:246},{x:'Jun',y:169}];
 
 // ─── ROTACIÓN POR GERENCIA — MAY 2026 (fuente: xlsx ROTACION) ───
-// Sabores: bajas 151 / inicio 1.754 / final 1.845 → rotación total 8.50%
 const rotSaboresPorGerencia = [
   { x:'A. Sbampato',   y: 8.34 },
   { x:'G. Cabrera',    y: 6.28 },
@@ -72,13 +71,11 @@ const rotSaboresPorGerencia = [
   { x:'L. Velez',      y: 4.06 },
   { x:'M. Biurra',     y: 9.05 },
 ];
-// Extremas: bajas 110 / inicio 1.102 / final 1.121 → rotación total 12.15%
 const rotExtremasPorGerencia = [
   { x:'F. Aramburo', y:17.82 },
   { x:'F. Gomez',    y:12.94 },
   { x:'G. Gomez',    y:12.94 },
 ];
-// Fábrica: bajas 55 / inicio 868 / final 890 → rotación total 7.51%
 const rotFabricaPorSector = [
   { x:'S. Martín',   y: 7.02 },
   { x:'S. Miguel',   y: 3.23 },
@@ -108,7 +105,6 @@ const rotFabricaBajasPorSector = [
   { label:'Logística',  value: 4 },
   { label:'Otros',      value: 7 },
 ];
-// Gráfico placeholder para meses sin desglose
 const sdGerencia = { type:'bar', title:'Rotación por gerencia / sector', sub:'S/D para este período — desglose disponible solo en May 2026', data:[{x:'S/D',y:null}] };
 const sdGerenciaStaff = { type:'bar', title:'Rotación por área / gerencia', sub:'S/D — sin desglose en la fuente para Staff', data:[{x:'S/D',y:null}] };
 
@@ -265,7 +261,6 @@ window.SECTOR_DATA = {
         { type:'line', title:'Evolución Dotación',  sub:'Ene–May 2026 · resultado mes activo', data: dotSaboresTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausSaboresTond },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotSaboresTend },
-        // ── Rotación por gerencia regional — datos reales xlsx ──
         {
           type:'bar',
           title:'Rotación por gerencia regional — May 2026',
@@ -392,7 +387,6 @@ window.SECTOR_DATA = {
         { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotExtremasTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausExtremasTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotExtremasTend },
-        // ── Rotación por gerencia regional — datos reales xlsx ──
         {
           type:'bar',
           title:'Rotación por gerencia regional — May 2026',
@@ -613,7 +607,6 @@ window.SECTOR_DATA = {
       charts: [
         { type:'line', title:'Evolución Dotación',    sub:'Ene–May 2026 · resultado mes activo', data: dotFabricaTend },
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
-        // ── Rotación (tendencia) y Distribución de bajas por sector — misma fila ──
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         {
           type:'donut',
@@ -622,7 +615,6 @@ window.SECTOR_DATA = {
           center:'55',
           data: rotFabricaBajasPorSector,
         },
-        // ── Rotación por sector/línea productiva — queda sola ──
         {
           type:'bar',
           title:'Rotación por sector / línea — May 2026',
@@ -1521,10 +1513,10 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Siniestralidad locales / staff', value:'3,04',  delta:{ dir:'neutral', text:'Jun 2026 · locales + staff' } },
-        { label:'Siniestralidad fábricas',        value:'11,44', delta:{ dir:'neutral', text:'Jun 2026 · plantas productivas' } },
-        { label:'Siniestros del mes', value:'22',  delta:{ dir:'down', text:'+2 vs. mes anterior' } },
-        { label:'Días caídos',        value:'167', delta:{ dir:'neutral', text:'Solo siniestros de junio · 845 con arrastre activo de meses ant.' } },
+        { label:'Siniestralidad locales / staff', value:'0,86',  delta:{ dir:'neutral', text:'Con arrastre: 2,14' } },
+        { label:'Siniestralidad fábricas',        value:'3,72',  delta:{ dir:'neutral', text:'Con arrastre: 19,97' } },
+        { label:'Siniestros del mes', value:'22',  delta:{ dir:'up', text:'Sabores 2 · Extremas 7 · Fábrica 11 · Staff 2' } },
+        { label:'Días caídos',        value:'169', delta:{ dir:'neutral', text:'Solo mes · 662 con arrastre (sumando meses anteriores) · detalle nominal suma 167' } },
       ],
       charts: [
         { type:'bar',   title:'Siniestros por mes',                sub:'Cantidad · Ene–Jun 2026',                     data: sinTendencia },
@@ -1595,7 +1587,7 @@ window.SECTOR_DATA = {
           {nombre:'JUAREZ LUCAS EZEQUIEL',         fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Herida',      tipo:'Laboral',    dias:'0'},
           {nombre:'RODA MAXIMILIANO',              fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA', lesion:'Corte',       tipo:'Laboral',    dias:'0'},
         ],
-        totalRow:{ label:'TOTAL — 22 siniestros · 167 días (mes) · 845 con arrastre activo', value:'167 días caídos' },
+        totalRow:{ label:'TOTAL — 22 siniestros · 169 días (mes) · 662 con arrastre activo', value:'169 días caídos' },
       }],
     },
   },
