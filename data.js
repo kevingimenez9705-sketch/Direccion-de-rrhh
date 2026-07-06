@@ -3,6 +3,7 @@
 //   · Judiciales: datos reales desde xlsx INFORME_DISCRIMINADO_JUNIO_2026.
 //   · Rotación/Dotación/Ausentismo Jun: verificado y corregido contra INDICADOR_JUNIO_global.xlsx.
 //   · Accidentabilidad Jun: verificado contra excel de siniestralidad histórico.
+//   · Fábrica: agregado detalle "Gestión y Acompañamiento de Bajas Voluntarias" (Mar-Jun 2026).
 
 window.MONTHS = [
   { key: 'ene', short: 'ENE', year: 2026 },
@@ -108,6 +109,83 @@ const rotFabricaBajasPorSector = [
 ];
 const sdGerencia = { type:'bar', title:'Rotación por gerencia / sector', sub:'S/D para este período — desglose disponible solo en May 2026', data:[{x:'S/D',y:null}] };
 const sdGerenciaStaff = { type:'bar', title:'Rotación por área / gerencia', sub:'S/D — sin desglose en la fuente para Staff', data:[{x:'S/D',y:null}] };
+
+// ─── FÁBRICA · GESTIÓN Y ACOMPAÑAMIENTO DE BAJAS VOLUNTARIAS (fuente: xlsx GESTION_Y_ACOMPAÑAMIENTO_DE_BAJAS_VOLUNTARIAS) ───
+// Detalle nominal por persona: sector, puesto, fechas, razón social, acción, liquidación final,
+// costo teórico de despido sin causa y ahorro de gestión (diferencia). Datos reales Mar-Jun 2026.
+
+const bajasVolCols = [
+  { key:'sector',  label:'SECTOR' },
+  { key:'nombre',  label:'APELLIDO Y NOMBRE' },
+  { key:'puesto',  label:'PUESTO' },
+  { key:'ingreso', label:'F. INGRESO' },
+  { key:'egreso',  label:'F. EGRESO' },
+  { key:'razon',   label:'RAZÓN SOCIAL' },
+  { key:'accion',  label:'ACCIÓN', badge:true },
+  { key:'liq',     label:'LIQ. FINAL',        align:'right' },
+  { key:'desp',    label:'DESPIDO S/C',       align:'right' },
+  { key:'ahorro',  label:'AHORRO / GESTIÓN',  align:'right', strong:true },
+];
+
+const bajasVolMarRows = [
+  { sector:'San Miguel',      nombre:'CASTRO, YORDANO',            puesto:'Operario/a',              ingreso:'21/12/2023', egreso:'19/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$547.665,45',    desp:'$40.600.800',  ahorro:'$40.053.134,55' },
+  { sector:'San Miguel',      nombre:'TOLEDO, DYLAN',              puesto:'Operario/a',              ingreso:'20/09/2023', egreso:'09/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$330.993,00',    desp:'$5.966.821',   ahorro:'$5.635.828,00' },
+  { sector:'Logística',       nombre:'GARAY, ERICA',               puesto:'Líder Logístico',         ingreso:'26/10/2021', egreso:'17/03/2026', razon:'Dick And Mac',   accion:'Desvinculación por acuerdo',           liq:'$7.500.000,00',  desp:'$11.722.200',  ahorro:'$4.222.200,00' },
+  { sector:'Logística',       nombre:'GOMEZ DE OLIVERA, ALAN',     puesto:'Coordinador',             ingreso:'07/04/2025', egreso:'27/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$2.000.000,00',  desp:'$6.912.100',   ahorro:'$4.912.100,00' },
+  { sector:'San Martín',      nombre:'ALEGRE, ANGEL GABRIEL',      puesto:'Operario/a',              ingreso:'03/07/2025', egreso:'27/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$1.291.677,10',  desp:'$2.096.600',   ahorro:'$804.922,90' },
+  { sector:'Tapas 2',         nombre:'FLORES, JUAN',               puesto:'Operario/a',              ingreso:'12/03/2025', egreso:'03/03/2026', razon:'Sancor',         accion:'Desvinculación por acuerdo',           liq:'$2.000.000,00',  desp:'$4.890.000',   ahorro:'$2.890.000,00' },
+  { sector:'Jamón y Queso',   nombre:'DAVALOS CANDIA, ESTEBAN',    puesto:'Operario/a',              ingreso:'15/06/2024', egreso:'16/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$977.338,66',    desp:'$4.773.900',   ahorro:'$3.796.561,34' },
+  { sector:'Procesadora',     nombre:'DUARTE, FACUNDO',            puesto:'Operario/a',              ingreso:'08/11/2025', egreso:'09/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$319.227,68',    desp:'$2.096.600',   ahorro:'$1.777.372,32' },
+  { sector:'San Martín',      nombre:'INSAURRALDE, GUILLERMO',     puesto:'Operario/a',              ingreso:'06/02/2023', egreso:'04/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$528.549,03',    desp:'$6.162.700',   ahorro:'$5.634.150,97' },
+  { sector:'Pizzas',          nombre:'RULOFF, ELIZABETH',          puesto:'Operario/a',              ingreso:'17/12/2025', egreso:'28/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$931.738,93',    desp:'$5.096.600',   ahorro:'$4.164.861,07' },
+  { sector:'Pizzas',          nombre:'GARCIA, AYELEN',             puesto:'Operario/a',              ingreso:'10/12/2024', egreso:'12/03/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$836.593,98',    desp:'$3.200.000',   ahorro:'$2.363.406,02' },
+  { sector:'Pizzas',          nombre:'IÑIGO, CAMILA',              puesto:'Operario/a',              ingreso:'30/12/2024', egreso:'18/03/2026', razon:'Certaldo',       accion:'Gestión y acompañamiento / Renuncia', liq:'$505.493,29',    desp:'$3.200.000',   ahorro:'$2.694.506,71' },
+];
+
+const bajasVolAbrRows = [
+  { sector:'Jamón y Queso',   nombre:'ALEGRE, FERNANDO EMANUEL',   puesto:'Operario/a', ingreso:'08/12/2025', egreso:'14/04/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$619.151,00',    desp:'$2.850.000',  ahorro:'$2.230.849,00' },
+  { sector:'Jamón y Queso',   nombre:'DUARTE, ARIEL',              puesto:'Operario/a', ingreso:'11/12/2025', egreso:'14/04/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$477.822,90',    desp:'$2.650.000',  ahorro:'$2.172.177,10' },
+  { sector:'Pizzas',          nombre:'BERDEN, SASHA',              puesto:'Operario/a', ingreso:'27/01/2026', egreso:'17/04/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$508.229,02',    desp:'$2.510.000',  ahorro:'$2.001.770,98' },
+  { sector:'Extremas',        nombre:'PEREZ, BRIAN',               puesto:'Ayudante de Chofer', ingreso:'01/06/2023', egreso:'16/04/2026', razon:'Sancor',  accion:'Gestión y acompañamiento / Renuncia', liq:'$1.851.735,73',  desp:'$7.971.900',  ahorro:'$6.120.164,27' },
+  { sector:'Pizzas',          nombre:'GUTIERREZ, MARIA',           puesto:'Operario/a', ingreso:'24/01/2025', egreso:'30/04/2026', razon:'Certaldo',       accion:'Desvinculación por acuerdo',           liq:'$2.000.000,00',  desp:'$4.195.500',  ahorro:'$2.195.500,00' },
+  { sector:'Medialunas',      nombre:'QUINTEROS, ALEJO',           puesto:'Operario/a', ingreso:'21/02/2025', egreso:'09/04/2026', razon:'La Empanadería', accion:'Gestión y acompañamiento / Renuncia', liq:'$908.279,56',    desp:'$4.195.500',  ahorro:'$3.287.220,44' },
+  { sector:'San Miguel',      nombre:'SANCHEZ, BRIAN',             puesto:'Operario/a', ingreso:'08/06/2025', egreso:'07/04/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$1.215.144,32',  desp:'$4.095.600',  ahorro:'$2.880.455,68' },
+  { sector:'Jamón y Queso',   nombre:'VELASQUEZ, DAIANA',          puesto:'Operario/a', ingreso:'06/12/2024', egreso:'20/04/2026', razon:'Sancor',         accion:'Gestión y acompañamiento / Renuncia', liq:'$206.383,94',    desp:'$3.651.000',  ahorro:'$3.444.616,06' },
+];
+
+const bajasVolMayRows = [
+  { sector:'Extremas',         nombre:'DOLAGARAY, IVAN',            puesto:'Operario/a',                  ingreso:'28/02/2025', egreso:'20/05/2026', razon:'Sancor',       accion:'Gestión y acompañamiento / Renuncia', liq:'$402.266,81',    desp:'$5.087.600',  ahorro:'$4.685.333,19' },
+  { sector:'Calidad Fábricas', nombre:'RAMIREZ, GUILLERMO',         puesto:'Jefe de Calidad Operativo',   ingreso:'10/04/2024', egreso:'04/05/2026', razon:'Sancor',       accion:'Gestión y acompañamiento / Renuncia', liq:'$780.048,21',    desp:'$7.287.500',  ahorro:'$6.507.451,79' },
+  { sector:'San Martín',       nombre:'ALMADA, NARELA',             puesto:'Operario/a',                  ingreso:'23/06/2025', egreso:'12/05/2026', razon:'Dick And Mac', accion:'Gestión y acompañamiento / Renuncia', liq:'$1.533.926,64',  desp:'$5.096.600',  ahorro:'$3.562.673,36' },
+  { sector:'Pizzas',           nombre:'SANCHEZ, VICTOR',            puesto:'Operario/a',                  ingreso:'15/11/2021', egreso:'21/05/2026', razon:'Sancor',       accion:'Desvinculación por acuerdo',           liq:'$853.048,63',    desp:'$9.102.000',  ahorro:'$8.248.951,37' },
+  { sector:'San Martín',       nombre:'FERRARO, DAVID',             puesto:'Operario/a',                  ingreso:'04/05/2025', egreso:'12/05/2026', razon:'Sancor',       accion:'Gestión y acompañamiento / Renuncia', liq:'$509.339,06',    desp:'$4.025.500',  ahorro:'$3.516.160,94' },
+];
+
+const bajasVolJunRows = [
+  { sector:'San Miguel', nombre:'BARRIONUEVO, NAHUEL',       puesto:'Operario/a', ingreso:'30/06/2024', egreso:'27/06/2026', razon:'Bollos y Rellenos', accion:'Desvinculación por acuerdo',           liq:'$2.000.000,00',  desp:'$6.101.800',  ahorro:'$4.101.800,00' },
+  { sector:'San Miguel', nombre:'CARABAJAL, BRENDA',         puesto:'Operario/a', ingreso:'10/07/2024', egreso:'27/06/2026', razon:'Bollos y Rellenos', accion:'Gestión y acompañamiento / Renuncia', liq:'$844.181,37',    desp:'$6.101.800',  ahorro:'$5.257.618,63' },
+  { sector:'San Martín',  nombre:'RIBAS, PAMELA',             puesto:'Operario/a', ingreso:'10/07/2024', egreso:'12/06/2026', razon:'La Empanadería',    accion:'Gestión y acompañamiento / Renuncia', liq:'$896.872,09',    desp:'$6.101.800',  ahorro:'$5.204.927,91' },
+  { sector:'San Martín',  nombre:'AGÜERO, ALAN',              puesto:'Operario/a', ingreso:'23/09/2025', egreso:'02/06/2026', razon:'La Empanadería',    accion:'Gestión y acompañamiento / Renuncia', liq:'$665.681,00',    desp:'$2.650.000',  ahorro:'$1.984.319,00' },
+  { sector:'San Martín',  nombre:'PERALTA, TOMAS',            puesto:'Operario/a', ingreso:'13/11/2024', egreso:'02/06/2026', razon:'La Empanadería',    accion:'Gestión y acompañamiento / Renuncia', liq:'$928.642,40',    desp:'$6.101.800',  ahorro:'$5.173.157,60' },
+  { sector:'San Miguel', nombre:'FRIAS, NAHUEL',             puesto:'Operario/a', ingreso:'17/12/2024', egreso:'27/06/2026', razon:'Bollos y Rellenos', accion:'Gestión y acompañamiento / Renuncia', liq:'$844.667,50',    desp:'$6.101.800',  ahorro:'$5.257.132,50' },
+  { sector:'San Miguel', nombre:'GOMEZ, FABRICIO',           puesto:'Operario/a', ingreso:'04/11/2021', egreso:'27/06/2026', razon:'Bollos y Rellenos', accion:'Desvinculación por acuerdo',           liq:'$4.000.000,00',  desp:'$10.243.400', ahorro:'$6.243.400,00' },
+];
+
+function bajasVolDetail(key, mesLabel, rows, totalLiq, totalDesp, totalAhorro, cantidad) {
+  return {
+    key, title:`Gestión y Acompañamiento de Bajas Voluntarias — ${mesLabel}`, iconEmoji:'🤝', accent:'amber', type:'table',
+    topChips:[
+      { label:'Casos', value:String(cantidad), tone:'amber' },
+      { label:'Liq. final', value: totalLiq, tone:'blue' },
+      { label:'Ahorro gestión', value: totalAhorro, tone:'green' },
+    ],
+    columns: bajasVolCols,
+    rows,
+    totalRow:{ label:`TOTAL ${mesLabel.toUpperCase()} — ${cantidad} casos`, value: totalAhorro },
+  };
+}
+
+// Total ahorrado histórico (Mar-Jun 2026, todas las razones sociales): $163.024.723,70
 
 // ══════════════════════════════════════════════════════
 window.SECTOR_DATA = {
@@ -585,6 +663,9 @@ window.SECTOR_DATA = {
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         sdGerencia,
       ],
+      details: [
+        bajasVolDetail('bajas-vol-mar', 'Marzo 2026', bajasVolMarRows, '$17.769.277,12', '$96.718.321', '$78.949.043,88', 12),
+      ],
     },
     abr: {
       kpis: [
@@ -597,6 +678,9 @@ window.SECTOR_DATA = {
         { type:'bar',  title:'Ausentismo',            sub:'% por mes', data: ausFabricaTend },
         { type:'line', title:'Rotación',              sub:'% por mes', data: rotFabricaTend },
         sdGerencia,
+      ],
+      details: [
+        bajasVolDetail('bajas-vol-abr', 'Abril 2026', bajasVolAbrRows, '$7.786.746,47', '$32.119.500', '$24.332.753,53', 8),
       ],
     },
     may: {
@@ -622,6 +706,9 @@ window.SECTOR_DATA = {
           sub:'% · desglose por línea productiva',
           data: rotFabricaPorSector,
         },
+      ],
+      details: [
+        bajasVolDetail('bajas-vol-may', 'Mayo 2026', bajasVolMayRows, '$4.078.629,35', '$30.599.200', '$26.520.570,65', 5),
       ],
     },
     jun: {
@@ -655,6 +742,9 @@ window.SECTOR_DATA = {
             { x:'Muzzarella',  y: 6.95 },
           ],
         },
+      ],
+      details: [
+        bajasVolDetail('bajas-vol-jun', 'Junio 2026', bajasVolJunRows, '$10.180.044,36', '$43.402.400', '$33.222.355,64', 7),
       ],
     },
   },
