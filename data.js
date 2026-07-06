@@ -171,13 +171,14 @@ const bajasVolJunRows = [
   { sector:'San Miguel', nombre:'GOMEZ, FABRICIO',           puesto:'Operario/a', ingreso:'04/11/2021', egreso:'27/06/2026', razon:'Bollos y Rellenos', accion:'Desvinculación por acuerdo',           liq:'$4.000.000,00',  desp:'$10.243.400', ahorro:'$6.243.400,00' },
 ];
 
-function bajasVolDetail(key, mesLabel, rows, totalLiq, totalDesp, totalAhorro, cantidad) {
+function bajasVolDetail(key, mesLabel, rows, totalLiq, totalDesp, totalAhorro, cantidad, acumulado) {
   return {
     key, title:`Gestión y Acompañamiento de Bajas Voluntarias — ${mesLabel}`, iconEmoji:'🤝', accent:'amber', type:'table',
     topChips:[
       { label:'Casos', value:String(cantidad), tone:'amber' },
       { label:'Liq. final', value: totalLiq, tone:'blue' },
       { label:'Ahorro gestión', value: totalAhorro, tone:'green' },
+      { label:'Ahorro acum. (Ene-Jun)', value: acumulado, tone:'green' },
     ],
     columns: bajasVolCols,
     rows,
@@ -664,7 +665,7 @@ window.SECTOR_DATA = {
         sdGerencia,
       ],
       details: [
-        bajasVolDetail('bajas-vol-mar', 'Marzo 2026', bajasVolMarRows, '$17.769.277,12', '$96.718.321', '$78.949.043,88', 12),
+        bajasVolDetail('bajas-vol-mar', 'Marzo 2026', bajasVolMarRows, '$17.769.277,12', '$96.718.321', '$78.949.043,88', 12, '$78.949.043,88'),
       ],
     },
     abr: {
@@ -680,7 +681,7 @@ window.SECTOR_DATA = {
         sdGerencia,
       ],
       details: [
-        bajasVolDetail('bajas-vol-abr', 'Abril 2026', bajasVolAbrRows, '$7.786.746,47', '$32.119.500', '$24.332.753,53', 8),
+        bajasVolDetail('bajas-vol-abr', 'Abril 2026', bajasVolAbrRows, '$7.786.746,47', '$32.119.500', '$24.332.753,53', 8, '$103.281.797,41'),
       ],
     },
     may: {
@@ -708,7 +709,7 @@ window.SECTOR_DATA = {
         },
       ],
       details: [
-        bajasVolDetail('bajas-vol-may', 'Mayo 2026', bajasVolMayRows, '$4.078.629,35', '$30.599.200', '$26.520.570,65', 5),
+        bajasVolDetail('bajas-vol-may', 'Mayo 2026', bajasVolMayRows, '$4.078.629,35', '$30.599.200', '$26.520.570,65', 5, '$129.802.368,06'),
       ],
     },
     jun: {
@@ -744,7 +745,7 @@ window.SECTOR_DATA = {
         },
       ],
       details: [
-        bajasVolDetail('bajas-vol-jun', 'Junio 2026', bajasVolJunRows, '$10.180.044,36', '$43.402.400', '$33.222.355,64', 7),
+        bajasVolDetail('bajas-vol-jun', 'Junio 2026', bajasVolJunRows, '$10.180.044,36', '$43.402.400', '$33.222.355,64', 7, '$163.024.723,70'),
       ],
     },
   },
