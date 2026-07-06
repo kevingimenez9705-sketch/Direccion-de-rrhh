@@ -1649,10 +1649,10 @@ window.SECTOR_DATA = {
         {
           key:'detalle-sin-jun', title:'Detalle de siniestros — Junio 2026', iconEmoji:'🦺', accent:'red', type:'table',
           topChips:[
-            {label:'Fábrica',  value:'11 sin. · 134 días', tone:'red'},
-            {label:'Extremas', value:'7 sin. · 67 días',   tone:'cyan'},
-            {label:'Sabores',  value:'2 sin. · 17 días',   tone:'blue'},
-            {label:'Staff',    value:'2 sin. · 13 días',   tone:'purple'},
+            {label:'Fábrica',  value:'11 sin. · 89 días', tone:'red'},
+            {label:'Extremas', value:'7 sin. · 58 días',  tone:'cyan'},
+            {label:'Sabores',  value:'2 sin. · 12 días',  tone:'blue'},
+            {label:'Staff',    value:'2 sin. · 9 días',   tone:'purple'},
           ],
           columns:[
             {key:'nombre',    label:'APELLIDO Y NOMBRE'},
