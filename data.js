@@ -1629,10 +1629,10 @@ window.SECTOR_DATA = {
           {label:'Staff',    value:2},
         ]},
         { type:'bar',   title:'Días caídos por sector — Jun 2026', sub:'Días · verificado en excel (columna Días Caídos Totales)', data:[
-          {x:'Fábrica',  y:134},
-          {x:'Extremas', y: 67},
-          {x:'Sabores',  y: 17},
-          {x:'Staff',    y: 13},
+          {x:'Fábrica',  y: 89},
+          {x:'Extremas', y: 58},
+          {x:'Sabores',  y: 12},
+          {x:'Staff',    y:  9},
         ]},
         { type:'donut', title:'Tipo de siniestro — Jun 2026',      sub:'% del total · 22 siniestros', center:'22',    data:[
           {label:'Laboral',    value:18},
