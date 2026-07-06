@@ -26,8 +26,8 @@ window.ACCENTS = acc;
 
 window.SECTORS = [
   { id:'empresa',         group:'UNIDADES', name:'Empresa Total',    sub:'Visión consolidada · todas las razones sociales', accent:'blue',   iconKey:'building',  logo:'assets/empresa total.png',       headerSub:'Consolidado de todas las unidades operativas',       tags:['Dotación 4.443','Rotación 12.00%'] },
-  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Jun 2026',         tags:['Ausentismo 3.57%','Rotación 4.95%'] },
-  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Jun 2026',      tags:['Ausentismo 4.56%','Rotación 16.30%'] },
+  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Jun 2026',         tags:['Ausentismo 3.57%','Rotación 3.22%'] },
+  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Jun 2026',      tags:['Ausentismo 4.56%','Rotación 5.11%'] },
   { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · Jun 2026',     tags:['Ausentismo 4.88%','Rotación 4.04%'] },
   { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · Jun 2026',                     tags:['Ausentismo 10.94%','Rotación 11.97%'] },
   { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Junio 2026',               tags:['20 acuerdos','$128.6M'] },
@@ -45,8 +45,8 @@ const ausFabricaTend  = [{x:'Ene',y:8.60},{x:'Feb',y:6.67},{x:'Mar',y:9.21},{x:'
 
 // ─── TENDENCIAS ROTACIÓN (Jun corregido contra INDICADOR_JUNIO_global.xlsx) ───
 const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96},{x:'Jun',y:12.00}];
-const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50},{x:'Jun',y:3.77}];
-const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15},{x:'Jun',y:6.16}];
+const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50},{x:'Jun',y:3.22}];
+const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15},{x:'Jun',y:5.11}];
 const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66},{x:'Jun',y:4.04}];
 const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:'Abr',y:6.54},{x:'May',y:7.51},{x:'Jun',y:11.97}];
 
@@ -270,7 +270,7 @@ window.SECTOR_DATA = {
         { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
-        { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:3.77},{x:'Extremas',y:6.16},{x:'Staff',y:4.04},{x:'Fábrica',y:11.97}] },
+        { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:3.22},{x:'Extremas',y:5.11},{x:'Staff',y:4.04},{x:'Fábrica',y:11.97}] },
       ],
     },
   },
@@ -366,7 +366,7 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Dotación',   value:'1.910', delta:{ dir:'up',   text:'+65 vs. mes ant. (1.845)' } },
         { label:'Ausentismo', value:'3.57%', delta:{ dir:'up',   text:'−0.42 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'3.77%', delta:{ dir:'up',   text:'−4.73 pp vs. mes ant. · 134 ceses (Personas X Cese)' } },
+        { label:'Rotación',   value:'3.22%', delta:{ dir:'up',   text:'−5.28 pp vs. mes ant. · 115 ceses (Personas X Cese)' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
@@ -377,10 +377,10 @@ window.SECTOR_DATA = {
           title:'Rotación por gerencia regional — Jun 2026',
           sub:'% · desglose por regional',
           data:[
-            { x:'A. Sbampato',   y: 4.71 },
-            { x:'G. Cabrera',    y: 3.08 },
-            { x:'I. Pisaniello', y: 4.68 },
-            { x:'L. Velez',      y: 4.00 },
+            { x:'A. Sbampato',   y: 3.81 },
+            { x:'G. Cabrera',    y: 2.68 },
+            { x:'I. Pisaniello', y: 4.36 },
+            { x:'L. Velez',      y: 2.41 },
             { x:'M. Biurra',     y: 2.68 },
           ],
         },
@@ -490,7 +490,7 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Dotación',   value:'1.180', delta:{ dir:'up',   text:'+59 vs. mes ant. (1.121)' } },
         { label:'Ausentismo', value:'4.56%', delta:{ dir:'down', text:'+0.43 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'6.16%',delta:{ dir:'up', text:'−5.99 pp vs. mes ant. · 130 ceses (Personas X Cese)' } },
+        { label:'Rotación',   value:'5.11%',delta:{ dir:'up', text:'−7.04 pp vs. mes ant. · 109 ceses (Personas X Cese)' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
@@ -501,8 +501,8 @@ window.SECTOR_DATA = {
           title:'Rotación por gerencia regional — Jun 2026',
           sub:'% · desglose por regional',
           data:[
-            { x:'F. Aramburo', y: 5.85 },
-            { x:'F. Gomez',    y: 5.95 },
+            { x:'F. Aramburo', y: 3.66 },
+            { x:'F. Gomez',    y: 5.44 },
             { x:'G. Gomez',    y: 7.00 },
           ],
         },
@@ -743,6 +743,7 @@ window.SECTOR_DATA = {
             { x:'Calidad',      y: 9.43 },
             { x:'S. Miguel',    y: 8.50 },
             { x:'J Y Q',        y: 6.95 },
+            { x:'Panificad.',   y: 9.27 },
           ],
         },
       ],
