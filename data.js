@@ -1657,7 +1657,7 @@ window.SECTOR_DATA = {
         { label:'Siniestralidad locales / staff', value:'0,86',  delta:{ dir:'neutral', text:'Con arrastre: 2,14' } },
         { label:'Siniestralidad fábricas',        value:'3,72',  delta:{ dir:'neutral', text:'Con arrastre: 18,97' } },
         { label:'Siniestros del mes', value:'22',  delta:{ dir:'up', text:'Sabores 2 · Extremas 7 · Fábrica 11 · Staff 2' } },
-        { label:'Días caídos',        value:'168', delta:{ dir:'neutral', text:'Solo mes · 673 con arrastre (sumando meses anteriores) · suma de los 22 casos' } },
+        { label:'Días caídos',        value:'168', delta:{ dir:'neutral', text:'Solo mes · 663 con arrastre (sumando meses anteriores) · suma de los 22 casos' } },
       ],
       charts: [
         { type:'bar',   title:'Siniestros por mes',                sub:'Cantidad · Ene–Jun 2026',                     data: sinTendencia },
