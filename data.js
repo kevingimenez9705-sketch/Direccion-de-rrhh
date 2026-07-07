@@ -4,6 +4,7 @@
 //   · Rotación/Dotación/Ausentismo Jun: verificado y corregido contra INDICADOR_JUNIO_global.xlsx.
 //   · Accidentabilidad Jun: verificado contra excel de siniestralidad histórico.
 //   · Fábrica: agregado detalle "Gestión y Acompañamiento de Bajas Voluntarias" (Mar-Jun 2026).
+//   · Accidentabilidad Jun: agregado detalle "Arrastre — Siniestros Cerrados de Meses Anteriores" (13 de 14 casos).
 
 window.MONTHS = [
   { key: 'ene', short: 'ENE', year: 2026 },
@@ -187,6 +188,50 @@ function bajasVolDetail(key, mesLabel, rows, totalLiq, totalDesp, totalAhorro, c
 }
 
 // Total ahorrado histórico (Mar-Jun 2026, todas las razones sociales): $163.024.723,70
+
+// ─── ACCIDENTABILIDAD · ARRASTRE — SINIESTROS CERRADOS DE MESES ANTERIORES (Jun 2026) ───
+// Fuente: excel de siniestralidad histórico. 13 de 14 casos confirmados; falta 1 por cargar.
+const arrastreCerradosJunCols = [
+  { key:'siniestro',  label:'N° SINIESTRO' },
+  { key:'nombre',     label:'APELLIDO Y NOMBRE' },
+  { key:'fecha',      label:'FECHA SINIESTRO' },
+  { key:'fechaAlta',  label:'FECHA DE ALTA' },
+  { key:'sector',     label:'SECTOR', badge:true },
+  { key:'modulo',     label:'MÓDULO/LOCAL' },
+  { key:'lesion',     label:'TIPO DE LESIÓN' },
+  { key:'diasAcum',   label:'DÍAS ACUM.', align:'right' },
+  { key:'diasCierre', label:'DÍAS AL CIERRE', align:'right' },
+  { key:'razon',      label:'RAZÓN SOCIAL' },
+  { key:'tipo',       label:'TIPO DE SINIESTRO' },
+  { key:'gravedad',   label:'GRAVEDAD', badge:true },
+];
+
+const arrastreCerradosJunRows = [
+  { siniestro:'2648702',   nombre:'DALLER ALEJO ABEL',            fecha:'19/10/2025', fechaAlta:'29/06/2026', sector:'LOCALES', modulo:'Local Escobar Sabores',        lesion:'Fractura',     diasAcum:253, diasCierre:225, razon:'Castro Cintia Noemí',   tipo:'In Itinere', gravedad:'Grave'    },
+  { siniestro:'600518933', nombre:'BARRIOS LAUTARO',              fecha:'17/12/2025', fechaAlta:'24/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel',           lesion:'Corte',        diasAcum:189, diasCierre:10,  razon:'Sancor Seguros',        tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2683675',   nombre:'EISENACHT LEANDRO EZEQUIEL',   fecha:'27/01/2026', fechaAlta:'11/06/2026', sector:'LOCALES', modulo:'Local Caballito Extremas',     lesion:'Traumatismo',  diasAcum:135, diasCierre:10,  razon:'González Miguel Ángel', tipo:'In Itinere', gravedad:'Moderado' },
+  { siniestro:'2693445',   nombre:'BERTINO GUSTAVO OSCAR',        fecha:'01/03/2026', fechaAlta:'22/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel Logística', lesion:'Traumatismo',  diasAcum:113, diasCierre:21,  razon:'Bollos y Rellenos S.A', tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2707557',   nombre:'CASAL ADRIAN FERNANDO',        fecha:'10/04/2026', fechaAlta:'16/06/2026', sector:'FÁBRICA', modulo:'Fábrica Panificados',          lesion:'Traumatismo',  diasAcum:67,  diasCierre:15,  razon:'Bollos y Rellenos S.A', tipo:'Laboral',     gravedad:'Grave'    },
+  { siniestro:'600531471', nombre:'SAUCEDO LEZCANO PABLO NAHUEL', fecha:'19/04/2026', fechaAlta:'11/06/2026', sector:'STAFF',   modulo:'Mantenimiento Staff',          lesion:'Traumatismo',  diasAcum:53,  diasCierre:10,  razon:'Sancor Seguros',        tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'1854586',   nombre:'SANTANDER MAXIMILIANO',        fecha:'05/05/2026', fechaAlta:'26/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Martín',           lesion:'Traumatismo',  diasAcum:52,  diasCierre:25,  razon:'La Empanadería',        tipo:'Laboral',     gravedad:'Moderado' },
+  { siniestro:'1860526',   nombre:'JUAREZ JOAQUIN',               fecha:'16/05/2026', fechaAlta:'12/06/2026', sector:'LOCALES', modulo:'Local Vicente López Extremas', lesion:'Corte',        diasAcum:27,  diasCierre:11,  razon:'Ruano Rojas Greissi',   tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'600536331', nombre:'OJEDA GONZALO DAMIAN',         fecha:'19/05/2026', fechaAlta:'09/06/2026', sector:'STAFF',   modulo:'Mantenimiento Staff',          lesion:'S/D',          diasAcum:null,diasCierre:9,   razon:'Sancor Seguros',        tipo:'S/D',         gravedad:'Leve'     },
+  { siniestro:'1862065',   nombre:'ALVARENGA JULIO',              fecha:'22/05/2026', fechaAlta:'30/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Martín Logística', lesion:'Traumatismo',  diasAcum:46,  diasCierre:36,  razon:'La Empanadería',        tipo:'In Itinere', gravedad:'Leve'     },
+  { siniestro:'2722960',   nombre:'FLORES MIÑO JOHANNA',          fecha:'23/05/2026', fechaAlta:'10/06/2026', sector:'LOCALES', modulo:'Local Crovara Extremas',       lesion:'Traumatismos', diasAcum:19,  diasCierre:10,  razon:'González Miguel Ángel', tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2723121',   nombre:'VEGA THOMAS',                  fecha:'24/05/2026', fechaAlta:'10/06/2026', sector:'FÁBRICA', modulo:'Fábrica Extremas Logística',   lesion:'Traumatismo',  diasAcum:17,  diasCierre:9,   razon:'Dick and Mack',         tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2723780',   nombre:'ROJAS NOELIA',                 fecha:'26/05/2026', fechaAlta:'08/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel',           lesion:'Traumatismo',  diasAcum:13,  diasCierre:7,   razon:'La Empanadería',        tipo:'Laboral',     gravedad:'Leve'     },
+];
+
+const arrastreCerradosJunDetail = {
+  key:'arrastre-cerrados-jun', title:'Arrastre — Siniestros Cerrados de Meses Anteriores (Jun 2026)', iconEmoji:'✅', accent:'green', type:'table',
+  topChips:[
+    { label:'Casos cargados', value:'13 de 14', tone:'green' },
+    { label:'Falta cargar',   value:'1',        tone:'red'   },
+  ],
+  columns: arrastreCerradosJunCols,
+  rows: arrastreCerradosJunRows,
+  totalRow:{ label:'TOTAL CARGADO — 13 de 14 casos (falta 1)', value:'S/D' },
+};
 
 // ══════════════════════════════════════════════════════
 window.SECTOR_DATA = {
@@ -1726,6 +1771,7 @@ window.SECTOR_DATA = {
           ],
           totalRow:{ label:'TOTAL ARRASTRE — 9 casos abiertos (30 días c/u al cierre)', value:'270 días' },
         },
+        arrastreCerradosJunDetail,
       ],
     },
   },
