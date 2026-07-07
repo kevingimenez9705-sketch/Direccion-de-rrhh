@@ -207,30 +207,30 @@ const arrastreCerradosJunCols = [
 ];
 
 const arrastreCerradosJunRows = [
-  { siniestro:'2648702',   nombre:'DALLER ALEJO ABEL',            fecha:'19/10/2025', fechaAlta:'29/06/2026', sector:'LOCALES', modulo:'Local Escobar Sabores',        lesion:'Fractura',     diasAcum:253, diasCierre:225, razon:'Castro Cintia Noemí',   tipo:'In Itinere', gravedad:'Grave'    },
-  { siniestro:'600518933', nombre:'BARRIOS LAUTARO',              fecha:'17/12/2025', fechaAlta:'24/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel',           lesion:'Corte',        diasAcum:189, diasCierre:10,  razon:'Sancor Seguros',        tipo:'Laboral',     gravedad:'Leve'     },
-  { siniestro:'2683675',   nombre:'EISENACHT LEANDRO EZEQUIEL',   fecha:'27/01/2026', fechaAlta:'11/06/2026', sector:'LOCALES', modulo:'Local Caballito Extremas',     lesion:'Traumatismo',  diasAcum:135, diasCierre:10,  razon:'González Miguel Ángel', tipo:'In Itinere', gravedad:'Moderado' },
-  { siniestro:'2693445',   nombre:'BERTINO GUSTAVO OSCAR',        fecha:'01/03/2026', fechaAlta:'22/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel Logística', lesion:'Traumatismo',  diasAcum:113, diasCierre:21,  razon:'Bollos y Rellenos S.A', tipo:'Laboral',     gravedad:'Leve'     },
-  { siniestro:'2707557',   nombre:'CASAL ADRIAN FERNANDO',        fecha:'10/04/2026', fechaAlta:'16/06/2026', sector:'FÁBRICA', modulo:'Fábrica Panificados',          lesion:'Traumatismo',  diasAcum:67,  diasCierre:15,  razon:'Bollos y Rellenos S.A', tipo:'Laboral',     gravedad:'Grave'    },
-  { siniestro:'600531471', nombre:'SAUCEDO LEZCANO PABLO NAHUEL', fecha:'19/04/2026', fechaAlta:'11/06/2026', sector:'STAFF',   modulo:'Mantenimiento Staff',          lesion:'Traumatismo',  diasAcum:53,  diasCierre:10,  razon:'Sancor Seguros',        tipo:'Laboral',     gravedad:'Leve'     },
-  { siniestro:'1854586',   nombre:'SANTANDER MAXIMILIANO',        fecha:'05/05/2026', fechaAlta:'26/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Martín',           lesion:'Traumatismo',  diasAcum:52,  diasCierre:25,  razon:'La Empanadería',        tipo:'Laboral',     gravedad:'Moderado' },
-  { siniestro:'1860526',   nombre:'JUAREZ JOAQUIN',               fecha:'16/05/2026', fechaAlta:'12/06/2026', sector:'LOCALES', modulo:'Local Vicente López Extremas', lesion:'Corte',        diasAcum:27,  diasCierre:11,  razon:'Ruano Rojas Greissi',   tipo:'Laboral',     gravedad:'Leve'     },
-  { siniestro:'600536331', nombre:'OJEDA GONZALO DAMIAN',         fecha:'19/05/2026', fechaAlta:'09/06/2026', sector:'STAFF',   modulo:'Mantenimiento Staff',          lesion:'S/D',          diasAcum:null,diasCierre:9,   razon:'Sancor Seguros',        tipo:'S/D',         gravedad:'Leve'     },
-  { siniestro:'1862065',   nombre:'ALVARENGA JULIO',              fecha:'22/05/2026', fechaAlta:'30/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Martín Logística', lesion:'Traumatismo',  diasAcum:46,  diasCierre:36,  razon:'La Empanadería',        tipo:'In Itinere', gravedad:'Leve'     },
-  { siniestro:'2722960',   nombre:'FLORES MIÑO JOHANNA',          fecha:'23/05/2026', fechaAlta:'10/06/2026', sector:'LOCALES', modulo:'Local Crovara Extremas',       lesion:'Traumatismos', diasAcum:19,  diasCierre:10,  razon:'González Miguel Ángel', tipo:'Laboral',     gravedad:'Leve'     },
-  { siniestro:'2723121',   nombre:'VEGA THOMAS',                  fecha:'24/05/2026', fechaAlta:'10/06/2026', sector:'FÁBRICA', modulo:'Fábrica Extremas Logística',   lesion:'Traumatismo',  diasAcum:17,  diasCierre:9,   razon:'Dick and Mack',         tipo:'Laboral',     gravedad:'Leve'     },
-  { siniestro:'2723780',   nombre:'ROJAS NOELIA',                 fecha:'26/05/2026', fechaAlta:'08/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel',           lesion:'Traumatismo',  diasAcum:13,  diasCierre:7,   razon:'La Empanadería',        tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2648702',   nombre:'DALLER ALEJO ABEL',            fecha:'19/10/2025', fechaAlta:'29/06/2026', sector:'LOCALES', modulo:'Local Escobar Sabores',        lesion:'Fractura',      diasAcum:253, diasCierre:225, razon:'Castro Cintia Noemí',   tipo:'In Itinere', gravedad:'Grave'    },
+  { siniestro:'600518933', nombre:'BARRIOS LAUTARO',              fecha:'17/12/2025', fechaAlta:'24/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel',           lesion:'Corte',         diasAcum:189, diasCierre:23,  razon:'Sancor Seguros',        tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2683675',   nombre:'EISENACHT LEANDRO EZEQUIEL',   fecha:'27/01/2026', fechaAlta:'11/06/2026', sector:'LOCALES', modulo:'Local Caballito Extremas',     lesion:'Traumatismo',   diasAcum:135, diasCierre:10,  razon:'González Miguel Ángel', tipo:'In Itinere', gravedad:'Moderado' },
+  { siniestro:'2693445',   nombre:'BERTINO GUSTAVO OSCAR',        fecha:'01/03/2026', fechaAlta:'22/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel Logística', lesion:'Traumatismo',   diasAcum:113, diasCierre:21,  razon:'Bollos y Rellenos S.A', tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2707557',   nombre:'CASAL ADRIAN FERNANDO',        fecha:'10/04/2026', fechaAlta:'16/06/2026', sector:'FÁBRICA', modulo:'Fábrica Panificados',          lesion:'Traumatismo',   diasAcum:67,  diasCierre:15,  razon:'Bollos y Rellenos S.A', tipo:'Laboral',     gravedad:'Grave'    },
+  { siniestro:'600531471', nombre:'SAUCEDO LEZCANO PABLO NAHUEL', fecha:'19/04/2026', fechaAlta:'11/06/2026', sector:'STAFF',   modulo:'Mantenimiento Staff',          lesion:'Traumatismo',   diasAcum:53,  diasCierre:10,  razon:'Sancor Seguros',        tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'1854586',   nombre:'SANTANDER MAXIMILIANO',        fecha:'05/05/2026', fechaAlta:'26/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Martín',           lesion:'Traumatismo',   diasAcum:52,  diasCierre:25,  razon:'La Empanadería',        tipo:'Laboral',     gravedad:'Moderado' },
+  { siniestro:'1860526',   nombre:'JUAREZ JOAQUIN',               fecha:'16/05/2026', fechaAlta:'12/06/2026', sector:'LOCALES', modulo:'Local Vicente López Extremas', lesion:'Corte',         diasAcum:27,  diasCierre:11,  razon:'Ruano Rojas Greissi',   tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'600536331', nombre:'OJEDA GONZALO DAMIAN',         fecha:'19/05/2026', fechaAlta:'09/06/2026', sector:'STAFF',   modulo:'Mantenimiento Staff',          lesion:'Traumatismos',  diasAcum:21,  diasCierre:8,   razon:'Sancor Seguros',        tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'1862065',   nombre:'ALVARENGA JULIO',              fecha:'22/05/2026', fechaAlta:'30/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Martín Logística', lesion:'Traumatismos',  diasAcum:46,  diasCierre:36,  razon:'La Empanadería',        tipo:'In Itinere', gravedad:'Leve'     },
+  { siniestro:'2722960',   nombre:'FLORES MIÑO JOHANNA',          fecha:'23/05/2026', fechaAlta:'10/06/2026', sector:'LOCALES', modulo:'Local Crovara Extremas',       lesion:'Traumatismos',  diasAcum:19,  diasCierre:10,  razon:'González Miguel Ángel', tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'2723121',   nombre:'VEGA THOMAS',                  fecha:'24/05/2026', fechaAlta:'10/06/2026', sector:'FÁBRICA', modulo:'Fábrica Extremas Logística',   lesion:'Traumatismos',  diasAcum:17,  diasCierre:9,   razon:'Dick and Mack',         tipo:'Laboral',     gravedad:'Leve'     },
+  { siniestro:'S/D',       nombre:'VAZQUEZ LUDMILA',              fecha:'29/05/2026', fechaAlta:'13/06/2026', sector:'FÁBRICA', modulo:'Fábrica San Miguel',           lesion:'Traumatismos',  diasAcum:15,  diasCierre:12,  razon:'S/D',                   tipo:'S/D',         gravedad:'S/D'      },
+  { siniestro:'2723780',   nombre:'ROJAS NOELIA',                 fecha:'26/05/2026', fechaAlta:'08/06/2026', sector:'STAFF',   modulo:'Cuentas a Pagar',              lesion:'Traumatismos',  diasAcum:13,  diasCierre:7,   razon:'La Empanadería',        tipo:'In Itinere', gravedad:'Leve'     },
 ];
 
 const arrastreCerradosJunDetail = {
   key:'arrastre-cerrados-jun', title:'Arrastre — Siniestros Cerrados de Meses Anteriores (Jun 2026)', iconEmoji:'✅', accent:'green', type:'table',
   topChips:[
-    { label:'Casos cargados', value:'13 de 14', tone:'green' },
-    { label:'Falta cargar',   value:'1',        tone:'red'   },
+    { label:'Casos cargados', value:'14 de 14', tone:'green' },
   ],
   columns: arrastreCerradosJunCols,
   rows: arrastreCerradosJunRows,
-  totalRow:{ label:'TOTAL CARGADO — 13 de 14 casos (falta 1)', value:'S/D' },
+  totalRow:{ label:'TOTAL CERRADOS — 14 de 14 casos', value:'S/D' },
 };
 
 // ══════════════════════════════════════════════════════
@@ -1657,7 +1657,7 @@ window.SECTOR_DATA = {
         { label:'Siniestralidad locales / staff', value:'0,86',  delta:{ dir:'neutral', text:'Con arrastre: 2,14' } },
         { label:'Siniestralidad fábricas',        value:'3,72',  delta:{ dir:'neutral', text:'Con arrastre: 18,97' } },
         { label:'Siniestros del mes', value:'22',  delta:{ dir:'up', text:'Sabores 2 · Extremas 7 · Fábrica 11 · Staff 2' } },
-        { label:'Días caídos',        value:'168', delta:{ dir:'neutral', text:'Solo mes · 662 con arrastre (sumando meses anteriores) · suma de los 22 casos' } },
+        { label:'Días caídos',        value:'168', delta:{ dir:'neutral', text:'Solo mes · 673 con arrastre (sumando meses anteriores) · suma de los 22 casos' } },
       ],
       charts: [
         { type:'bar',   title:'Siniestros por mes',                sub:'Cantidad · Ene–Jun 2026',                     data: sinTendencia },
@@ -1684,10 +1684,10 @@ window.SECTOR_DATA = {
           {label:'In Itinere', value:4},
         ]},
         { type:'donut', title:'Tipo de lesión — Jun 2026',         sub:'% del total · 22 siniestros', center:'22',    data:[
-          {label:'Traumatismo',  value:15},
-          {label:'Corte',        value: 5},
-          {label:'Herida',       value: 1},
-          {label:'Traum./Corte', value: 1},
+          {label:'Traumatismo',  value:67},
+          {label:'Corte',        value:23},
+          {label:'Herida',       value: 5},
+          {label:'Traum./Corte', value: 5},
         ]},
       ],
       details: [
