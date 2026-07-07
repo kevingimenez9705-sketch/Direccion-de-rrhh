@@ -230,7 +230,7 @@ const arrastreCerradosJunDetail = {
   ],
   columns: arrastreCerradosJunCols,
   rows: arrastreCerradosJunRows,
-  totalRow:{ label:'TOTAL CERRADOS — 14 de 14 casos', value:'S/D' },
+  totalRow:{ label:'TOTAL CERRADOS — 14 de 14 casos', value:'225 días' },
 };
 
 // ══════════════════════════════════════════════════════
