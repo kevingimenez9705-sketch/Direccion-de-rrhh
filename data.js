@@ -5,6 +5,7 @@
 //   · Accidentabilidad Jun: verificado contra excel de siniestralidad histórico.
 //   · Fábrica: agregado detalle "Gestión y Acompañamiento de Bajas Voluntarias" (Mar-Jun 2026).
 //   · Accidentabilidad Jun: agregado detalle "Arrastre — Siniestros Cerrados de Meses Anteriores" (13 de 14 casos).
+//   · Judiciales Jun: agregado KPI "Efectividad de acuerdos" (42%).
 
 window.MONTHS = [
   { key: 'ene', short: 'ENE', year: 2026 },
@@ -951,6 +952,7 @@ window.SECTOR_DATA = {
         { label:'Total acuerdos cerrados en junio', value:'$128.592.933', delta:{ dir:'neutral', text:'20 acuerdos celebrados' } },
         { label:'Total pagado en junio',            value:'$132.084.409', delta:{ dir:'neutral', text:'Acuerdos anteriores + acuerdos junio' } },
         { label:'Total a pagar (Jul–Oct)',          value:'$73.400.000',  delta:{ dir:'neutral', text:'Cuotas pendientes de acuerdos cerrados' } },
+        { label:'Efectividad de acuerdos',          value:'42%',          delta:{ dir:'up', text:'Ahorro $177.807.686 vs. reclamado $306.400.619' } },
       ],
       charts: [],
       details: [
@@ -993,6 +995,25 @@ window.SECTOR_DATA = {
             {mes:'Octubre 2026',    detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$0',          locales:'$6.000.000',  monto:'$6.000.000'},
           ],
           totalRow:{ label:'TOTAL A PAGAR (Jul–Oct)', value:'$73.400.000' },
+        },
+        {
+          key:'efectividad-jun', title:'Efectividad de Acuerdos — Junio 2026', iconEmoji:'🎯', accent:'green', type:'table',
+          topChips:[
+            {label:'Cierre de acuerdos', value:'$128.592.933', tone:'purple'},
+            {label:'Montos reclamados',  value:'$306.400.619', tone:'red'},
+            {label:'Ahorro',             value:'$177.807.686', tone:'green'},
+            {label:'Efectividad',        value:'42%',          tone:'amber'},
+          ],
+          columns:[
+            {key:'concepto',label:'CONCEPTO'},
+            {key:'monto',label:'MONTO',align:'right',strong:true},
+          ],
+          rows:[
+            {concepto:'Cierre de acuerdos', monto:'$128.592.933'},
+            {concepto:'Montos reclamados',  monto:'$306.400.619'},
+            {concepto:'Ahorro',             monto:'$177.807.686'},
+          ],
+          totalRow:{ label:'EFECTIVIDAD DE ACUERDOS — JUN 2026', value:'42%' },
         },
       ],
     },
