@@ -252,6 +252,15 @@ function DetailTable({ detail }) {
             </div>
           </div>
         )}
+        {detail.totalRow?.chips && (
+          <div className="dt-chips dt-chips-total">
+            {detail.totalRow.chips.map((c, i) => (
+              <span key={i} className={'dt-chip dt-chip-' + (c.tone || 'blue')}>
+                {c.label}: <strong>{c.value}</strong>
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
