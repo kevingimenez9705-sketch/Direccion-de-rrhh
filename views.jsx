@@ -247,9 +247,11 @@ function DetailTable({ detail }) {
                 {detail.totalRow.extra && i === detail.columns.length - 3 ? detail.totalRow.extra : ''}
               </div>
             ))}
-            <div style={{ textAlign: 'right', fontWeight: 700, color: detail.totalRow.color === 'green' ? '#2C7E51' : 'inherit' }}>
-              {detail.totalRow.value}
-            </div>
+            {!detail.totalRow.chips && (
+              <div style={{ textAlign: 'right', fontWeight: 700, color: detail.totalRow.color === 'green' ? '#2C7E51' : 'inherit' }}>
+                {detail.totalRow.value}
+              </div>
+            )}
           </div>
         )}
         {detail.totalRow?.chips && (
