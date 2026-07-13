@@ -184,7 +184,15 @@ function bajasVolDetail(key, mesLabel, rows, totalLiq, totalDesp, totalAhorro, c
     ],
     columns: bajasVolCols,
     rows,
-    totalRow:{ label:`TOTAL ${mesLabel.toUpperCase()} — ${cantidad} casos`, value: totalAhorro },
+    totalRow:{
+      label: `TOTAL ${mesLabel.toUpperCase()} — ${cantidad} casos`,
+      value: totalAhorro,
+      chips:[
+        { label:'Liq. final', value: totalLiq, tone:'blue' },
+        { label:'Ahorro gestión', value: totalAhorro, tone:'green' },
+        { label:'Ahorro acum.', value: acumulado, tone:'green' },
+      ],
+    },
   };
 }
 
