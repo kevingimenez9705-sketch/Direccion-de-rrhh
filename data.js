@@ -55,7 +55,7 @@ const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:
 
 // ─── TENDENCIAS DOTACIÓN (Jun corregido contra INDICADOR_JUNIO_global.xlsx) ───
 const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235},{x:'Jun',y:4443}];
-const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845},{x:'Jun',y:1910}];
+const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845},{x:'Jun',y:1907}];
 const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121},{x:'Jun',y:1176}];
 const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'Abr',y:368},{x:'May',y:374},{x:'Jun',y:393}];
 const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895},{x:'Jun',y:960}];
@@ -419,7 +419,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'1.910', delta:{ dir:'up',   text:'+65 vs. mes ant. (1.845)' } },
+        { label:'Dotación',   value:'1.907', delta:{ dir:'up',   text:'+65 vs. mes ant. (1.845)' } },
         { label:'Ausentismo', value:'3.57%', delta:{ dir:'up',   text:'−0.42 pp vs. mes ant.' } },
         { label:'Rotación',   value:'9.28%', delta:{ dir:'up',   text:'+0.78 pp vs. mes ant. · 115 ceses (Personas X Cese)' } },
       ],
@@ -543,7 +543,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Dotación',   value:'1.180', delta:{ dir:'up',   text:'+59 vs. mes ant. (1.121)' } },
+        { label:'Dotación',   value:'1.176', delta:{ dir:'up',   text:'+59 vs. mes ant. (1.121)' } },
         { label:'Ausentismo', value:'4.56%', delta:{ dir:'down', text:'+0.43 pp vs. mes ant.' } },
         { label:'Rotación',   value:'13.78%',delta:{ dir:'up',   text:'+1.63 pp vs. mes ant. · 107 ceses (Personas X Cese)' } },
       ],
