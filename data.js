@@ -319,7 +319,7 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Dotación',   value:'4.443', delta:{ dir:'up',   text:'+208 vs. mes ant. (4.235)' } },
         { label:'Ausentismo', value:'5.57%', delta:{ dir:'down', text:'+0.20 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'12.00%',delta:{ dir:'down', text:'+2.04 pp vs. mes ant. · 419 bajas · 621 altas' } },
+        { label:'Rotación',   value:'10.59%',delta:{ dir:'down', text:'+2.04 pp vs. mes ant. · 419 bajas · 621 altas' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
