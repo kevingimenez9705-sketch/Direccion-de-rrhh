@@ -47,7 +47,7 @@ const ausStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:6.56},{x:'Mar',y:5.74},{x:'
 const ausFabricaTend  = [{x:'Ene',y:8.60},{x:'Feb',y:6.67},{x:'Mar',y:9.21},{x:'Abr',y:11.43},{x:'May',y:9.61},{x:'Jun',y:10.94}];
 
 // ─── TENDENCIAS ROTACIÓN (Jun: Sabores/Extremas según métrica "Personas X Cese" de indicador_junio_global.xlsx) ───
-const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96},{x:'Jun',y:12.00}];
+const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96},{x:'Jun',y:10.59}];
 const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50},{x:'Jun',y:9.28}];
 const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15},{x:'Jun',y:13.78}];
 const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66},{x:'Jun',y:4.04}];
