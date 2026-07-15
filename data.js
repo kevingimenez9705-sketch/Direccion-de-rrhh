@@ -56,7 +56,7 @@ const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:
 // ─── TENDENCIAS DOTACIÓN (Jun corregido contra INDICADOR_JUNIO_global.xlsx) ───
 const dotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:4067},{x:'Abr',y:4101},{x:'May',y:4235},{x:'Jun',y:4443}];
 const dotSaboresTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1668},{x:'Abr',y:1754},{x:'May',y:1845},{x:'Jun',y:1910}];
-const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121},{x:'Jun',y:1180}];
+const dotExtremasTend = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:1107},{x:'Abr',y:1102},{x:'May',y:1121},{x:'Jun',y:1176}];
 const dotStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:364},{x:'Abr',y:368},{x:'May',y:374},{x:'Jun',y:393}];
 const dotFabricaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:928},{x:'Abr',y:877},{x:'May',y:895},{x:'Jun',y:960}];
 
