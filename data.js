@@ -2,7 +2,7 @@
 // Actualizado: agregado mes JUNIO 2026.
 //   · Judiciales: datos reales desde xlsx INFORME_DISCRIMINADO_JUNIO_2026.
 //   · Rotación/Dotación/Ausentismo Jun: verificado y corregido contra INDICADOR_JUNIO_global.xlsx.
-//   · Rotación Sabores/Extremas Jun: RE-corregido contra INDICADOR_JUNIO_global.xlsx (versión actualizada) — Sabores 4.95% (174 ceses), Extremas 16.30% (158 ceses).
+//   · Rotación Sabores/Extremas Jun: RE-corregido contra INDICADOR_JUNIO_global.xlsx (métrica "Personas X Cese") — Sabores 9.28% (115 ceses), Extremas 13.78% (107 ceses).
 //   · Accidentabilidad Jun: verificado contra excel de siniestralidad histórico.
 //   · Fábrica: agregado detalle "Gestión y Acompañamiento de Bajas Voluntarias" (Mar-Jun 2026).
 //   · Accidentabilidad Jun: agregado detalle "Arrastre — Siniestros Cerrados de Meses Anteriores" (13 de 14 casos).
@@ -29,8 +29,8 @@ window.ACCENTS = acc;
 
 window.SECTORS = [
   { id:'empresa',         group:'UNIDADES', name:'Empresa Total',    sub:'Visión consolidada · todas las razones sociales', accent:'blue',   iconKey:'building',  logo:'assets/empresa total.png',       headerSub:'Consolidado de todas las unidades operativas',       tags:['Dotación 4.443','Rotación 12.00%'] },
-  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Jun 2026',         tags:['Ausentismo 3.57%','Rotación 4.95%'] },
-  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Jun 2026',      tags:['Ausentismo 4.56%','Rotación 16.30%'] },
+  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Jun 2026',         tags:['Ausentismo 3.57%','Rotación 9.28%'] },
+  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Jun 2026',      tags:['Ausentismo 4.56%','Rotación 13.78%'] },
   { id:'staff',           group:'UNIDADES', name:'Staff',            sub:'Áreas corporativas y administración',            accent:'purple', iconKey:'briefcase', logo:'assets/Staff.png',               headerSub:'Áreas corporativas y administración · Jun 2026',     tags:['Ausentismo 4.88%','Rotación 4.04%'] },
   { id:'fabrica',         group:'UNIDADES', name:'Fábrica',          sub:'Plantas productivas',                            accent:'amber',  iconKey:'factory',   logo:'assets/fabrica.png',             headerSub:'Plantas productivas · Jun 2026',                     tags:['Ausentismo 10.94%','Rotación 11.97%'] },
   { id:'judiciales',      group:'GESTIÓN',  name:'Inf. Judiciales',  sub:'Acuerdos y resoluciones por razón social',       accent:'purple', iconKey:'gavel',     logo:'assets/informes judiciales.png', headerSub:'Acuerdos y resoluciones · Junio 2026',               tags:['20 acuerdos','$128.6M'] },
@@ -46,10 +46,10 @@ const ausExtremasTend = [{x:'Ene',y:1.40},{x:'Feb',y:1.29},{x:'Mar',y:7.17},{x:'
 const ausStaffTend    = [{x:'Ene',y:null},{x:'Feb',y:6.56},{x:'Mar',y:5.74},{x:'Abr',y:9.28},{x:'May',y:5.28},{x:'Jun',y:4.88}];
 const ausFabricaTend  = [{x:'Ene',y:8.60},{x:'Feb',y:6.67},{x:'Mar',y:9.21},{x:'Abr',y:11.43},{x:'May',y:9.61},{x:'Jun',y:10.94}];
 
-// ─── TENDENCIAS ROTACIÓN (Jun corregido contra INDICADOR_JUNIO_global.xlsx — Sabores/Extremas re-corregido) ───
+// ─── TENDENCIAS ROTACIÓN (Jun: Sabores/Extremas según métrica "Personas X Cese" de indicador_junio_global.xlsx) ───
 const rotEmpresaTend  = [{x:'Ene',y:null},{x:'Feb',y:null},{x:'Mar',y:null},{x:'Abr',y:11.62},{x:'May',y:9.96},{x:'Jun',y:12.00}];
-const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50},{x:'Jun',y:4.95}];
-const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15},{x:'Jun',y:16.30}];
+const rotSaboresTend  = [{x:'Ene',y:13.90},{x:'Feb',y:13.05},{x:'Mar',y:18.81},{x:'Abr',y:14.52},{x:'May',y:8.50},{x:'Jun',y:9.28}];
+const rotExtremasTend = [{x:'Ene',y:17.80},{x:'Feb',y:11.48},{x:'Mar',y:12.16},{x:'Abr',y:13.58},{x:'May',y:12.15},{x:'Jun',y:13.78}];
 const rotStaffTend    = [{x:'Ene',y:5.20},{x:'Feb',y:2.63},{x:'Mar',y:4.54},{x:'Abr',y:4.64},{x:'May',y:5.66},{x:'Jun',y:4.04}];
 const rotFabricaTend  = [{x:'Ene',y:11.60},{x:'Feb',y:7.82},{x:'Mar',y:7.46},{x:'Abr',y:6.54},{x:'May',y:7.51},{x:'Jun',y:11.97}];
 
@@ -325,7 +325,7 @@ window.SECTOR_DATA = {
         { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotEmpresaTend },
         { type:'bar',  title:'Ausentismo',          sub:'% por mes', data: ausEmpresaTend },
         { type:'line', title:'Rotación',            sub:'% por mes', data: rotEmpresaTend },
-        { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:4.95},{x:'Extremas',y:16.30},{x:'Staff',y:4.04},{x:'Fábrica',y:11.97}] },
+        { type:'bar',  title:'Rotación por unidad', sub:'% mes activo', data:[{x:'Sabores',y:9.28},{x:'Extremas',y:13.78},{x:'Staff',y:4.04},{x:'Fábrica',y:11.97}] },
       ],
     },
   },
@@ -421,7 +421,7 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Dotación',   value:'1.910', delta:{ dir:'up',   text:'+65 vs. mes ant. (1.845)' } },
         { label:'Ausentismo', value:'3.57%', delta:{ dir:'up',   text:'−0.42 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'4.95%', delta:{ dir:'up',   text:'−3.55 pp vs. mes ant. · 174 ceses (Personas X Cese)' } },
+        { label:'Rotación',   value:'9.28%', delta:{ dir:'up',   text:'+0.78 pp vs. mes ant. · 115 ceses (Personas X Cese)' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',  sub:'Ene–Jun 2026 · resultado mes activo', data: dotSaboresTend },
@@ -442,14 +442,14 @@ window.SECTOR_DATA = {
         {
           type:'donut',
           title:'Distribución de bajas por gerencia — Jun 2026',
-          sub:'Personas × cese · Sabores total: 174 bajas',
-          center:'174',
+          sub:'Personas × cese · Sabores total: 115 bajas',
+          center:'115',
           data:[
-            { label:'A. Sbampato',   value:47 },
-            { label:'G. Cabrera',    value:20 },
-            { label:'I. Pisaniello', value:47 },
-            { label:'L. Velez',      value:18 },
-            { label:'M. Biurra',     value:42 },
+            { label:'A. Sbampato',   value:31 },
+            { label:'G. Cabrera',    value:21 },
+            { label:'I. Pisaniello', value:29 },
+            { label:'L. Velez',      value:11 },
+            { label:'M. Biurra',     value:23 },
           ],
         },
       ],
@@ -545,7 +545,7 @@ window.SECTOR_DATA = {
       kpis: [
         { label:'Dotación',   value:'1.180', delta:{ dir:'up',   text:'+59 vs. mes ant. (1.121)' } },
         { label:'Ausentismo', value:'4.56%', delta:{ dir:'down', text:'+0.43 pp vs. mes ant.' } },
-        { label:'Rotación',   value:'16.30%',delta:{ dir:'down', text:'+4.15 pp vs. mes ant. · 158 ceses (Personas X Cese)' } },
+        { label:'Rotación',   value:'13.78%',delta:{ dir:'up',   text:'+1.63 pp vs. mes ant. · 107 ceses (Personas X Cese)' } },
       ],
       charts: [
         { type:'line', title:'Evolución Dotación',    sub:'Ene–Jun 2026 · resultado mes activo', data: dotExtremasTend },
@@ -564,12 +564,12 @@ window.SECTOR_DATA = {
         {
           type:'donut',
           title:'Distribución de bajas por gerencia — Jun 2026',
-          sub:'Personas × cese · Extremas total: 158 bajas',
-          center:'158',
+          sub:'Personas × cese · Extremas total: 107 bajas',
+          center:'107',
           data:[
-            { label:'F. Aramburo', value:52 },
-            { label:'F. Gomez',    value:51 },
-            { label:'G. Gomez',    value:55 },
+            { label:'F. Aramburo', value:30 },
+            { label:'F. Gomez',    value:44 },
+            { label:'G. Gomez',    value:33 },
           ],
         },
       ],
