@@ -65,8 +65,8 @@ const hsTendencia    = [{x:'Ene',y:6325},{x:'Feb',y:4479},{x:'Mar',y:3779},{x:'A
 const costoTendencia = [{x:'Ene',y:67.3},{x:'Feb',y:49.4},{x:'Mar',y:38.8},{x:'Abr',y:49.2},{x:'May',y:43.9},{x:'Jun',y:48.1}];
 
 // ─── ACCIDENTABILIDAD ───
-const sinTendencia    = [{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:20},{x:'Jun',y:22}];
-const diasTendencia   = [{x:'Ene',y:926},{x:'Feb',y:396},{x:'Mar',y:846},{x:'Abr',y:607},{x:'May',y:246},{x:'Jun',y:168}];
+const sinTendencia    = [{x:'Ene',y:34},{x:'Feb',y:24},{x:'Mar',y:24},{x:'Abr',y:28},{x:'May',y:20},{x:'Jun',y:24}];
+const diasTendencia   = [{x:'Ene',y:926},{x:'Feb',y:396},{x:'Mar',y:846},{x:'Abr',y:607},{x:'May',y:246},{x:'Jun',y:209}];
 
 // ─── ROTACIÓN POR GERENCIA — MAY 2026 (fuente: xlsx ROTACION) ───
 const rotSaboresPorGerencia = [
@@ -1684,36 +1684,36 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Siniestralidad locales / staff', value:'0,86',  delta:{ dir:'neutral', text:'Con arrastre: 2,14' } },
-        { label:'Siniestralidad fábricas',        value:'3,72',  delta:{ dir:'neutral', text:'Con arrastre: 18,97' } },
-        { label:'Siniestros del mes', value:'22',  delta:{ dir:'up', text:'Sabores 2 · Extremas 7 · Fábrica 11 · Staff 2' } },
-        { label:'Días caídos',        value:'168', delta:{ dir:'neutral', text:'Solo mes · 663 con arrastre (sumando meses anteriores) · suma de los 22 casos' } },
+        { label:'Siniestralidad locales / staff', value:'0,94',  delta:{ dir:'neutral', text:'Con arrastre: 2,24' } },
+        { label:'Siniestralidad fábricas',        value:'5,04',  delta:{ dir:'neutral', text:'Con arrastre: 18,09' } },
+        { label:'Siniestros del mes', value:'24',  delta:{ dir:'up', text:'Sabores 2 · Extremas 8 · Fábrica 12 · Staff 2' } },
+        { label:'Días caídos',        value:'209', delta:{ dir:'neutral', text:'Solo mes · 649 con arrastre (sumando meses anteriores) · suma de los 24 casos' } },
       ],
       charts: [
         { type:'bar',   title:'Siniestros por mes',                sub:'Cantidad · Ene–Jun 2026',                     data: sinTendencia },
         { type:'bar',   title:'Días caídos por mes',               sub:'Cantidad · Ene–Jun 2026 · solo mes (sin arrastre)', data: diasTendencia },
         { type:'bar',   title:'Siniestros por unidad — Jun 2026',  sub:'Cantidad de siniestros por unidad operativa', data:[
-          {x:'Fábrica',  y:11},
-          {x:'Extremas', y:7},
+          {x:'Fábrica',  y:12},
+          {x:'Extremas', y:8},
           {x:'Sabores',  y:2},
           {x:'Staff',    y:2},
         ]},
-        { type:'donut', title:'Siniestros por sector — Jun 2026',  sub:'% del total · 22 siniestros', center:'22',    data:[
-          {label:'Fábrica',  value:11},
-          {label:'Locales',  value:9},
+        { type:'donut', title:'Siniestros por sector — Jun 2026',  sub:'% del total · 24 siniestros', center:'24',    data:[
+          {label:'Fábrica',  value:12},
+          {label:'Locales',  value:10},
           {label:'Staff',    value:2},
         ]},
         { type:'bar',   title:'Días caídos por sector — Jun 2026', sub:'Días · verificado en excel (columna Días Caídos Totales)', data:[
-          {x:'Fábrica',  y: 89},
-          {x:'Extremas', y: 58},
+          {x:'Fábrica',  y:126},
+          {x:'Extremas', y: 62},
           {x:'Sabores',  y: 12},
           {x:'Staff',    y:  9},
         ]},
-        { type:'donut', title:'Tipo de siniestro — Jun 2026',      sub:'% del total · 22 siniestros', center:'22',    data:[
+        { type:'donut', title:'Tipo de siniestro — Jun 2026',      sub:'% del total · 24 siniestros', center:'24',    data:[
           {label:'Laboral',    value:18},
           {label:'In Itinere', value:4},
         ]},
-        { type:'donut', title:'Tipo de lesión — Jun 2026',         sub:'% del total · 22 siniestros', center:'22',    data:[
+        { type:'donut', title:'Tipo de lesión — Jun 2026',         sub:'% del total · 24 siniestros', center:'24',    data:[
           {label:'Traumatismo',  value:67},
           {label:'Corte',        value:23},
           {label:'Herida',       value: 5},
@@ -1724,8 +1724,8 @@ window.SECTOR_DATA = {
         {
           key:'detalle-sin-jun', title:'Detalle de siniestros — Junio 2026', iconEmoji:'🦺', accent:'red', type:'table',
           topChips:[
-            {label:'Fábrica',  value:'11 sin. · 89 días', tone:'red'},
-            {label:'Extremas', value:'7 sin. · 58 días',  tone:'cyan'},
+            {label:'Fábrica',  value:'12 sin. · 126 días', tone:'red'},
+            {label:'Extremas', value:'8 sin. · 62 días',  tone:'cyan'},
             {label:'Sabores',  value:'2 sin. · 12 días',  tone:'blue'},
             {label:'Staff',    value:'2 sin. · 9 días',   tone:'purple'},
           ],
@@ -1765,7 +1765,7 @@ window.SECTOR_DATA = {
             {nombre:'JUAREZ LUCAS EZEQUIEL',         fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Herida',       tipo:'Laboral',    razon:'Certaldo',                   gravedad:'Leve',     dias:'0',  fechaAlta:'06/07/2026'},
             {nombre:'RODA MAXIMILIANO',              fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Corte',        tipo:'Laboral',    razon:'Sancor Seguros',             gravedad:'Leve',     dias:'0',  fechaAlta:'S/D'},
           ],
-          totalRow:{ label:'TOTAL — 22 siniestros', value:'168 días al cierre de mes' },
+          totalRow:{ label:'TOTAL — 24 siniestros (22 cargados en detalle nominal, 2 pendientes de carga)', value:'209 días al cierre de mes' },
         },
         {
           key:'arrastre-jun', title:'Arrastre — Siniestros abiertos de meses anteriores (Jun 2026)', iconEmoji:'📦', accent:'purple', type:'table',
