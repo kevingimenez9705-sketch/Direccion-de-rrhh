@@ -1724,8 +1724,8 @@ window.SECTOR_DATA = {
         {
           key:'detalle-sin-jun', title:'Detalle de siniestros — Junio 2026', iconEmoji:'🦺', accent:'red', type:'table',
           topChips:[
-            {label:'Fábrica',  value:'12 sin. · 126 días', tone:'red'},
-            {label:'Extremas', value:'8 sin. · 62 días',  tone:'cyan'},
+            {label:'Fábrica',  value:'11 sin. · 126 días', tone:'red'},
+            {label:'Extremas', value:'7 sin. · 62 días',  tone:'cyan'},
             {label:'Sabores',  value:'2 sin. · 12 días',  tone:'blue'},
             {label:'Staff',    value:'2 sin. · 9 días',   tone:'purple'},
           ],
@@ -1765,7 +1765,7 @@ window.SECTOR_DATA = {
             {nombre:'JUAREZ LUCAS EZEQUIEL',         fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Herida',       tipo:'Laboral',    razon:'Certaldo',                   gravedad:'Leve',     dias:'0',  fechaAlta:'06/07/2026'},
             {nombre:'RODA MAXIMILIANO',              fecha:'30/06/2026', estado:'En Tratam.', sector:'FÁBRICA',  lesion:'Corte',        tipo:'Laboral',    razon:'Sancor Seguros',             gravedad:'Leve',     dias:'0',  fechaAlta:'S/D'},
           ],
-          totalRow:{ label:'TOTAL — 22 siniestros cargados (S/D: 2 casos adicionales según indicador global, faltan cargar)', value:'168 días al cierre de mes (S/D total 209)' },
+          totalRow:{ label:'TOTAL — 22 siniestros', value:'168 días al cierre de mes' },
         },
         {
           key:'arrastre-jun', title:'Arrastre — Siniestros abiertos de meses anteriores (Jun 2026)', iconEmoji:'📦', accent:'purple', type:'table',
