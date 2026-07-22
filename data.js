@@ -974,8 +974,8 @@ window.SECTOR_DATA = {
             {key:'spm',label:'SE PAGA EN JUNIO',align:'right'},
           ],
           rows:[
-            {concepto:'Fábricas',                     detalle:'20% de 20', monto:'$28.018.750',  spm:'$11.530.100'},
-            {concepto:'Locales / Sabores / Extremas', detalle:'80% de 20', monto:'$100.574.183', spm:'$63.190.888'},
+            {concepto:'Fábricas',                     detalle:'18% de 22', monto:'$28.018.750',  spm:'$11.530.100'},
+            {concepto:'Locales / Sabores / Extremas', detalle:'82% de 22', monto:'$100.574.183', spm:'$63.190.888'},
           ],
           totalRow:{ label:'Total acuerdos cerrados en junio — 22 acuerdos celebrados', value:'$143.060.233' },
         },
