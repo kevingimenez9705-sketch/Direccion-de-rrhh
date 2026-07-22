@@ -958,10 +958,10 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Total acuerdos cerrados en junio', value:'$128.592.933', delta:{ dir:'neutral', text:'20 acuerdos celebrados' } },
-        { label:'Total pagado en junio',            value:'$132.084.409', delta:{ dir:'neutral', text:'Acuerdos anteriores + acuerdos junio' } },
-        { label:'Total a pagar (Jul–Oct)',          value:'$73.400.000',  delta:{ dir:'neutral', text:'Cuotas pendientes de acuerdos cerrados' } },
-        { label:'Efectividad de acuerdos',          value:'42%',          delta:{ dir:'up', text:'Ahorro $177.807.686 vs. reclamado $306.400.619' } },
+        { label:'Total acuerdos cerrados en junio', value:'$143.060.233', delta:{ dir:'neutral', text:'22 acuerdos celebrados' } },
+        { label:'Total pagado en junio',            value:'$142.939.709', delta:{ dir:'neutral', text:'Acuerdos anteriores + acuerdos junio' } },
+        { label:'Total a pagar (Jul–Oct)',          value:'$75.900.000',  delta:{ dir:'neutral', text:'Cuotas pendientes de acuerdos cerrados' } },
+        { label:'Efectividad de acuerdos',          value:'42%',          delta:{ dir:'up', text:'Ahorro $195.021.274 vs. reclamado $338.081.507' } },
       ],
       charts: [],
       details: [
@@ -977,16 +977,16 @@ window.SECTOR_DATA = {
             {concepto:'Fábricas',                     detalle:'20% de 20', monto:'$28.018.750',  spm:'$11.530.100'},
             {concepto:'Locales / Sabores / Extremas', detalle:'80% de 20', monto:'$100.574.183', spm:'$63.190.888'},
           ],
-          totalRow:{ label:'Total acuerdos cerrados en junio — 20 acuerdos celebrados', value:'$128.592.933' },
+          totalRow:{ label:'Total acuerdos cerrados en junio — 22 acuerdos celebrados', value:'$143.060.233' },
         },
         {
           key:'pagos-jun', title:'Pagos emitidos en junio 2026', iconEmoji:'💰', accent:'green', type:'table',
           columns:[{key:'concepto',label:'CONCEPTO'},{key:'detalle',label:'DETALLE'},{key:'monto',label:'MONTO',align:'right',strong:true}],
           rows:[
             {concepto:'Acuerdos de meses anteriores', detalle:'Cuotas correspondientes a acuerdos previos a junio', monto:'$57.363.421'},
-            {concepto:'Acuerdos celebrados en junio',  detalle:'Cuotas abonadas de acuerdos firmados en junio',     monto:'$74.720.988'},
+            {concepto:'Acuerdos celebrados en junio',  detalle:'Cuotas abonadas de acuerdos firmados en junio',     monto:'$85.576.288'},
           ],
-          totalRow:{ label:'TOTAL PAGADO EN JUNIO', value:'$132.084.409' },
+          totalRow:{ label:'TOTAL PAGADO EN JUNIO', value:'$142.939.709' },
         },
         {
           key:'pagos-pendientes-jun', title:'Pagos a emitir — acuerdos cerrados en junio y anteriores', iconEmoji:'📅', accent:'amber', type:'table',
@@ -998,19 +998,19 @@ window.SECTOR_DATA = {
             {key:'monto',label:'MONTO',align:'right',strong:true},
           ],
           rows:[
-            {mes:'Julio 2026',      detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$10.850.000', locales:'$19.875.000', monto:'$30.725.000'},
+            {mes:'Julio 2026',      detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$10.850.000', locales:'$22.375.000', monto:'$33.225.000'},
             {mes:'Agosto 2026',     detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$9.500.000',  locales:'$16.625.000', monto:'$26.125.000'},
             {mes:'Septiembre 2026', detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$4.550.000',  locales:'$6.000.000',  monto:'$10.550.000'},
             {mes:'Octubre 2026',    detalle:'Cuotas de acuerdos cerrados en junio y anteriores', fabrica:'$0',          locales:'$6.000.000',  monto:'$6.000.000'},
           ],
-          totalRow:{ label:'TOTAL A PAGAR (Jul–Oct)', value:'$73.400.000' },
+          totalRow:{ label:'TOTAL A PAGAR (Jul–Oct)', value:'$75.900.000' },
         },
         {
           key:'efectividad-jun', title:'Efectividad de Acuerdos — Junio 2026', iconEmoji:'🎯', accent:'green', type:'table',
           topChips:[
-            {label:'Cierre de acuerdos', value:'$128.592.933', tone:'purple'},
-            {label:'Montos reclamados',  value:'$306.400.619', tone:'red'},
-            {label:'Ahorro',             value:'$177.807.686', tone:'green'},
+            {label:'Cierre de acuerdos', value:'$143.060.233', tone:'purple'},
+            {label:'Montos reclamados',  value:'$338.081.507', tone:'red'},
+            {label:'Ahorro',             value:'$195.021.274', tone:'green'},
             {label:'Efectividad',        value:'42%',          tone:'amber'},
           ],
           columns:[
@@ -1018,9 +1018,9 @@ window.SECTOR_DATA = {
             {key:'monto',label:'MONTO',align:'right',strong:true},
           ],
           rows:[
-            {concepto:'Cierre de acuerdos', monto:'$128.592.933'},
-            {concepto:'Montos reclamados',  monto:'$306.400.619'},
-            {concepto:'Ahorro',             monto:'$177.807.686'},
+            {concepto:'Cierre de acuerdos', monto:'$143.060.233'},
+            {concepto:'Montos reclamados',  monto:'$338.081.507'},
+            {concepto:'Ahorro',             monto:'$195.021.274'},
           ],
           totalRow:{ label:'EFECTIVIDAD DE ACUERDOS — JUN 2026', value:'42%' },
         },
@@ -1789,7 +1789,7 @@ window.SECTOR_DATA = {
             {key:'gravedad',   label:'GRAVEDAD',            badge:true},
           ],
           rows:[
-            {mes:'Nov \'25', nombre:'CORDOBA AXEL',              fecha:'24/11/2025', estado:'En Tratamiento', sector:'FÁBRICA', modulo:'Fábrica Panificados',           detalle:'Operaciones', lesion:'Corte',       diasAcum:'224', diasCierre:'30', tipo:'Laboral', gravedad:'Moderado'},
+            {mes:"Nov '25", nombre:'CORDOBA AXEL',              fecha:'24/11/2025', estado:'En Tratamiento', sector:'FÁBRICA', modulo:'Fábrica Panificados',           detalle:'Operaciones', lesion:'Corte',       diasAcum:'224', diasCierre:'30', tipo:'Laboral', gravedad:'Moderado'},
             {mes:'Febrero',  nombre:'FLORES VICTOR HUGO',        fecha:'08/02/2026', estado:'En Tratamiento', sector:'FÁBRICA', modulo:'Fábrica San Martín',            detalle:'Operaciones', lesion:'Corte',       diasAcum:'148', diasCierre:'30', tipo:'Laboral', gravedad:'Leve'},
             {mes:'Abril',    nombre:'RODRIGUEZ ARIEL MARTIN',    fecha:'21/04/2026', estado:'En tratamiento', sector:'FÁBRICA', modulo:'Fábrica San Martín Logística', detalle:'Logística',   lesion:'Traumatismo', diasAcum:'76',  diasCierre:'30', tipo:'Laboral', gravedad:'Leve'},
             {mes:'Abril',    nombre:'VERA ESCOBAR JOSE LAUTARO', fecha:'21/04/2026', estado:'En tratamiento', sector:'FÁBRICA', modulo:'Fábrica Jamón y Queso',        detalle:'Operaciones', lesion:'Amputación',  diasAcum:'76',  diasCierre:'30', tipo:'Laboral', gravedad:'Grave'},
