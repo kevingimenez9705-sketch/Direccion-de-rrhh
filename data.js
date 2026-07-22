@@ -975,7 +975,7 @@ window.SECTOR_DATA = {
           ],
           rows:[
             {concepto:'Fábricas',                     detalle:'18% de 22', monto:'$28.018.750',  spm:'$11.530.100'},
-            {concepto:'Locales / Sabores / Extremas', detalle:'82% de 22', monto:'$115.041.483', spm:'$74.758.188'},
+            {concepto:'Locales / Sabores / Extremas', detalle:'82% de 22', monto:'$115.041.483', spm:'74.046.188'},
           ],
           totalRow:{ label:'Total acuerdos cerrados en junio — 22 acuerdos celebrados', value:'$143.060.233' },
         },
