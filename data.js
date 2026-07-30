@@ -1684,7 +1684,7 @@ window.SECTOR_DATA = {
     },
     jun: {
       kpis: [
-        { label:'Siniestralidad locales / staff', value:'0,94',  delta:{ dir:'neutral', text:'Con arrastre: 2,24' } },
+        { label:'Siniestralidad locales / staff', value:'2,10',  delta:{ dir:'neutral', text:'Con arrastre: 2,24' } },
         { label:'Siniestralidad fábricas',        value:'5,04',  delta:{ dir:'neutral', text:'Con arrastre: 18,09' } },
         { label:'Siniestros del mes', value:'24',  delta:{ dir:'up', text:'Sabores 2 · Extremas 8 · Fábrica 12 · Staff 2' } },
         { label:'Días caídos',        value:'209', delta:{ dir:'neutral', text:'Solo mes · 649 con arrastre (sumando meses anteriores) · suma de los 24 casos' } },
