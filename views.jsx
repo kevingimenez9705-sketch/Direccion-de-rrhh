@@ -78,16 +78,29 @@ function findGerenciaStat(charts, matchLabel) {
   return { rotacion, bajas };
 }
 
-function GerenciaPicker({ gerencias, selectedKey, onSelect }) {
+// Total sumando todas las gerencias del mes activo: bajas (suma de la dona) y
+// rotación (tomada del KPI del sector, que ya viene calculado correctamente).
+function findTotalStat(kpis, charts) {
+  let bajas = null;
+  (charts || []).forEach(c => {
+    if (/gerencia/i.test(c.title || '') && c.type === 'donut') {
+      bajas = c.data.reduce((a, d) => a + d.value, 0);
+    }
+  });
+  const rotKpi = (kpis || []).find(k => /rotaci/i.test(k.label));
+  return { rotacionDisplay: rotKpi ? rotKpi.value : null, bajas };
+}
+
+function GerenciaPicker({ items, selectedKey, onSelect }) {
   return (
     <div className="gerencia-picker">
-      {gerencias.map(g => (
+      {items.map(g => (
         <button
           key={g.key}
-          className={'gerencia-btn' + (selectedKey === g.key ? ' active' : '')}
-          onClick={() => onSelect(selectedKey === g.key ? null : g.key)}
+          className={'gerencia-btn' + (selectedKey === g.key ? ' active' : '') + (g.isTotal ? ' is-total' : '')}
+          onClick={() => onSelect(g.key)}
         >
-          <span className="gerencia-btn-photo">
+          <span className={'gerencia-btn-photo' + (g.isTotal ? ' is-logo' : '')}>
             <img src={encodeURI(g.photo)} alt={g.name} />
           </span>
           <span className="gerencia-btn-name">{g.name}</span>
@@ -103,13 +116,18 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const sectorData = window.SECTOR_DATA[sector.id];
   const activeMonth = window.MONTHS[monthIdx];
   const gerencias = window.GERENCIAS[sector.id] || [];
-  const [selectedGerenciaKey, setSelectedGerenciaKey] = useState(null);
-  const selectedGerencia = gerencias.find(g => g.key === selectedGerenciaKey) || null;
+  const totalEntry = { key: 'total', isTotal: true, name: `Total ${sector.name}`, role: 'Todas las gerencias', photo: sector.logo };
+  const pickerItems = gerencias.length > 0 ? [totalEntry, ...gerencias] : [];
+  const [selectedGerenciaKey, setSelectedGerenciaKey] = useState('total');
+  const selectedGerencia = pickerItems.find(g => g.key === selectedGerenciaKey) || totalEntry;
+  const isTotalSelected = selectedGerencia.isTotal;
 
   // Busca datos del mes activo; si no existe, toma el último mes disponible
   const monthKeys = Object.keys(sectorData);
   const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
-  const gStat = selectedGerencia ? findGerenciaStat(data.charts, selectedGerencia.matchLabel) : null;
+  const gStat = isTotalSelected
+    ? findTotalStat(data.kpis, data.charts)
+    : (() => { const s = findGerenciaStat(data.charts, selectedGerencia.matchLabel); return { rotacionDisplay: s.rotacion != null ? `${s.rotacion}%` : null, bajas: s.bajas }; })();
 
   return (
     <div style={accent}>
@@ -136,29 +154,31 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         ))}
       </div>
 
-      {gerencias.length > 0 && (
+      {pickerItems.length > 0 && (
         <>
           <div className="section-label">Gerencias — elegí una para ver sus gráficos</div>
-          <GerenciaPicker gerencias={gerencias} selectedKey={selectedGerenciaKey} onSelect={setSelectedGerenciaKey} />
+          <GerenciaPicker items={pickerItems} selectedKey={selectedGerenciaKey} onSelect={setSelectedGerenciaKey} />
         </>
       )}
 
-      {selectedGerencia && (
-        <div className="gerencia-card">
-          <img className="gerencia-card-photo" src={encodeURI(selectedGerencia.photo)} alt={selectedGerencia.name} />
+      {pickerItems.length > 0 && (
+        <div className={'gerencia-card' + (isTotalSelected ? ' is-total' : '')}>
+          <img className={'gerencia-card-photo' + (isTotalSelected ? ' is-logo' : '')} src={encodeURI(selectedGerencia.photo)} alt={selectedGerencia.name} />
           <div className="gerencia-card-body">
             <div className="gerencia-card-name">{selectedGerencia.name}</div>
             <div className="gerencia-card-role">{selectedGerencia.role}</div>
             <div className="gerencia-card-stats">
-              {gStat.rotacion != null ? (
-                <span className="gerencia-stat"><strong>{gStat.rotacion}%</strong> rotación · {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
+              {gStat.rotacionDisplay != null ? (
+                <span className="gerencia-stat"><strong>{gStat.rotacionDisplay}</strong> rotación · {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
               ) : (
                 <span className="gerencia-stat gerencia-stat-empty">Sin desglose por gerencia para {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
               )}
-              {gStat.bajas != null && <span className="gerencia-stat"><strong>{gStat.bajas}</strong> bajas</span>}
+              {gStat.bajas != null && <span className="gerencia-stat"><strong>{gStat.bajas}</strong> bajas{isTotalSelected ? ' (todas las gerencias)' : ''}</span>}
             </div>
           </div>
-          <button className="gerencia-card-close" onClick={() => setSelectedGerenciaKey(null)} aria-label="Quitar selección">×</button>
+          {!isTotalSelected && (
+            <button className="gerencia-card-close" onClick={() => setSelectedGerenciaKey('total')} aria-label="Volver al total">×</button>
+          )}
         </div>
       )}
 
@@ -169,19 +189,20 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
       <div className={'chart-grid' + (data.charts.length === 1 ? ' one' : '')}>
         {data.charts.map((c, i) => {
           const isGerenciaChart = /gerencia/i.test(c.title || '');
+          const filtering = isGerenciaChart && !isTotalSelected;
           const barActiveLabel = isGerenciaChart
-            ? (selectedGerencia ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x : undefined)
+            ? (filtering ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x : undefined)
             : (activeMonth && c.data.find(d => d.x.toLowerCase().startsWith(activeMonth.short.slice(0,3).toLowerCase()))?.x);
-          const donutActiveLabel = isGerenciaChart && selectedGerencia ? selectedGerencia.matchLabel : undefined;
+          const donutActiveLabel = filtering ? selectedGerencia.matchLabel : undefined;
           return (
             <div key={i} className="chart-card">
               <div className="chart-head">
-                <div className="chart-title">{c.title}</div>
+                <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
                 <div className="chart-sub">{c.sub}</div>
               </div>
               <div className="chart-body">
                 {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} />}
-                {c.type === 'bar'   && <window.BarChart   data={c.data} activeLabel={barActiveLabel} />}
+                {c.type === 'bar'   && <window.BarChart   data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />}
                 {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
                 {c.type === 'donut' && <window.DonutChart data={c.data} center={c.center} activeLabel={donutActiveLabel} />}
               </div>

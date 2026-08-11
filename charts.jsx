@@ -133,7 +133,7 @@ function LineChart({ data, activeIndex }) {
 }
 
 // ============ Vertical bar chart ============
-function BarChart({ data, activeLabel }) {
+function BarChart({ data, activeLabel, dimOthers }) {
   const t = chartTheme();
   // Rota etiquetas 45° cuando hay muchas barras (p. ej. Rotación por sector — Fábrica, 14 sectores).
   const rotate = data.length > 7;
@@ -180,8 +180,9 @@ function BarChart({ data, activeLabel }) {
         const isActive = activeLabel != null && d.x === activeLabel;
         const lx = x + barW / 2;
         const ly = padT + innerH + (rotate ? 12 : 20);
+        const dimmed = dimOthers && activeLabel != null && !isActive;
         return (
-          <g key={i}>
+          <g key={i} opacity={dimmed ? 0.35 : 1}>
             <rect
               x={x} y={y} width={barW} height={h}
               rx="4"
@@ -201,6 +202,7 @@ function BarChart({ data, activeLabel }) {
               fontSize={rotate ? 9.5 : 11}
               textAnchor={rotate ? 'end' : 'middle'}
               fill={t.axis}
+              fontWeight={isActive ? 700 : 400}
               transform={rotate ? `rotate(-45, ${lx}, ${ly})` : undefined}
             >{d.x}</text>
           </g>
