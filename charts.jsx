@@ -42,8 +42,10 @@ function ticks(max, count = 5) {
 }
 
 // ============ Line chart ============
-function LineChart({ data, activeIndex, wide }) {
+function LineChart({ data, activeIndex, activeIndices, wide }) {
   const t = chartTheme();
+  // activeIndices (comparación de varios meses) tiene prioridad sobre activeIndex (mes único).
+  const actives = activeIndices && activeIndices.length ? activeIndices : (activeIndex != null ? [activeIndex] : []);
   // "wide": series largas (ej. 15 meses) piden más ancho por punto para que
   // las etiquetas del eje X no se amontonen.
   const W = wide ? Math.max(900, data.length * 65) : 560;
@@ -100,8 +102,8 @@ function LineChart({ data, activeIndex, wide }) {
       {/* points */}
       {pts.map((p, i) => (
         <g key={i}>
-          <circle cx={p.x} cy={p.y} r={i === activeIndex ? 6 : 4} fill={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'} stroke={t.blueDark} strokeWidth={i === activeIndex ? 3 : 2} />
-          {i === activeIndex && (
+          <circle cx={p.x} cy={p.y} r={actives.includes(i) ? 6 : 4} fill={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'} stroke={t.blueDark} strokeWidth={actives.includes(i) ? 3 : 2} />
+          {actives.includes(i) && (
             <g>
               <rect x={p.x - 22} y={p.y - 30} width="44" height="20" rx="5" fill={t.tooltipBg} />
               <text x={p.x} y={p.y - 16} fontSize="10.5" textAnchor="middle" fill="white" fontWeight="600">{p.d.y}</text>
@@ -109,9 +111,9 @@ function LineChart({ data, activeIndex, wide }) {
           )}
         </g>
       ))}
-      {/* value labels — número sobre cada punto (el activo ya muestra su burbuja) */}
+      {/* value labels — número sobre cada punto (los activos ya muestran su burbuja) */}
       {pts.map((p, i) => (
-        (Number.isFinite(p.d.y) && i !== activeIndex) ? (
+        (Number.isFinite(p.d.y) && !actives.includes(i)) ? (
           <text
             key={i}
             x={p.x}
@@ -213,6 +215,88 @@ function BarChart({ data, activeLabel, dimOthers }) {
         );
       })}
     </svg>
+  );
+}
+
+// ============ Grouped bar chart (comparación de varios meses) ============
+// series: [{ label, color, data:[{x,y}, ...] }] — todas las series comparten
+// las mismas categorías (mismo orden de "x") para poder agruparlas.
+function GroupedBarChart({ series, activeLabel, dimOthers }) {
+  const t = chartTheme();
+  const categories = (series[0]?.data || []).map(d => d.x);
+  const rotate = categories.length > 7 || categories.some(c => String(c).length > 10);
+  const W = 560;
+  const padL = 44, padR = 14, padT = 14;
+  const padB = rotate ? 64 : 30;
+  const H = 240 + (rotate ? 44 : 0);
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+
+  const maxVal = Math.max(1, ...series.flatMap(s => s.data.map(d => d.y)));
+  const max = niceMax(maxVal);
+  const yTicks = ticks(max, 5);
+
+  const groupGap = rotate ? 10 : 18;
+  const groupW = (innerW - groupGap * (categories.length - 1)) / categories.length;
+  const barGap = 3;
+  const n = Math.max(series.length, 1);
+  const barW = (groupW - barGap * (n - 1)) / n;
+
+  return (
+    <div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280 }}>
+        {yTicks.map((v, i) => {
+          const y = padT + (1 - v / max) * innerH;
+          return (
+            <g key={i}>
+              <line x1={padL} x2={W - padR} y1={y} y2={y} stroke={t.grid} />
+              <text x={padL - 8} y={y + 4} fontSize="10" textAnchor="end" fill={t.axis}>{v}</text>
+            </g>
+          );
+        })}
+        {categories.map((cat, ci) => {
+          const gx = padL + ci * (groupW + groupGap);
+          const lx = gx + groupW / 2;
+          const ly = padT + innerH + (rotate ? 12 : 20);
+          const dimmed = dimOthers && activeLabel != null && cat !== activeLabel;
+          return (
+            <g key={ci} opacity={dimmed ? 0.35 : 1}>
+              {series.map((s, si) => {
+                const hit = s.data[ci];
+                const val = hit ? hit.y : 0;
+                const h = (val / max) * innerH;
+                const bx = gx + si * (barW + barGap);
+                const by = padT + innerH - h;
+                return (
+                  <g key={si}>
+                    <rect x={bx} y={by} width={barW} height={h} rx="3" fill={s.color} />
+                    {Number.isFinite(val) && val > 0 && (
+                      <text x={bx + barW / 2} y={by - 4} fontSize={rotate ? 8 : 9} textAnchor="middle" fill={t.ink} fontWeight="700">{val}</text>
+                    )}
+                  </g>
+                );
+              })}
+              <text
+                x={lx} y={ly}
+                fontSize={rotate ? 9.5 : 11}
+                textAnchor={rotate ? 'end' : 'middle'}
+                fill={t.axis}
+                fontWeight={activeLabel === cat ? 700 : 400}
+                transform={rotate ? `rotate(-45, ${lx}, ${ly})` : undefined}
+              >{cat}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <div className="chart-legend">
+        {series.map((s, i) => (
+          <span key={i} className="chart-legend-item">
+            <span className="chart-legend-swatch" style={{ background: s.color }}></span>
+            {s.label}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -331,4 +415,4 @@ function DonutChart({ data, center, activeLabel }) {
   );
 }
 
-Object.assign(window, { LineChart, BarChart, HBarChart, DonutChart });
+Object.assign(window, { LineChart, BarChart, HBarChart, DonutChart, GroupedBarChart });

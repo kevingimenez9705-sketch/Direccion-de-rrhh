@@ -485,6 +485,32 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--accent-color, var(--text));
 }
 
+.month-strip-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.compare-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.compare-toggle:hover { border-color: var(--blue-300); color: var(--text); }
+.compare-toggle.active {
+  background: var(--accent-color, var(--blue-500));
+  border-color: var(--accent-color, var(--blue-500));
+  color: white;
+}
+.compare-hint { font-size: 12px; color: var(--text-3); }
+
 .month-strip {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -504,6 +530,7 @@ button { font-family: inherit; cursor: pointer; }
   text-align: center;
   color: var(--text-2);
   flex: 0 0 68px;
+  position: relative;
 }
 .month-tab:hover { background: var(--muted); }
 .month-tab-name { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
@@ -513,6 +540,72 @@ button { font-family: inherit; cursor: pointer; }
   color: white;
 }
 .month-tab.active .month-tab-year { color: rgba(255,255,255,0.85); }
+.month-tab-badge {
+  position: absolute;
+  top: 3px; right: 3px;
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  color: #14213D;
+  font-size: 9.5px;
+  font-weight: 800;
+  display: grid; place-items: center;
+}
+
+/* ============ Comparación de meses ============ */
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.compare-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 14px 16px 16px;
+}
+.compare-col-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.compare-col-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.compare-col-metric { margin-bottom: 12px; }
+.compare-col-metric:last-child { margin-bottom: 0; }
+.compare-col-metric-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-3);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.compare-col-metric-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.compare-col-delta {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--muted);
+  font-size: 11px;
+  color: var(--text-2);
+}
+.compare-col-delta.up { color: #2C7E51; background: #E4F2EA; }
+.compare-col-delta.down { color: #A8453C; background: #F8E5E3; }
+[data-theme="dark"] .compare-col-delta.up { color: #7FD3A5; background: #16301F; }
+[data-theme="dark"] .compare-col-delta.down { color: #EBA29A; background: #3A1F1E; }
 
 /* ============ Selector de gerencias (con foto) ============ */
 .gerencia-picker {

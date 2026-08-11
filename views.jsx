@@ -92,16 +92,19 @@ function buildStat(sectorData, monthKey, prevMonthKey, matchLabel) {
   return { altasTotal, altasMes, altasMesPrev, noPresentes, noPresentesPrev };
 }
 
-// Texto + dirección de la variación vs. el mes anterior.
+// Texto + dirección de la variación vs. una referencia con nombre propio
+// (por defecto "mes ant."; en la comparación de meses se pasa el mes puntual,
+// porque ahí la referencia no siempre es el mes calendario anterior).
 // invert:true = un aumento es una mala noticia (ej. no presentes) → se pinta como "down"/rojo.
-function deltaInfo(cur, prev, invert) {
+function deltaInfo(cur, prev, invert, refLabel) {
+  const ref = refLabel || 'mes ant.';
   if (cur == null) return null;
-  if (prev == null) return { dir: 'neutral', text: 'Sin dato del mes anterior' };
+  if (prev == null) return { dir: 'neutral', text: `Sin dato de ${ref}` };
   const diff = cur - prev;
-  if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. mes ant. (${fmtInt(prev)})` };
+  if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. ${ref} (${fmtInt(prev)})` };
   const isMore = diff > 0;
   const dir = invert ? (isMore ? 'down' : 'up') : (isMore ? 'up' : 'down');
-  return { dir, text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. mes ant. (${fmtInt(prev)})` };
+  return { dir, text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. ${ref} (${fmtInt(prev)})` };
 }
 
 function GerenciaPicker({ items, selectedKey, onSelect }) {
@@ -123,55 +126,127 @@ function GerenciaPicker({ items, selectedKey, onSelect }) {
   );
 }
 
+// Colores para distinguir hasta 4 meses en modo comparación (barras agrupadas,
+// línea de Altas por mes, insignias de la tira de meses).
+const COMPARE_COLORS = ['#1D3860', '#1F7A85', '#8B96A6', '#55606E'];
+const MAX_COMPARE_MONTHS = 4;
+
 // Tira de meses con scroll horizontal (el rango real son 15 meses) —
 // centra automáticamente el mes activo al montar o cambiar de mes.
-function MonthStrip({ monthIdx, onMonthChange }) {
+// En modo comparación permite tildar hasta MAX_COMPARE_MONTHS meses a la vez
+// (ej. Mayo 2025 vs Mayo 2026) en vez de un solo mes.
+function MonthStrip({ monthIdx, onMonthChange, compareMode, onToggleCompareMode, compareMonthIdxs, onToggleCompareMonth }) {
   const activeRef = useRef(null);
   useEffect(() => {
-    activeRef.current?.scrollIntoView({ inline: 'center', block: 'nearest' });
-  }, [monthIdx]);
+    if (!compareMode) activeRef.current?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, [monthIdx, compareMode]);
 
   return (
-    <div className="month-strip">
-      {window.MONTHS.map((m, i) => (
+    <div>
+      <div className="month-strip-toolbar">
         <button
-          key={m.key}
-          ref={i === monthIdx ? activeRef : null}
-          className={'month-tab' + (i === monthIdx ? ' active' : '')}
-          onClick={() => onMonthChange(i)}
+          className={'compare-toggle' + (compareMode ? ' active' : '')}
+          onClick={onToggleCompareMode}
         >
-          <div className="month-tab-name">{m.short}</div>
-          <div className="month-tab-year">{m.year}</div>
+          <window.Icon name="grid" size={13} />
+          {compareMode ? 'Comparando meses' : 'Comparar meses'}
         </button>
-      ))}
+        {compareMode && (
+          <span className="compare-hint">
+            {compareMonthIdxs.length === 0
+              ? `Elegí hasta ${MAX_COMPARE_MONTHS} meses (ej. Mayo 2025 vs Mayo 2026)`
+              : `${compareMonthIdxs.length}/${MAX_COMPARE_MONTHS} elegidos`}
+          </span>
+        )}
+      </div>
+      <div className="month-strip">
+        {window.MONTHS.map((m, i) => {
+          const compareOrder = compareMode ? compareMonthIdxs.indexOf(i) : -1;
+          const isCompareActive = compareOrder !== -1;
+          const isActive = compareMode ? isCompareActive : i === monthIdx;
+          return (
+            <button
+              key={m.key}
+              ref={!compareMode && i === monthIdx ? activeRef : null}
+              className={'month-tab' + (isActive ? ' active' : '')}
+              style={isCompareActive ? { background: COMPARE_COLORS[compareOrder], color: 'white' } : undefined}
+              onClick={() => compareMode ? onToggleCompareMonth(i) : onMonthChange(i)}
+            >
+              {isCompareActive && <span className="month-tab-badge">{compareOrder + 1}</span>}
+              <div className="month-tab-name">{m.short}</div>
+              <div className="month-tab-year" style={isCompareActive ? { color: 'rgba(255,255,255,0.85)' } : undefined}>{m.year}</div>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
+}
+
+function mesLabelFor(m) {
+  return `${m.short.charAt(0)}${m.short.slice(1).toLowerCase()} ${m.year}`;
+}
+function pctOf(noPresentes, altasMes) {
+  return (altasMes != null && noPresentes != null && altasMes > 0)
+    ? Math.round((noPresentes / altasMes) * 1000) / 10
+    : null;
 }
 
 // ============ Sector detail view ============
 function SectorView({ sector, monthIdx, onMonthChange }) {
   const accent = window.ACCENTS[sector.accent] || window.ACCENTS.blue;
   const sectorData = window.SECTOR_DATA[sector.id];
-  const activeMonth = window.MONTHS[monthIdx];
   const gerencias = window.GERENCIAS[sector.id] || [];
   const totalEntry = { key: 'total', isTotal: true, name: `Total ${sector.name}`, role: 'Todas las gerencias', photo: sector.logo };
   const pickerItems = gerencias.length > 0 ? [totalEntry, ...gerencias] : [];
   const [selectedGerenciaKey, setSelectedGerenciaKey] = useState('total');
   const selectedGerencia = pickerItems.find(g => g.key === selectedGerenciaKey) || totalEntry;
   const isTotalSelected = selectedGerencia.isTotal;
+  const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
+
+  // ── Comparación de varios meses (ej. Mayo 2025 vs Mayo 2026) ──
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareMonthIdxs, setCompareMonthIdxs] = useState([]);
+  function toggleCompareMode() {
+    setCompareMode(m => {
+      const next = !m;
+      setCompareMonthIdxs(next ? [monthIdx] : []);
+      return next;
+    });
+  }
+  function toggleCompareMonth(i) {
+    setCompareMonthIdxs(prev => {
+      if (prev.includes(i)) return prev.filter(x => x !== i);
+      if (prev.length >= MAX_COMPARE_MONTHS) return prev;
+      return [...prev, i];
+    });
+  }
+  const sortedCompareIdxs = [...compareMonthIdxs].sort((a, b) => a - b);
+  const isComparing = compareMode && sortedCompareIdxs.length >= 2;
+  // Mientras se está eligiendo (compareMode con 0-1 meses), se sigue mostrando
+  // el último mes tildado como referencia para no dejar la pantalla vacía.
+  const effectiveMonthIdx = compareMode && sortedCompareIdxs.length > 0
+    ? sortedCompareIdxs[sortedCompareIdxs.length - 1]
+    : monthIdx;
+  const activeMonth = window.MONTHS[effectiveMonthIdx];
 
   // Busca datos del mes activo; si no existe, toma el último mes disponible
   const monthKeys = Object.keys(sectorData);
   const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
-  const prevMonth = monthIdx > 0 ? window.MONTHS[monthIdx - 1] : null;
-  const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
+  const prevMonth = effectiveMonthIdx > 0 ? window.MONTHS[effectiveMonthIdx - 1] : null;
   const stat = buildStat(sectorData, activeMonth.key, prevMonth && sectorData[prevMonth.key] ? prevMonth.key : null, matchLabel);
   const altasDelta = deltaInfo(stat.altasMes, stat.altasMesPrev, false);
   const noPresentesDelta = deltaInfo(stat.noPresentes, stat.noPresentesPrev, true);
-  const gPct = (stat.altasMes != null && stat.noPresentes != null && stat.altasMes > 0)
-    ? Math.round((stat.noPresentes / stat.altasMes) * 1000) / 10
-    : null;
-  const mesLabel = `${activeMonth.short.charAt(0)}${activeMonth.short.slice(1).toLowerCase()} ${activeMonth.year}`;
+  const gPct = pctOf(stat.noPresentes, stat.altasMes);
+  const mesLabel = mesLabelFor(activeMonth);
+
+  // Datos por columna cuando se está comparando
+  const compareStats = isComparing ? sortedCompareIdxs.map(idx => {
+    const m = window.MONTHS[idx];
+    const mData = sectorData[m.key];
+    const s = mData ? buildStat(sectorData, m.key, null, matchLabel) : { altasMes: null, noPresentes: null, altasTotal: null };
+    return { idx, month: m, ...s };
+  }) : [];
 
   return (
     <div style={accent}>
@@ -185,7 +260,14 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
       </div>
 
       <div className="section-label" style={{ marginTop: 0 }}>Informe mensual — Elegí un mes</div>
-      <MonthStrip monthIdx={monthIdx} onMonthChange={onMonthChange} />
+      <MonthStrip
+        monthIdx={monthIdx}
+        onMonthChange={onMonthChange}
+        compareMode={compareMode}
+        onToggleCompareMode={toggleCompareMode}
+        compareMonthIdxs={compareMonthIdxs}
+        onToggleCompareMonth={toggleCompareMonth}
+      />
 
       {pickerItems.length > 0 && (
         <>
@@ -207,16 +289,46 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         </div>
       )}
 
-      {/* Cuando hay una gerencia seleccionada, las tarjetas muestran SUS datos
-          (acumulado del período + mes activo, con variación vs. el mes anterior)
-          en vez de los del sector completo. */}
-      <div className="kpi-grid">
-        {[
-          { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D' },
-          { label: `Altas — ${mesLabel}`, value: fmtInt(stat.altasMes) ?? '0', delta: altasDelta },
-          { label: `No presentes — ${mesLabel}`, value: `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}`, delta: noPresentesDelta },
-        ].map((k, i) => <KpiCard key={i} kpi={k} />)}
-      </div>
+      {isComparing ? (
+        <div className="compare-grid">
+          {compareStats.map((cs, i) => {
+            const prev = i > 0 ? compareStats[i - 1] : null;
+            const prevLabel = prev ? mesLabelFor(prev.month) : null;
+            const aDelta = prev ? deltaInfo(cs.altasMes, prev.altasMes, false, prevLabel) : null;
+            const nDelta = prev ? deltaInfo(cs.noPresentes, prev.noPresentes, true, prevLabel) : null;
+            const pct = pctOf(cs.noPresentes, cs.altasMes);
+            return (
+              <div key={cs.idx} className="compare-col" style={{ borderTopColor: COMPARE_COLORS[i] }}>
+                <div className="compare-col-head">
+                  <span className="compare-col-dot" style={{ background: COMPARE_COLORS[i] }}></span>
+                  {mesLabelFor(cs.month)}
+                </div>
+                <div className="compare-col-metric">
+                  <div className="compare-col-metric-label">Altas</div>
+                  <div className="compare-col-metric-value">{fmtInt(cs.altasMes) ?? '0'}</div>
+                  {aDelta && <div className={'compare-col-delta ' + aDelta.dir}>{aDelta.text}</div>}
+                </div>
+                <div className="compare-col-metric">
+                  <div className="compare-col-metric-label">No presentes</div>
+                  <div className="compare-col-metric-value">{fmtInt(cs.noPresentes) ?? '0'}{pct != null ? ` (${pct}%)` : ''}</div>
+                  {nDelta && <div className={'compare-col-delta ' + nDelta.dir}>{nDelta.text}</div>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        /* Cuando hay una gerencia seleccionada, las tarjetas muestran SUS datos
+           (acumulado del período + mes activo, con variación vs. el mes anterior)
+           en vez de los del sector completo. */
+        <div className="kpi-grid">
+          {[
+            { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D' },
+            { label: `Altas — ${mesLabel}`, value: fmtInt(stat.altasMes) ?? '0', delta: altasDelta },
+            { label: `No presentes — ${mesLabel}`, value: `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}`, delta: noPresentesDelta },
+          ].map((k, i) => <KpiCard key={i} kpi={k} />)}
+        </div>
+      )}
 
       <div className={'chart-grid' + (data.charts.length === 1 ? ' one' : '')}>
         {data.charts.map((c, i) => {
@@ -228,7 +340,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
               <div key={i} className="chart-card">
                 <div className="chart-head">
                   <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
-                  <div className="chart-sub">{mesLabel}</div>
+                  <div className="chart-sub">{mesLabel}{isComparing ? ' · no se compara entre meses' : ''}</div>
                 </div>
                 <div className="chart-body">
                   {zonalData.length > 0
@@ -243,15 +355,24 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
             ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x
             : undefined;
           const donutActiveLabel = filtering && c.matchKind === 'gerencia-total' ? selectedGerencia.matchLabel : undefined;
+          const isComparableBar = isComparing && (c.matchKind === 'gerencia-mes' || c.matchKind === 'no-presentes-gerencia');
+          const compareSeries = isComparableBar ? sortedCompareIdxs.map((idx, si) => {
+            const m = window.MONTHS[idx];
+            const mData = sectorData[m.key];
+            const chart = mData ? chartByKind(mData.charts, c.matchKind) : null;
+            return { label: mesLabelFor(m), color: COMPARE_COLORS[si], data: chart ? chart.data : [] };
+          }) : null;
           return (
             <div key={i} className={'chart-card' + (c.full ? ' chart-card--wide' : '')}>
               <div className="chart-head">
                 <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
-                <div className="chart-sub">{c.sub}</div>
+                <div className="chart-sub">{isComparableBar ? 'Comparando meses elegidos' : c.sub}</div>
               </div>
               <div className="chart-body">
-                {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} wide={c.wide} />}
-                {c.type === 'bar'   && <window.BarChart   data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />}
+                {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={effectiveMonthIdx < c.data.length ? effectiveMonthIdx : c.data.length - 1} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < c.data.length) : undefined} wide={c.wide} />}
+                {c.type === 'bar' && (isComparableBar
+                  ? <window.GroupedBarChart series={compareSeries} activeLabel={barActiveLabel} dimOthers={filtering} />
+                  : <window.BarChart data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />)}
                 {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
                 {c.type === 'donut' && <window.DonutChart data={c.data} center={c.center} activeLabel={donutActiveLabel} />}
               </div>
