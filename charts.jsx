@@ -42,9 +42,12 @@ function ticks(max, count = 5) {
 }
 
 // ============ Line chart ============
-function LineChart({ data, activeIndex }) {
+function LineChart({ data, activeIndex, wide }) {
   const t = chartTheme();
-  const W = 560, H = 220;
+  // "wide": series largas (ej. 15 meses) piden más ancho por punto para que
+  // las etiquetas del eje X no se amontonen.
+  const W = wide ? Math.max(900, data.length * 65) : 560;
+  const H = wide ? 260 : 220;
   const padL = 44, padR = 14, padT = 16, padB = 26;
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
@@ -77,7 +80,7 @@ function LineChart({ data, activeIndex }) {
   }
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: 260 }}>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: wide ? 320 : 260 }}>
       <defs>
         <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={t.blue} stopOpacity="0.28" />

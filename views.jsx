@@ -187,15 +187,6 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           <div className="gerencia-card-body">
             <div className="gerencia-card-name">{selectedGerencia.name}</div>
             <div className="gerencia-card-role">{selectedGerencia.role}</div>
-            <div className="gerencia-card-stats">
-              <span className="gerencia-stat"><strong>{isTotalSelected ? gStat.altasTotal : fmtInt(gStat.altasTotal)}</strong> altas acumuladas</span>
-              <span className="gerencia-stat"><strong>{isTotalSelected ? gStat.altasMes : fmtInt(gStat.altasMes)}</strong> altas · {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
-              {isTotalSelected ? (
-                <span className="gerencia-stat">{gStat.noPresentes} no presentes</span>
-              ) : (
-                <span className="gerencia-stat"><strong>{fmtInt(gStat.noPresentes)}</strong> no presentes{gPct != null ? ` (${gPct}%)` : ''}</span>
-              )}
-            </div>
           </div>
           {!isTotalSelected && (
             <button className="gerencia-card-close" onClick={() => setSelectedGerenciaKey('total')} aria-label="Volver al total">×</button>
@@ -203,25 +194,53 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         </div>
       )}
 
+      {/* Cuando hay una gerencia seleccionada, las tarjetas muestran SUS datos totales
+          (acumulado del período + mes activo) en vez de los del sector completo. */}
       <div className="kpi-grid">
-        {data.kpis.map((k, i) => <KpiCard key={i} kpi={k} />)}
+        {isTotalSelected
+          ? data.kpis.map((k, i) => <KpiCard key={i} kpi={k} />)
+          : [
+              { label: 'Altas acumuladas', value: fmtInt(gStat.altasTotal) ?? 'S/D' },
+              { label: `Altas — ${activeMonth.short.charAt(0)}${activeMonth.short.slice(1).toLowerCase()} ${activeMonth.year}`, value: fmtInt(gStat.altasMes) ?? '0' },
+              { label: 'No presentes acumulados', value: `${fmtInt(gStat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}` },
+            ].map((k, i) => <KpiCard key={i} kpi={k} />)
+        }
       </div>
 
       <div className={'chart-grid' + (data.charts.length === 1 ? ' one' : '')}>
         {data.charts.map((c, i) => {
           const filtering = !!c.matchKind && !isTotalSelected;
+
+          if (c.matchKind === 'top5-zonales') {
+            const zonalData = window.ZONALES_TOP5?.[sector.id]?.[activeMonth.key]?.[filtering ? selectedGerencia.matchLabel : 'total'] || [];
+            const mesLabel = `${activeMonth.short.charAt(0)}${activeMonth.short.slice(1).toLowerCase()} ${activeMonth.year}`;
+            return (
+              <div key={i} className="chart-card">
+                <div className="chart-head">
+                  <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
+                  <div className="chart-sub">{mesLabel}</div>
+                </div>
+                <div className="chart-body">
+                  {zonalData.length > 0
+                    ? <window.HBarChart data={zonalData} />
+                    : <div className="chart-empty">Sin altas registradas para {mesLabel.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
+                </div>
+              </div>
+            );
+          }
+
           const barActiveLabel = filtering && (c.matchKind === 'gerencia-mes' || c.matchKind === 'no-presentes-gerencia')
             ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x
             : undefined;
           const donutActiveLabel = filtering && c.matchKind === 'gerencia-total' ? selectedGerencia.matchLabel : undefined;
           return (
-            <div key={i} className="chart-card">
+            <div key={i} className={'chart-card' + (c.full ? ' chart-card--wide' : '')}>
               <div className="chart-head">
                 <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
                 <div className="chart-sub">{c.sub}</div>
               </div>
               <div className="chart-body">
-                {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} />}
+                {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} wide={c.wide} />}
                 {c.type === 'bar'   && <window.BarChart   data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />}
                 {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
                 {c.type === 'donut' && <window.DonutChart data={c.data} center={c.center} activeLabel={donutActiveLabel} />}
