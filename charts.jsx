@@ -145,8 +145,11 @@ function BarChart({ data, activeLabel, dimOthers }) {
   const rotate = data.length > 7 || data.some(d => String(d.x).length > 10);
   const W = 560;
   const padL = 44, padR = 14, padT = 14;
-  const padB = rotate ? 64 : 30; // más espacio abajo para las etiquetas rotadas
-  const H = 240 + (rotate ? 44 : 0);
+  // El texto rotado -45° (anchor "end") cuelga hacia ABAJO desde su punto de
+  // anclaje, no hacia arriba — con nombres largos ("Facundo Aramburo") el
+  // margen tiene que ser generoso o el nombre queda cortado por el borde.
+  const padB = rotate ? 80 : 30;
+  const H = 240 + (rotate ? 60 : 0);
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 
@@ -157,7 +160,7 @@ function BarChart({ data, activeLabel, dimOthers }) {
   const barW = (innerW - gap * (data.length - 1)) / data.length;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280 }}>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280, overflow: 'visible' }}>
       <defs>
         <linearGradient id="barFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#6E8CBB" />
@@ -227,8 +230,9 @@ function GroupedBarChart({ series, activeLabel, dimOthers }) {
   const rotate = categories.length > 7 || categories.some(c => String(c).length > 10);
   const W = 560;
   const padL = 44, padR = 14, padT = 14;
-  const padB = rotate ? 64 : 30;
-  const H = 240 + (rotate ? 44 : 0);
+  // Ídem BarChart: el texto rotado -45° cuelga hacia abajo del anclaje.
+  const padB = rotate ? 80 : 30;
+  const H = 240 + (rotate ? 60 : 0);
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 
@@ -244,7 +248,7 @@ function GroupedBarChart({ series, activeLabel, dimOthers }) {
 
   return (
     <div>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280 }}>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280, overflow: 'visible' }}>
         {yTicks.map((v, i) => {
           const y = padT + (1 - v / max) * innerH;
           return (
