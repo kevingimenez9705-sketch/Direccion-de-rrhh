@@ -8,7 +8,7 @@ function PanelEjecutivo({ onOpen }) {
   return (
     <div>
       <div className="panel-hero">
-        <img className="panel-hero-logo" src="assets/rrhh-logo-clean.png" alt="Equipo de Selección" />
+        <img className="panel-hero-logo" src="assets/logo-equipo-seleccion.png" alt="Equipo de Selección" />
         <h1>Equipo de <span className="he-accent">Selección</span></h1>
       </div>
 
