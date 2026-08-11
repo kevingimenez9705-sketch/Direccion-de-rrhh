@@ -344,8 +344,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .sector-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 14px;
 }
 
@@ -359,6 +360,8 @@ button { font-family: inherit; cursor: pointer; }
   flex-direction: column;
   gap: 12px;
   min-height: 130px;
+  flex: 1 1 260px;
+  max-width: 320px;
   position: relative;
   overflow: hidden;
   transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
