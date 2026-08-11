@@ -138,8 +138,9 @@ function LineChart({ data, activeIndex, wide }) {
 // ============ Vertical bar chart ============
 function BarChart({ data, activeLabel, dimOthers }) {
   const t = chartTheme();
-  // Rota etiquetas 45° cuando hay muchas barras (p. ej. Rotación por sector — Fábrica, 14 sectores).
-  const rotate = data.length > 7;
+  // Rota etiquetas 45° cuando hay muchas barras, o cuando los nombres son largos
+  // (ej. "Agustín Sbampato") y se pisan aunque haya pocas barras.
+  const rotate = data.length > 7 || data.some(d => String(d.x).length > 10);
   const W = 560;
   const padL = 44, padR = 14, padT = 14;
   const padB = rotate ? 64 : 30; // más espacio abajo para las etiquetas rotadas
