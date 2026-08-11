@@ -490,10 +490,11 @@ button { font-family: inherit; cursor: pointer; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 6px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
   gap: 6px;
+  overflow-x: auto;
   margin-bottom: 22px;
+  scrollbar-width: thin;
 }
 .month-tab {
   background: transparent;
@@ -502,6 +503,7 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 10px;
   text-align: center;
   color: var(--text-2);
+  flex: 0 0 68px;
 }
 .month-tab:hover { background: var(--muted); }
 .month-tab-name { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }

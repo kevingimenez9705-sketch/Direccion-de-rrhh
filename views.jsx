@@ -1,5 +1,5 @@
 // Panel Ejecutivo — landing page. NO data, only sector buttons.
-const { useState } = React;
+const { useState, useEffect, useRef } = React;
 
 function PanelEjecutivo({ onOpen }) {
   const unidades = window.SECTORS.filter(s => s.group === 'UNIDADES');
@@ -60,35 +60,40 @@ function SectorButton({ sector, onOpen }) {
 }
 window.SectorButton = SectorButton;
 
-// Busca, dentro de los charts del mes activo, la rotación y las bajas
-// del "x"/"label" (matchLabel) de una gerencia puntual.
-function findGerenciaStat(charts, matchLabel) {
-  let rotacion = null, bajas = null;
-  (charts || []).forEach(c => {
-    if (!/gerencia/i.test(c.title || '')) return;
-    if (c.type === 'bar') {
-      const hit = c.data.find(d => d.x === matchLabel);
-      if (hit && Number.isFinite(hit.y)) rotacion = hit.y;
-    }
-    if (c.type === 'donut') {
-      const hit = c.data.find(d => d.label === matchLabel);
-      if (hit) bajas = hit.value;
-    }
-  });
-  return { rotacion, bajas };
+function fmtInt(n) {
+  return n == null ? null : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-// Total sumando todas las gerencias del mes activo: bajas (suma de la dona) y
-// rotación (tomada del KPI del sector, que ya viene calculado correctamente).
-function findTotalStat(kpis, charts) {
-  let bajas = null;
+// Busca, dentro de los charts identificados por matchKind, las altas totales
+// (acumulado del período), las altas del mes activo y los no presentes
+// (acumulado) de una gerencia puntual.
+function findGerenciaStat(charts, matchLabel) {
+  let altasTotal = null, altasMes = null, noPresentes = null;
   (charts || []).forEach(c => {
-    if (/gerencia/i.test(c.title || '') && c.type === 'donut') {
-      bajas = c.data.reduce((a, d) => a + d.value, 0);
+    if (c.matchKind === 'gerencia-mes') {
+      const hit = c.data.find(d => d.x === matchLabel);
+      if (hit) altasMes = hit.y;
+    }
+    if (c.matchKind === 'gerencia-total') {
+      const hit = c.data.find(d => d.label === matchLabel);
+      if (hit) altasTotal = hit.value;
+    }
+    if (c.matchKind === 'no-presentes-gerencia') {
+      const hit = c.data.find(d => d.x === matchLabel);
+      if (hit) noPresentes = hit.y;
     }
   });
-  const rotKpi = (kpis || []).find(k => /rotaci/i.test(k.label));
-  return { rotacionDisplay: rotKpi ? rotKpi.value : null, bajas };
+  return { altasTotal, altasMes, noPresentes };
+}
+
+// Total del sector: toma los KPIs ya calculados (acumulado del período completo).
+function findTotalStat(kpis) {
+  const get = (label) => (kpis || []).find(k => k.label === label)?.value ?? null;
+  return {
+    altasTotal: get('Altas acumuladas'),
+    altasMes: get('Altas — mes activo'),
+    noPresentes: get('No presentes acumulados'),
+  };
 }
 
 function GerenciaPicker({ items, selectedKey, onSelect }) {
@@ -110,6 +115,31 @@ function GerenciaPicker({ items, selectedKey, onSelect }) {
   );
 }
 
+// Tira de meses con scroll horizontal (el rango real son 15 meses) —
+// centra automáticamente el mes activo al montar o cambiar de mes.
+function MonthStrip({ monthIdx, onMonthChange }) {
+  const activeRef = useRef(null);
+  useEffect(() => {
+    activeRef.current?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, [monthIdx]);
+
+  return (
+    <div className="month-strip">
+      {window.MONTHS.map((m, i) => (
+        <button
+          key={m.key}
+          ref={i === monthIdx ? activeRef : null}
+          className={'month-tab' + (i === monthIdx ? ' active' : '')}
+          onClick={() => onMonthChange(i)}
+        >
+          <div className="month-tab-name">{m.short}</div>
+          <div className="month-tab-year">{m.year}</div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // ============ Sector detail view ============
 function SectorView({ sector, monthIdx, onMonthChange }) {
   const accent = window.ACCENTS[sector.accent] || window.ACCENTS.blue;
@@ -125,9 +155,10 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   // Busca datos del mes activo; si no existe, toma el último mes disponible
   const monthKeys = Object.keys(sectorData);
   const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
-  const gStat = isTotalSelected
-    ? findTotalStat(data.kpis, data.charts)
-    : (() => { const s = findGerenciaStat(data.charts, selectedGerencia.matchLabel); return { rotacionDisplay: s.rotacion != null ? `${s.rotacion}%` : null, bajas: s.bajas }; })();
+  const gStat = isTotalSelected ? findTotalStat(data.kpis) : findGerenciaStat(data.charts, selectedGerencia.matchLabel);
+  const gPct = (!isTotalSelected && gStat.altasTotal != null && gStat.noPresentes != null && gStat.altasTotal > 0)
+    ? Math.round((gStat.noPresentes / gStat.altasTotal) * 1000) / 10
+    : null;
 
   return (
     <div style={accent}>
@@ -141,18 +172,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
       </div>
 
       <div className="section-label" style={{ marginTop: 0 }}>Informe mensual — Elegí un mes</div>
-      <div className="month-strip">
-        {window.MONTHS.map((m, i) => (
-          <button
-            key={m.key}
-            className={'month-tab' + (i === monthIdx ? ' active' : '')}
-            onClick={() => onMonthChange(i)}
-          >
-            <div className="month-tab-name">{m.short}</div>
-            <div className="month-tab-year">{m.year}</div>
-          </button>
-        ))}
-      </div>
+      <MonthStrip monthIdx={monthIdx} onMonthChange={onMonthChange} />
 
       {pickerItems.length > 0 && (
         <>
@@ -168,12 +188,13 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
             <div className="gerencia-card-name">{selectedGerencia.name}</div>
             <div className="gerencia-card-role">{selectedGerencia.role}</div>
             <div className="gerencia-card-stats">
-              {gStat.rotacionDisplay != null ? (
-                <span className="gerencia-stat"><strong>{gStat.rotacionDisplay}</strong> rotación · {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
+              <span className="gerencia-stat"><strong>{isTotalSelected ? gStat.altasTotal : fmtInt(gStat.altasTotal)}</strong> altas acumuladas</span>
+              <span className="gerencia-stat"><strong>{isTotalSelected ? gStat.altasMes : fmtInt(gStat.altasMes)}</strong> altas · {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
+              {isTotalSelected ? (
+                <span className="gerencia-stat">{gStat.noPresentes} no presentes</span>
               ) : (
-                <span className="gerencia-stat gerencia-stat-empty">Sin desglose por gerencia para {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
+                <span className="gerencia-stat"><strong>{fmtInt(gStat.noPresentes)}</strong> no presentes{gPct != null ? ` (${gPct}%)` : ''}</span>
               )}
-              {gStat.bajas != null && <span className="gerencia-stat"><strong>{gStat.bajas}</strong> bajas{isTotalSelected ? ' (todas las gerencias)' : ''}</span>}
             </div>
           </div>
           {!isTotalSelected && (
@@ -188,12 +209,11 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
 
       <div className={'chart-grid' + (data.charts.length === 1 ? ' one' : '')}>
         {data.charts.map((c, i) => {
-          const isGerenciaChart = /gerencia/i.test(c.title || '');
-          const filtering = isGerenciaChart && !isTotalSelected;
-          const barActiveLabel = isGerenciaChart
-            ? (filtering ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x : undefined)
-            : (activeMonth && c.data.find(d => d.x.toLowerCase().startsWith(activeMonth.short.slice(0,3).toLowerCase()))?.x);
-          const donutActiveLabel = filtering ? selectedGerencia.matchLabel : undefined;
+          const filtering = !!c.matchKind && !isTotalSelected;
+          const barActiveLabel = filtering && (c.matchKind === 'gerencia-mes' || c.matchKind === 'no-presentes-gerencia')
+            ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x
+            : undefined;
+          const donutActiveLabel = filtering && c.matchKind === 'gerencia-total' ? selectedGerencia.matchLabel : undefined;
           return (
             <div key={i} className="chart-card">
               <div className="chart-head">
