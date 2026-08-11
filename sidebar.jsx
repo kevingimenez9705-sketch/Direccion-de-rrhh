@@ -47,16 +47,16 @@ function Sidebar({ activeId, onNavigate, collapsed }) {
   return (
     <aside className={'sidebar' + (collapsed ? ' collapsed' : '')}>
       <div className="sb-brand">
-        <div className="sb-brand-mark">RH</div>
+        <div className="sb-brand-mark">ES</div>
         <div className="sb-brand-text">
-          <div className="sb-brand-name">RRHH</div>
-          <div className="sb-brand-sub">Dirección</div>
+          <div className="sb-brand-name">Selección</div>
+          <div className="sb-brand-sub">Equipo de</div>
         </div>
       </div>
 
       <div className="sb-user">
         <div className="sb-user-name">César Lugo</div>
-        <div className="sb-user-role">Director de RRHH</div>
+        <div className="sb-user-role">Equipo de Selección</div>
       </div>
 
       <nav className="sb-nav">

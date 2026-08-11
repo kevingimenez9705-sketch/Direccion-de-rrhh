@@ -1,37 +1,37 @@
-/* ============ Tokens ============ */
+/* ============ Tokens — paleta "Confianza" (azules, negros y grises) ============ */
 :root {
-  --bg: #DCE6F4;
-  --bg-2: #CFDCEF;
+  --bg: #E2E6ED;
+  --bg-2: #D3D9E3;
   --surface: #FFFFFF;
-  --border: #E5E9F0;
-  --border-strong: #D7DDE7;
-  --text: #1A1F36;
-  --text-2: #4B5565;
-  --text-3: #8A93A6;
-  --muted: #EEF1F6;
+  --border: #DBDFE7;
+  --border-strong: #C5CBD6;
+  --text: #161B26;
+  --text-2: #434B5A;
+  --text-3: #6E7889;
+  --muted: #ECEFF3;
 
-  --blue-50: #EAF2FE;
-  --blue-100: #D7E5FD;
-  --blue-200: #B7CFFB;
-  --blue-300: #8DB3F7;
-  --blue-400: #6FA0F2;
-  --blue-500: #4F86E8;
-  --blue-600: #3A6FD0;
+  --blue-50: #E6ECF5;
+  --blue-100: #C7D4E8;
+  --blue-200: #9DB3D6;
+  --blue-300: #6E8CBB;
+  --blue-400: #47699C;
+  --blue-500: #2C4D7D;
+  --blue-600: #1D3860;
 
-  --cyan: #6CC8DC;
-  --purple: #A8A4F0;
-  --amber: #E8B86A;
-  --green: #5EBA8A;
-  --red: #E26666;
+  --cyan: #57697F;
+  --purple: #5B5A85;
+  --amber: #8A6A38;
+  --green: #2C6E51;
+  --red: #8C3D36;
 
-  --grad-blue: linear-gradient(90deg, #6FA0F2 0%, #8DB3F7 100%);
-  --grad-card: linear-gradient(135deg, #7BA8F0 0%, #A6B4F0 100%);
-  --grad-cyan: linear-gradient(90deg, #6CC8DC 0%, #8DB3F7 100%);
-  --grad-purple: linear-gradient(90deg, #A8A4F0 0%, #C9B6F2 100%);
-  --grad-amber: linear-gradient(90deg, #E8B86A 0%, #F0CE8E 100%);
+  --grad-blue: linear-gradient(90deg, #2C4D7D 0%, #3E6294 100%);
+  --grad-card: linear-gradient(135deg, #24344A 0%, #3E5674 100%);
+  --grad-cyan: linear-gradient(90deg, #3B4A5E 0%, #57697F 100%);
+  --grad-purple: linear-gradient(90deg, #5B5A85 0%, #787AA8 100%);
+  --grad-amber: linear-gradient(90deg, #8A6A38 0%, #A4855A 100%);
 
-  --shadow-sm: 0 1px 2px rgba(20, 30, 60, 0.04);
-  --shadow-md: 0 1px 3px rgba(20, 30, 60, 0.06), 0 4px 12px rgba(20, 30, 60, 0.04);
+  --shadow-sm: 0 1px 2px rgba(10, 16, 30, 0.06);
+  --shadow-md: 0 1px 3px rgba(10, 16, 30, 0.08), 0 4px 12px rgba(10, 16, 30, 0.06);
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -42,19 +42,19 @@
 
 /* ============ Dark theme ============ */
 [data-theme="dark"] {
-  --bg: #0F1420;
-  --bg-2: #0B1018;
-  --surface: #171D2B;
-  --border: #283143;
-  --border-strong: #344056;
-  --text: #E7ECF4;
-  --text-2: #AEB8C9;
-  --text-3: #74809A;
-  --muted: #1F2738;
+  --bg: #0A0E17;
+  --bg-2: #060811;
+  --surface: #121722;
+  --border: #232C3C;
+  --border-strong: #2E3A4E;
+  --text: #E5E9F1;
+  --text-2: #A7B0C0;
+  --text-3: #6C7789;
+  --muted: #1A212F;
 
-  --blue-50: #1B2740;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.3);
+  --blue-50: #16233B;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 * { box-sizing: border-box; }
@@ -154,7 +154,7 @@ button { font-family: inherit; cursor: pointer; }
   color: white;
   font-weight: 600;
 }
-.sb-link.active .sb-link-dot { background: #6FA0F2; }
+.sb-link.active .sb-link-dot { background: #6E8CBB; }
 .sb-link-ico {
   width: 22px; height: 22px;
   display: grid; place-items: center;
@@ -285,7 +285,7 @@ button { font-family: inherit; cursor: pointer; }
   min-height: 124px;
   margin-bottom: 6px;
   border: 1px solid var(--border);
-  box-shadow: 0 8px 28px rgba(40, 80, 170, 0.12), 0 2px 6px rgba(20, 30, 60, 0.05);
+  box-shadow: 0 8px 28px rgba(20, 35, 60, 0.14), 0 2px 6px rgba(10, 16, 30, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,7 +297,7 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   left: 0; right: 0; top: 0;
   height: 5px;
-  background: linear-gradient(90deg, #6FA0F2, #8DB3F7 45%, #A8A4F0 100%);
+  background: linear-gradient(90deg, #2C4D7D, #3E6294 45%, #57697F 100%);
 }
 .panel-hero-logo {
   position: absolute;
@@ -320,7 +320,7 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text);
 }
 .panel-hero h1 .he-accent {
-  background: linear-gradient(90deg, #4F86E8, #6E68C9);
+  background: linear-gradient(90deg, #2C4D7D, #3D3D63);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -438,7 +438,7 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
   overflow: hidden;
   border: 1px solid var(--border);
-  box-shadow: 0 8px 28px rgba(40, 80, 170, 0.12), 0 2px 6px rgba(20, 30, 60, 0.05);
+  box-shadow: 0 8px 28px rgba(20, 35, 60, 0.14), 0 2px 6px rgba(10, 16, 30, 0.06);
 }
 .sector-hero::before {
   content: "";

@@ -8,8 +8,8 @@ function PanelEjecutivo({ onOpen }) {
   return (
     <div>
       <div className="panel-hero">
-        <img className="panel-hero-logo" src="assets/rrhh-logo-clean.png" alt="Dirección de Recursos Humanos" />
-        <h1>Dirección de <span className="he-accent">Recursos Humanos</span></h1>
+        <img className="panel-hero-logo" src="assets/rrhh-logo-clean.png" alt="Equipo de Selección" />
+        <h1>Equipo de <span className="he-accent">Selección</span></h1>
       </div>
 
       <hr className="hero-divider" />
@@ -19,10 +19,14 @@ function PanelEjecutivo({ onOpen }) {
         {unidades.map(s => <SectorButton key={s.id} sector={s} onOpen={onOpen} />)}
       </div>
 
-      <div className="section-label">Gestión</div>
-      <div className="sector-grid">
-        {gestion.map(s => <SectorButton key={s.id} sector={s} onOpen={onOpen} />)}
-      </div>
+      {gestion.length > 0 && (
+        <>
+          <div className="section-label">Gestión</div>
+          <div className="sector-grid">
+            {gestion.map(s => <SectorButton key={s.id} sector={s} onOpen={onOpen} />)}
+          </div>
+        </>
+      )}
     </div>
   );
 }

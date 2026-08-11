@@ -4,21 +4,21 @@
 function chartTheme() {
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
   return dark ? {
-    blue: '#7BA8F0',
-    blueDark: '#8DB3F7',
-    grid: '#283143',
-    axis: '#8A93A6',
-    ink: '#E7ECF4',
-    inkSub: '#AEB8C9',
-    tooltipBg: '#0F1420',
+    blue: '#47699C',
+    blueDark: '#6E8CBB',
+    grid: '#232C3C',
+    axis: '#6C7789',
+    ink: '#E5E9F1',
+    inkSub: '#A7B0C0',
+    tooltipBg: '#0A0E17',
   } : {
-    blue: '#7BA8F0',
-    blueDark: '#4F86E8',
-    grid: '#E5E9F0',
-    axis: '#8A93A6',
-    ink: '#1A1F36',
-    inkSub: '#8A93A6',
-    tooltipBg: '#1B2336',
+    blue: '#47699C',
+    blueDark: '#2C4D7D',
+    grid: '#DBDFE7',
+    axis: '#6E7889',
+    ink: '#161B26',
+    inkSub: '#6E7889',
+    tooltipBg: '#1D3860',
   };
 }
 
@@ -97,7 +97,7 @@ function LineChart({ data, activeIndex }) {
       {/* points */}
       {pts.map((p, i) => (
         <g key={i}>
-          <circle cx={p.x} cy={p.y} r={i === activeIndex ? 6 : 4} fill={t.tooltipBg === '#0F1420' ? '#171D2B' : 'white'} stroke={t.blueDark} strokeWidth={i === activeIndex ? 3 : 2} />
+          <circle cx={p.x} cy={p.y} r={i === activeIndex ? 6 : 4} fill={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'} stroke={t.blueDark} strokeWidth={i === activeIndex ? 3 : 2} />
           {i === activeIndex && (
             <g>
               <rect x={p.x - 22} y={p.y - 30} width="44" height="20" rx="5" fill={t.tooltipBg} />
@@ -118,7 +118,7 @@ function LineChart({ data, activeIndex }) {
             fill={t.ink}
             fontWeight="600"
             style={{ paintOrder: 'stroke' }}
-            stroke={t.tooltipBg === '#0F1420' ? '#171D2B' : 'white'}
+            stroke={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'}
             strokeWidth="3"
             strokeLinejoin="round"
           >{p.d.y}</text>
@@ -154,12 +154,12 @@ function BarChart({ data, activeLabel }) {
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280 }}>
       <defs>
         <linearGradient id="barFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#8DB3F7" />
-          <stop offset="100%" stopColor="#A8C2F8" />
+          <stop offset="0%" stopColor="#6E8CBB" />
+          <stop offset="100%" stopColor="#9DB3D6" />
         </linearGradient>
         <linearGradient id="barFillActive" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#4F86E8" />
-          <stop offset="100%" stopColor="#6FA0F2" />
+          <stop offset="0%" stopColor="#1D3860" />
+          <stop offset="100%" stopColor="#2C4D7D" />
         </linearGradient>
       </defs>
       {/* gridlines */}
@@ -229,8 +229,8 @@ function HBarChart({ data }) {
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
       <defs>
         <linearGradient id="hbarFill" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#8DB3F7" />
-          <stop offset="100%" stopColor="#A8C2F8" />
+          <stop offset="0%" stopColor="#6E8CBB" />
+          <stop offset="100%" stopColor="#9DB3D6" />
         </linearGradient>
       </defs>
       {/* gridlines */}
@@ -269,7 +269,7 @@ function DonutChart({ data, center }) {
   const R = 92, r = 58;
 
   const total = data.reduce((a, d) => a + d.value, 0);
-  const palette = ['#7BA8F0', '#A6B4F0', '#C7D5F9', '#8DB3F7', '#B7CFFB', '#D7E5FD'];
+  const palette = ['#2C4D7D', '#3E6294', '#57697F', '#6E8CBB', '#8B96A6', '#B4BEC9'];
 
   let angle = -Math.PI / 2;
   const slices = data.map((d, i) => {
@@ -296,7 +296,7 @@ function DonutChart({ data, center }) {
     <div style={{ display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
       <svg viewBox={`0 0 ${W} ${H}`} width="220" style={{ flexShrink: 0 }}>
         {slices.map((s, i) => (
-          <path key={i} d={s.path} fill={s.color} stroke={t.tooltipBg === '#0F1420' ? '#171D2B' : 'white'} strokeWidth="2" />
+          <path key={i} d={s.path} fill={s.color} stroke={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'} strokeWidth="2" />
         ))}
         {center && (
           <text x={cx} y={cy + 6} textAnchor="middle" fontSize="15" fill={t.ink} fontWeight="700">{center}</text>
