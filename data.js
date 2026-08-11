@@ -14,9 +14,9 @@
 window.GERENCIAS = {
   sabores: [
     { key:'sbampato',   name:'Agustín Sbampato', role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/sbampato.jpg',   matchLabel:'Agustín Sbampato' },
-    { key:'cabrera',    name:'Gustavo Cabrera',   role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/cabrera.jpg',    matchLabel:'Gustavo Cabrera' },
+    { key:'cabrera',    name:'Gustavo Cabrera',   role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/cabrera.gif',    matchLabel:'Gustavo Cabrera' },
     { key:'pisaniello', name:'Ivo Pisaniello',    role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/pisaniello.gif', matchLabel:'Ivo Pisaniello' },
-    { key:'velez',      name:'Lucía Vélez',       role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/velez.jpg',      matchLabel:'Lucía Vélez' },
+    { key:'velez',      name:'Lucía Vélez',       role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/velez.gif',      matchLabel:'Lucía Vélez' },
     { key:'biurra',     name:'Marcelo Biurra',    role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/biurra.jpg',     matchLabel:'Marcelo Biurra' },
   ],
   extremas: [
