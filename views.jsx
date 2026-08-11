@@ -183,6 +183,21 @@ function MonthStrip({ monthIdx, onMonthChange, compareMode, onToggleCompareMode,
   );
 }
 
+// Top 5 zonales sumando uno o varios meses (para comparar se suma el
+// desglose COMPLETO de cada mes elegido antes de recortar a 5 — sumar
+// listas ya truncadas a 5 subestimaría zonales que quedaron justo afuera).
+function computeTop5Zonales(sectorId, monthKeys, bucketKey) {
+  const totals = {};
+  monthKeys.forEach(mk => {
+    const arr = window.ZONALES_FULL?.[sectorId]?.[mk]?.[bucketKey] || [];
+    arr.forEach(({ x, y }) => { totals[x] = (totals[x] || 0) + y; });
+  });
+  return Object.entries(totals)
+    .map(([x, y]) => ({ x, y }))
+    .sort((a, b) => b.y - a.y)
+    .slice(0, 5);
+}
+
 function mesLabelFor(m) {
   return `${m.short.charAt(0)}${m.short.slice(1).toLowerCase()} ${m.year}`;
 }
@@ -335,17 +350,22 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           const filtering = !!c.matchKind && !isTotalSelected;
 
           if (c.matchKind === 'top5-zonales') {
-            const zonalData = window.ZONALES_TOP5?.[sector.id]?.[activeMonth.key]?.[filtering ? selectedGerencia.matchLabel : 'total'] || [];
+            const bucketKey = filtering ? selectedGerencia.matchLabel : 'total';
+            const zonalMonthKeys = isComparing ? sortedCompareIdxs.map(idx => window.MONTHS[idx].key) : [activeMonth.key];
+            const zonalData = computeTop5Zonales(sector.id, zonalMonthKeys, bucketKey);
+            const zonalSub = isComparing
+              ? `Acumulado de ${sortedCompareIdxs.length} meses elegidos`
+              : mesLabel;
             return (
               <div key={i} className="chart-card">
                 <div className="chart-head">
                   <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
-                  <div className="chart-sub">{mesLabel}{isComparing ? ' · no se compara entre meses' : ''}</div>
+                  <div className="chart-sub">{zonalSub}</div>
                 </div>
                 <div className="chart-body">
                   {zonalData.length > 0
                     ? <window.HBarChart data={zonalData} />
-                    : <div className="chart-empty">Sin altas registradas para {mesLabel.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
+                    : <div className="chart-empty">Sin altas registradas para {zonalSub.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
                 </div>
               </div>
             );
