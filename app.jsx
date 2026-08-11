@@ -39,7 +39,7 @@ function App() {
               </button>
             )}
             <div className="crumbs">
-              <button className="crumb-link" onClick={() => setView('__panel')}>RRHH</button>
+              <button className="crumb-link" onClick={() => setView('__panel')}>Equipo de Selección</button>
               <span className="crumb-sep">›</span>
               {sector ? (
                 <>
