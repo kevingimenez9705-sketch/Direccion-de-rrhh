@@ -274,7 +274,9 @@ function DonutChart({ data, center, activeLabel }) {
   const R = 92, r = 58;
 
   const total = data.reduce((a, d) => a + d.value, 0);
-  const palette = ['#2C4D7D', '#3E6294', '#57697F', '#6E8CBB', '#8B96A6', '#B4BEC9'];
+  // 9 tonos distinguibles entre sí (navy/azul/teal/grafito/gris) — antes eran
+  // solo 6 y muy parecidos entre sí, difíciles de diferenciar en la leyenda.
+  const palette = ['#14213D', '#1D3860', '#2C4D7D', '#0F5C66', '#3E6294', '#55606E', '#1F7A85', '#37414F', '#8B96A6'];
 
   let angle = -Math.PI / 2;
   const slices = data.map((d, i) => {

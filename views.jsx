@@ -64,36 +64,44 @@ function fmtInt(n) {
   return n == null ? null : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-// Busca, dentro de los charts identificados por matchKind, las altas totales
-// (acumulado del período), las altas del mes activo y los no presentes
-// (acumulado) de una gerencia puntual.
-function findGerenciaStat(charts, matchLabel) {
-  let altasTotal = null, altasMes = null, noPresentes = null;
-  (charts || []).forEach(c => {
-    if (c.matchKind === 'gerencia-mes') {
-      const hit = c.data.find(d => d.x === matchLabel);
-      if (hit) altasMes = hit.y;
-    }
-    if (c.matchKind === 'gerencia-total') {
-      const hit = c.data.find(d => d.label === matchLabel);
-      if (hit) altasTotal = hit.value;
-    }
-    if (c.matchKind === 'no-presentes-gerencia') {
-      const hit = c.data.find(d => d.x === matchLabel);
-      if (hit) noPresentes = hit.y;
-    }
-  });
-  return { altasTotal, altasMes, noPresentes };
+function chartByKind(charts, matchKind) {
+  return (charts || []).find(c => c.matchKind === matchKind);
 }
 
-// Total del sector: toma los KPIs ya calculados (acumulado del período completo).
-function findTotalStat(kpis) {
-  const get = (label) => (kpis || []).find(k => k.label === label)?.value ?? null;
-  return {
-    altasTotal: get('Altas acumuladas'),
-    altasMes: get('Altas — mes activo'),
-    noPresentes: get('No presentes acumulados'),
-  };
+// Suma todos los valores de un chart (matchLabel null = "Total") o busca el
+// valor de una gerencia puntual (matchLabel = su matchLabel exacto).
+function sumOrPick(chart, matchLabel, valueKey) {
+  if (!chart) return null;
+  if (matchLabel == null) return chart.data.reduce((a, d) => a + d[valueKey], 0);
+  const keyField = valueKey === 'value' ? 'label' : 'x';
+  const hit = chart.data.find(d => d[keyField] === matchLabel);
+  return hit ? hit[valueKey] : null;
+}
+
+// Construye el set de estadísticas (para el Total del sector si matchLabel es
+// null, o para una gerencia puntual) a partir de los charts del mes activo y
+// del mes anterior — todo calculado en vivo, nada queda "pisado" al cambiar de mes.
+function buildStat(sectorData, monthKey, prevMonthKey, matchLabel) {
+  const data = sectorData[monthKey];
+  const prevData = prevMonthKey ? sectorData[prevMonthKey] : null;
+  const altasTotal = sumOrPick(chartByKind(data.charts, 'gerencia-total'), matchLabel, 'value');
+  const altasMes = sumOrPick(chartByKind(data.charts, 'gerencia-mes'), matchLabel, 'y');
+  const altasMesPrev = prevData ? sumOrPick(chartByKind(prevData.charts, 'gerencia-mes'), matchLabel, 'y') : null;
+  const noPresentes = sumOrPick(chartByKind(data.charts, 'no-presentes-gerencia'), matchLabel, 'y');
+  const noPresentesPrev = prevData ? sumOrPick(chartByKind(prevData.charts, 'no-presentes-gerencia'), matchLabel, 'y') : null;
+  return { altasTotal, altasMes, altasMesPrev, noPresentes, noPresentesPrev };
+}
+
+// Texto + dirección de la variación vs. el mes anterior.
+// invert:true = un aumento es una mala noticia (ej. no presentes) → se pinta como "down"/rojo.
+function deltaInfo(cur, prev, invert) {
+  if (cur == null) return null;
+  if (prev == null) return { dir: 'neutral', text: 'Sin dato del mes anterior' };
+  const diff = cur - prev;
+  if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. mes ant. (${fmtInt(prev)})` };
+  const isMore = diff > 0;
+  const dir = invert ? (isMore ? 'down' : 'up') : (isMore ? 'up' : 'down');
+  return { dir, text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. mes ant. (${fmtInt(prev)})` };
 }
 
 function GerenciaPicker({ items, selectedKey, onSelect }) {
@@ -155,10 +163,15 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   // Busca datos del mes activo; si no existe, toma el último mes disponible
   const monthKeys = Object.keys(sectorData);
   const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
-  const gStat = isTotalSelected ? findTotalStat(data.kpis) : findGerenciaStat(data.charts, selectedGerencia.matchLabel);
-  const gPct = (!isTotalSelected && gStat.altasTotal != null && gStat.noPresentes != null && gStat.altasTotal > 0)
-    ? Math.round((gStat.noPresentes / gStat.altasTotal) * 1000) / 10
+  const prevMonth = monthIdx > 0 ? window.MONTHS[monthIdx - 1] : null;
+  const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
+  const stat = buildStat(sectorData, activeMonth.key, prevMonth && sectorData[prevMonth.key] ? prevMonth.key : null, matchLabel);
+  const altasDelta = deltaInfo(stat.altasMes, stat.altasMesPrev, false);
+  const noPresentesDelta = deltaInfo(stat.noPresentes, stat.noPresentesPrev, true);
+  const gPct = (stat.altasMes != null && stat.noPresentes != null && stat.altasMes > 0)
+    ? Math.round((stat.noPresentes / stat.altasMes) * 1000) / 10
     : null;
+  const mesLabel = `${activeMonth.short.charAt(0)}${activeMonth.short.slice(1).toLowerCase()} ${activeMonth.year}`;
 
   return (
     <div style={accent}>
@@ -194,17 +207,15 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         </div>
       )}
 
-      {/* Cuando hay una gerencia seleccionada, las tarjetas muestran SUS datos totales
-          (acumulado del período + mes activo) en vez de los del sector completo. */}
+      {/* Cuando hay una gerencia seleccionada, las tarjetas muestran SUS datos
+          (acumulado del período + mes activo, con variación vs. el mes anterior)
+          en vez de los del sector completo. */}
       <div className="kpi-grid">
-        {isTotalSelected
-          ? data.kpis.map((k, i) => <KpiCard key={i} kpi={k} />)
-          : [
-              { label: 'Altas acumuladas', value: fmtInt(gStat.altasTotal) ?? 'S/D' },
-              { label: `Altas — ${activeMonth.short.charAt(0)}${activeMonth.short.slice(1).toLowerCase()} ${activeMonth.year}`, value: fmtInt(gStat.altasMes) ?? '0' },
-              { label: 'No presentes acumulados', value: `${fmtInt(gStat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}` },
-            ].map((k, i) => <KpiCard key={i} kpi={k} />)
-        }
+        {[
+          { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D' },
+          { label: `Altas — ${mesLabel}`, value: fmtInt(stat.altasMes) ?? '0', delta: altasDelta },
+          { label: `No presentes — ${mesLabel}`, value: `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}`, delta: noPresentesDelta },
+        ].map((k, i) => <KpiCard key={i} kpi={k} />)}
       </div>
 
       <div className={'chart-grid' + (data.charts.length === 1 ? ' one' : '')}>
@@ -213,7 +224,6 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
 
           if (c.matchKind === 'top5-zonales') {
             const zonalData = window.ZONALES_TOP5?.[sector.id]?.[activeMonth.key]?.[filtering ? selectedGerencia.matchLabel : 'total'] || [];
-            const mesLabel = `${activeMonth.short.charAt(0)}${activeMonth.short.slice(1).toLowerCase()} ${activeMonth.year}`;
             return (
               <div key={i} className="chart-card">
                 <div className="chart-head">
