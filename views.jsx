@@ -60,15 +60,56 @@ function SectorButton({ sector, onOpen }) {
 }
 window.SectorButton = SectorButton;
 
+// Busca, dentro de los charts del mes activo, la rotación y las bajas
+// del "x"/"label" (matchLabel) de una gerencia puntual.
+function findGerenciaStat(charts, matchLabel) {
+  let rotacion = null, bajas = null;
+  (charts || []).forEach(c => {
+    if (!/gerencia/i.test(c.title || '')) return;
+    if (c.type === 'bar') {
+      const hit = c.data.find(d => d.x === matchLabel);
+      if (hit && Number.isFinite(hit.y)) rotacion = hit.y;
+    }
+    if (c.type === 'donut') {
+      const hit = c.data.find(d => d.label === matchLabel);
+      if (hit) bajas = hit.value;
+    }
+  });
+  return { rotacion, bajas };
+}
+
+function GerenciaPicker({ gerencias, selectedKey, onSelect }) {
+  return (
+    <div className="gerencia-picker">
+      {gerencias.map(g => (
+        <button
+          key={g.key}
+          className={'gerencia-btn' + (selectedKey === g.key ? ' active' : '')}
+          onClick={() => onSelect(selectedKey === g.key ? null : g.key)}
+        >
+          <span className="gerencia-btn-photo">
+            <img src={encodeURI(g.photo)} alt={g.name} />
+          </span>
+          <span className="gerencia-btn-name">{g.name}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // ============ Sector detail view ============
 function SectorView({ sector, monthIdx, onMonthChange }) {
   const accent = window.ACCENTS[sector.accent] || window.ACCENTS.blue;
   const sectorData = window.SECTOR_DATA[sector.id];
   const activeMonth = window.MONTHS[monthIdx];
+  const gerencias = window.GERENCIAS[sector.id] || [];
+  const [selectedGerenciaKey, setSelectedGerenciaKey] = useState(null);
+  const selectedGerencia = gerencias.find(g => g.key === selectedGerenciaKey) || null;
 
   // Busca datos del mes activo; si no existe, toma el último mes disponible
   const monthKeys = Object.keys(sectorData);
   const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
+  const gStat = selectedGerencia ? findGerenciaStat(data.charts, selectedGerencia.matchLabel) : null;
 
   return (
     <div style={accent}>
@@ -95,25 +136,58 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         ))}
       </div>
 
+      {gerencias.length > 0 && (
+        <>
+          <div className="section-label">Gerencias — elegí una para ver sus gráficos</div>
+          <GerenciaPicker gerencias={gerencias} selectedKey={selectedGerenciaKey} onSelect={setSelectedGerenciaKey} />
+        </>
+      )}
+
+      {selectedGerencia && (
+        <div className="gerencia-card">
+          <img className="gerencia-card-photo" src={encodeURI(selectedGerencia.photo)} alt={selectedGerencia.name} />
+          <div className="gerencia-card-body">
+            <div className="gerencia-card-name">{selectedGerencia.name}</div>
+            <div className="gerencia-card-role">{selectedGerencia.role}</div>
+            <div className="gerencia-card-stats">
+              {gStat.rotacion != null ? (
+                <span className="gerencia-stat"><strong>{gStat.rotacion}%</strong> rotación · {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
+              ) : (
+                <span className="gerencia-stat gerencia-stat-empty">Sin desglose por gerencia para {activeMonth.short.charAt(0)}{activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</span>
+              )}
+              {gStat.bajas != null && <span className="gerencia-stat"><strong>{gStat.bajas}</strong> bajas</span>}
+            </div>
+          </div>
+          <button className="gerencia-card-close" onClick={() => setSelectedGerenciaKey(null)} aria-label="Quitar selección">×</button>
+        </div>
+      )}
+
       <div className="kpi-grid">
         {data.kpis.map((k, i) => <KpiCard key={i} kpi={k} />)}
       </div>
 
       <div className={'chart-grid' + (data.charts.length === 1 ? ' one' : '')}>
-        {data.charts.map((c, i) => (
-          <div key={i} className="chart-card">
-            <div className="chart-head">
-              <div className="chart-title">{c.title}</div>
-              <div className="chart-sub">{c.sub}</div>
+        {data.charts.map((c, i) => {
+          const isGerenciaChart = /gerencia/i.test(c.title || '');
+          const barActiveLabel = isGerenciaChart
+            ? (selectedGerencia ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x : undefined)
+            : (activeMonth && c.data.find(d => d.x.toLowerCase().startsWith(activeMonth.short.slice(0,3).toLowerCase()))?.x);
+          const donutActiveLabel = isGerenciaChart && selectedGerencia ? selectedGerencia.matchLabel : undefined;
+          return (
+            <div key={i} className="chart-card">
+              <div className="chart-head">
+                <div className="chart-title">{c.title}</div>
+                <div className="chart-sub">{c.sub}</div>
+              </div>
+              <div className="chart-body">
+                {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} />}
+                {c.type === 'bar'   && <window.BarChart   data={c.data} activeLabel={barActiveLabel} />}
+                {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
+                {c.type === 'donut' && <window.DonutChart data={c.data} center={c.center} activeLabel={donutActiveLabel} />}
+              </div>
             </div>
-            <div className="chart-body">
-              {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={monthIdx < c.data.length ? monthIdx : c.data.length - 1} />}
-              {c.type === 'bar'   && <window.BarChart   data={c.data} activeLabel={activeMonth && c.data.find(d => d.x.toLowerCase().startsWith(activeMonth.short.slice(0,3).toLowerCase()))?.x} />}
-              {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
-              {c.type === 'donut' && <window.DonutChart data={c.data} />}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {data.details && data.details.length > 0 && (

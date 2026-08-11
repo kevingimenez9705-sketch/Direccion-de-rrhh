@@ -262,7 +262,7 @@ function HBarChart({ data }) {
 }
 
 // ============ Donut chart ============
-function DonutChart({ data, center }) {
+function DonutChart({ data, center, activeLabel }) {
   const t = chartTheme();
   const W = 320, H = 260;
   const cx = W / 2, cy = H / 2;
@@ -296,20 +296,28 @@ function DonutChart({ data, center }) {
     <div style={{ display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
       <svg viewBox={`0 0 ${W} ${H}`} width="220" style={{ flexShrink: 0 }}>
         {slices.map((s, i) => (
-          <path key={i} d={s.path} fill={s.color} stroke={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'} strokeWidth="2" />
+          <path
+            key={i} d={s.path} fill={s.color}
+            stroke={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'}
+            strokeWidth={activeLabel && s.label === activeLabel ? 3 : 2}
+            opacity={activeLabel && s.label !== activeLabel ? 0.35 : 1}
+          />
         ))}
         {center && (
           <text x={cx} y={cy + 6} textAnchor="middle" fontSize="15" fill={t.ink} fontWeight="700">{center}</text>
         )}
       </svg>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12.5 }}>
-        {slices.map((s, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 10, height: 10, borderRadius: 2, background: s.color, flexShrink: 0 }}></span>
-            <span style={{ color: t.ink, minWidth: 110 }}>{s.label}</span>
-            <span style={{ color: t.inkSub, fontVariantNumeric: 'tabular-nums' }}>{Math.round(s.pct * 100)}%</span>
-          </div>
-        ))}
+        {slices.map((s, i) => {
+          const dim = activeLabel && s.label !== activeLabel;
+          return (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: dim ? 0.45 : 1 }}>
+              <span style={{ width: 10, height: 10, borderRadius: 2, background: s.color, flexShrink: 0 }}></span>
+              <span style={{ color: t.ink, minWidth: 110, fontWeight: activeLabel && !dim ? 700 : 400 }}>{s.label}</span>
+              <span style={{ color: t.inkSub, fontVariantNumeric: 'tabular-nums' }}>{Math.round(s.pct * 100)}%</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

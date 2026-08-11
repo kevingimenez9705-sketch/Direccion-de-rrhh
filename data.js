@@ -8,6 +8,24 @@
 //   · Accidentabilidad Jun: agregado detalle "Arrastre — Siniestros Cerrados de Meses Anteriores" (13 de 14 casos).
 //   · Judiciales Jun: agregado KPI "Efectividad de acuerdos" (42%).
 
+// ─── GERENCIAS (con foto) — usadas en el selector de gerencia dentro de cada unidad ───
+// matchLabel debe coincidir exactamente con el "x" / "label" usado en los charts
+// "Rotación por gerencia..." y "Distribución de bajas por gerencia..." de cada sector.
+window.GERENCIAS = {
+  sabores: [
+    { key:'sbampato',   name:'Agustín Sbampato', role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/sbampato.jpg',   matchLabel:'A. Sbampato' },
+    { key:'cabrera',    name:'Gustavo Cabrera',   role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/cabrera.jpg',    matchLabel:'G. Cabrera' },
+    { key:'pisaniello', name:'Ivo Pisaniello',    role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/pisaniello.jpg', matchLabel:'I. Pisaniello' },
+    { key:'velez',      name:'Lucía Vélez',       role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/velez.jpg',      matchLabel:'L. Velez' },
+    { key:'biurra',     name:'Marcelo Biurra',    role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/biurra.jpg',     matchLabel:'M. Biurra' },
+  ],
+  extremas: [
+    { key:'aramburo', name:'Facundo Aramburo', role:'Gerente Regional', photo:'assets/gerencias/extremas/aramburo.jpg', matchLabel:'F. Aramburo' },
+    { key:'fgomez',   name:'Federico Gómez',   role:'Gerente Regional', photo:'assets/gerencias/extremas/f-gomez.jpg', matchLabel:'F. Gomez' },
+    { key:'ggomez',   name:'Gustavo Gómez',    role:'Gerente Regional', photo:'assets/gerencias/extremas/g-gomez.jpg', matchLabel:'G. Gomez' },
+  ],
+};
+
 window.MONTHS = [
   { key: 'ene', short: 'ENE', year: 2026 },
   { key: 'feb', short: 'FEB', year: 2026 },
