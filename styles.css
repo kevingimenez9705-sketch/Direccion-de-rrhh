@@ -359,16 +359,12 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .sector-btn {
-  background:
-    linear-gradient(165deg, var(--accent-soft, var(--blue-50)) 0%, transparent 55%),
-    var(--surface);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 22px 22px 20px;
+  padding: 0;
   text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: block;
   min-height: 190px;
   flex: 1 1 300px;
   max-width: 380px;
@@ -383,11 +379,46 @@ button { font-family: inherit; cursor: pointer; }
   height: 4px;
   background: var(--accent, var(--grad-blue));
   opacity: 0.95;
+  z-index: 2;
 }
-.sector-btn:hover {
+.sector-btn:hover,
+.sector-btn:focus-visible {
   border-color: var(--accent-color, var(--blue-300));
   box-shadow: 0 10px 26px rgba(20,35,60,0.14), var(--shadow-md);
   transform: translateY(-2px);
+}
+/* Fondo con el color/logo de la marca — cubre toda la tarjeta al pasar el mouse. */
+.sector-btn-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent, var(--grad-blue));
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  overflow: hidden;
+  z-index: 0;
+}
+.sector-btn:hover .sector-btn-fill,
+.sector-btn:focus-visible .sector-btn-fill {
+  opacity: 1;
+  transform: scale(1);
+}
+.sector-btn-fill-logo {
+  position: absolute;
+  right: -14px; bottom: -20px;
+  width: 180px; height: 180px;
+  object-fit: contain;
+  opacity: 0.22;
+  transform: rotate(-4deg);
+}
+.sector-btn-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: 22px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 .sector-btn-head {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -400,6 +431,13 @@ button { font-family: inherit; cursor: pointer; }
   display: grid; place-items: center;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(20,35,60,0.05);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+.sector-btn:hover .sector-btn-ico,
+.sector-btn:focus-visible .sector-btn-ico {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  box-shadow: none;
 }
 .sector-btn-logo {
   width: 100%; height: 100%;
@@ -418,7 +456,10 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 700;
   letter-spacing: -0.2px;
   color: var(--text);
+  transition: color 0.25s ease;
 }
+.sector-btn:hover .sector-btn-title,
+.sector-btn:focus-visible .sector-btn-title { color: white; }
 .sector-btn-tags {
   display: flex;
   flex-wrap: wrap;
@@ -428,11 +469,18 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 11px;
   font-weight: 600;
   color: var(--accent-color, var(--blue-500));
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
   background: var(--surface);
   border: 1px solid var(--border);
   padding: 4px 10px;
   border-radius: 999px;
   white-space: nowrap;
+}
+.sector-btn:hover .sector-btn-tag-chip,
+.sector-btn:focus-visible .sector-btn-tag-chip {
+  color: white;
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.35);
 }
 .sector-btn-cta {
   margin-top: auto;
@@ -442,7 +490,10 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--accent-color, var(--blue-500));
   font-size: 12.5px;
   font-weight: 600;
+  transition: color 0.25s ease;
 }
+.sector-btn:hover .sector-btn-cta,
+.sector-btn:focus-visible .sector-btn-cta { color: white; }
 .sector-btn-cta svg { transition: transform 0.12s ease; }
 .sector-btn:hover .sector-btn-cta svg { transform: translateX(2px); }
 

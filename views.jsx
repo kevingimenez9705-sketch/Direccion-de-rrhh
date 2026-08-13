@@ -38,7 +38,7 @@ function PanelEjecutivo({ onOpen }) {
         <>
           <div className="section-label" style={{ marginTop: 18 }}>Resumen general — ambas marcas</div>
           <div className="kpi-grid">
-            <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado) }} />
+            <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
             <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
             <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
           </div>
@@ -73,24 +73,31 @@ function SectorButton({ sector, onOpen }) {
       style={accent}
       onClick={() => onOpen(sector.id)}
     >
-      <div className="sector-btn-head">
-        <div className="sector-btn-ico">
-          {sector.logo
-            ? <img className="sector-btn-logo" src={encodeURI(sector.logo)} alt={sector.name} />
-            : <window.Icon name={sector.iconKey} size={20} />}
-        </div>
+      {/* Al hover/focus, este fondo con el color de la marca cubre toda la
+          tarjeta, con el logo como marca de agua grande detrás del contenido. */}
+      <div className="sector-btn-fill">
+        {sector.logo && <img className="sector-btn-fill-logo" src={encodeURI(sector.logo)} alt="" />}
       </div>
-      <div>
-        <div className="sector-btn-title">{sector.name}</div>
-      </div>
-      {sector.tags && sector.tags.length > 0 && (
-        <div className="sector-btn-tags">
-          {sector.tags.map((t, i) => <span key={i} className="sector-btn-tag-chip">{t}</span>)}
+      <div className="sector-btn-content">
+        <div className="sector-btn-head">
+          <div className="sector-btn-ico">
+            {sector.logo
+              ? <img className="sector-btn-logo" src={encodeURI(sector.logo)} alt={sector.name} />
+              : <window.Icon name={sector.iconKey} size={20} />}
+          </div>
         </div>
-      )}
-      <div className="sector-btn-cta">
-        <span>Ver indicadores</span>
-        <window.Icon name="arrow-right" size={16} />
+        <div>
+          <div className="sector-btn-title">{sector.name}</div>
+        </div>
+        {sector.tags && sector.tags.length > 0 && (
+          <div className="sector-btn-tags">
+            {sector.tags.map((t, i) => <span key={i} className="sector-btn-tag-chip">{t}</span>)}
+          </div>
+        )}
+        <div className="sector-btn-cta">
+          <span>Ver indicadores</span>
+          <window.Icon name="arrow-right" size={16} />
+        </div>
       </div>
     </button>
   );
@@ -238,6 +245,11 @@ function computeTop5Zonales(sectorId, monthKeys, bucketKey) {
 function mesLabelFor(m) {
   return `${m.short.charAt(0)}${m.short.slice(1).toLowerCase()} ${m.year}`;
 }
+// Texto de contexto para "Altas acumuladas": cuántos meses se están sumando y qué rango.
+function periodoAcumuladoTexto() {
+  const first = window.MONTHS[0], last = window.MONTHS[window.MONTHS.length - 1];
+  return `${mesLabelFor(first)} – ${mesLabelFor(last)} · ${window.MONTHS.length} meses`;
+}
 function pctOf(noPresentes, altasMes) {
   return (altasMes != null && noPresentes != null && altasMes > 0)
     ? Math.round((noPresentes / altasMes) * 1000) / 10
@@ -375,7 +387,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
            en vez de los del sector completo. */
         <div className="kpi-grid">
           {[
-            { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D' },
+            { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D', delta: { dir: 'neutral', text: periodoAcumuladoTexto() } },
             { label: `Altas — ${mesLabel}`, value: fmtInt(stat.altasMes) ?? '0', delta: altasDelta },
             { label: `No presentes — ${mesLabel}`, value: `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}`, delta: noPresentesDelta },
           ].map((k, i) => <KpiCard key={i} kpi={k} />)}
