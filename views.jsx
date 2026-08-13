@@ -391,6 +391,20 @@ function computeTop5Zonales(sectorId, monthKeys, bucketKey) {
     .slice(0, 5);
 }
 
+const MES_SHORT_CAP = { ENE:'Ene', FEB:'Feb', MAR:'Mar', ABR:'Abr', MAY:'May', JUN:'Jun', JUL:'Jul', AGO:'Ago', SEP:'Sep', OCT:'Oct', NOV:'Nov', DIC:'Dic' };
+function mesShortXY(m) {
+  return `${MES_SHORT_CAP[m.short]} ${String(m.year).slice(2)}`;
+}
+// Serie mensual de "Altas por mes" de UNA gerencia puntual (matchLabel null = total del
+// sector, igual al c.data ya guardado). Se arma leyendo, mes a mes, el chart "gerencia-mes".
+function monthlySeriesFor(sectorData, matchLabel) {
+  return window.MONTHS.map(m => {
+    const md = sectorData[m.key];
+    const val = md ? sumOrPick(chartByKind(md.charts, 'gerencia-mes'), matchLabel, 'y') : null;
+    return { x: mesShortXY(m), y: val ?? 0 };
+  });
+}
+
 function mesLabelFor(m) {
   return `${m.short.charAt(0)}${m.short.slice(1).toLowerCase()} ${m.year}`;
 }
@@ -580,14 +594,22 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
             const chart = mData ? chartByKind(mData.charts, c.matchKind) : null;
             return { label: mesLabelFor(m), color: COMPARE_COLORS[si], data: chart ? chart.data : [] };
           }) : null;
+          // "Altas por mes" (línea) también sigue a la gerencia elegida: en vez del
+          // total del sector, arma su propia serie mensual mes a mes.
+          const isLineFiltering = c.type === 'line' && !isTotalSelected;
+          const lineData = isLineFiltering ? monthlySeriesFor(sectorData, selectedGerencia.matchLabel) : c.data;
+          const titleSuffix = (filtering || isLineFiltering) ? ` — ${selectedGerencia.name}` : '';
+          const lineSub = isLineFiltering
+            ? `May 2025 – Jul 2026 · altas de ${selectedGerencia.name} por mes`
+            : c.sub;
           return (
             <div key={i} className={'chart-card' + (c.full ? ' chart-card--wide' : '')}>
               <div className="chart-head">
-                <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
-                <div className="chart-sub">{isComparableBar ? 'Comparando meses elegidos' : c.sub}</div>
+                <div className="chart-title">{c.title}{titleSuffix}</div>
+                <div className="chart-sub">{c.type === 'line' ? lineSub : (isComparableBar ? 'Comparando meses elegidos' : c.sub)}</div>
               </div>
               <div className="chart-body">
-                {c.type === 'line'  && <window.LineChart  data={c.data} activeIndex={effectiveMonthIdx < c.data.length ? effectiveMonthIdx : c.data.length - 1} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < c.data.length) : undefined} wide={c.wide} />}
+                {c.type === 'line'  && <window.LineChart  data={lineData} activeIndex={effectiveMonthIdx < lineData.length ? effectiveMonthIdx : lineData.length - 1} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < lineData.length) : undefined} wide={c.wide} />}
                 {c.type === 'bar' && (isComparableBar
                   ? <window.GroupedBarChart series={compareSeries} activeLabel={barActiveLabel} dimOthers={filtering} />
                   : <window.BarChart data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />)}
