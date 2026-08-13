@@ -1,6 +1,81 @@
 // Panel Ejecutivo — landing page. NO data, only sector buttons.
 const { useState, useEffect, useRef } = React;
 
+// ── Tarjeta de bienvenida con clima real (Manuel Alberti, Pilar, Bs. As.) ──
+const WEATHER_LAT = -34.456;
+const WEATHER_LON = -58.775;
+
+function weatherBucket(code) {
+  if (code === 0) return 'clear';
+  if ([1, 2, 3].includes(code)) return 'cloudy';
+  if ([45, 48].includes(code)) return 'fog';
+  if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return 'rain';
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return 'snow';
+  if ([95, 96, 99].includes(code)) return 'storm';
+  return 'cloudy';
+}
+const WEATHER_LABELS = { clear: 'Despejado', cloudy: 'Nublado', fog: 'Niebla', rain: 'Lluvia', snow: 'Nieve', storm: 'Tormenta' };
+function weatherIconName(bucket, isDay) {
+  if (bucket === 'clear') return isDay ? 'sun' : 'moon';
+  if (bucket === 'rain') return 'cloud-rain';
+  if (bucket === 'snow') return 'cloud-snow';
+  if (bucket === 'storm') return 'cloud-lightning';
+  return 'cloud';
+}
+function greetingFor(hour) {
+  if (hour < 6) return 'Buenas noches';
+  if (hour < 12) return 'Buenos días';
+  if (hour < 20) return 'Buenas tardes';
+  return 'Buenas noches';
+}
+
+function WelcomeWeatherCard() {
+  const [now, setNow] = useState(() => new Date());
+  const [weather, setWeather] = useState(null); // { bucket, tempC, isDay } | null si falla/está cargando
+
+  useEffect(() => {
+    const tick = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(tick);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${WEATHER_LAT}&longitude=${WEATHER_LON}&current_weather=true&timezone=auto`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => {
+        if (cancelled || !data || !data.current_weather) return;
+        const cw = data.current_weather;
+        setWeather({
+          bucket: weatherBucket(cw.weathercode),
+          tempC: Math.round(cw.temperature),
+          isDay: cw.is_day === 1,
+        });
+      })
+      .catch(() => { /* sin clima disponible: se muestra el saludo igual, sin cortar la carga del panel */ });
+    return () => { cancelled = true; };
+  }, []);
+
+  const hour = now.getHours();
+  const isDayFallback = hour >= 6 && hour < 19;
+  const isDay = weather ? weather.isDay : isDayFallback;
+  const bucket = weather ? weather.bucket : 'clear';
+  const timeText = now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+
+  return (
+    <div className={`panel-welcome-card wx-${bucket} ${isDay ? 'is-day' : 'is-night'}`}>
+      <div className="panel-welcome-icon"><window.Icon name={weatherIconName(bucket, isDay)} size={20} /></div>
+      <div className="panel-welcome-body">
+        <div className="panel-welcome-label">Hora local</div>
+        <div className="panel-welcome-greeting">{greetingFor(hour)}</div>
+        <div className="panel-welcome-name">Alejandra Baltar</div>
+        <div className="panel-welcome-time">
+          {timeText} hs{weather ? ` · ${WEATHER_LABELS[weather.bucket]} · ${weather.tempC}°` : ''}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PanelEjecutivo({ onOpen }) {
   const unidades = window.SECTORS.filter(s => s.group === 'UNIDADES');
   const gestion  = window.SECTORS.filter(s => s.group === 'GESTIÓN');
@@ -27,11 +102,14 @@ function PanelEjecutivo({ onOpen }) {
   return (
     <div>
       <div className="panel-hero">
-        <img className="panel-hero-logo" src="assets/logo-equipo-seleccion.png" alt="Equipo de Selección" />
-        <div className="panel-hero-text">
-          <h1>Equipo de <span className="he-accent">Selección</span></h1>
-          <p className="panel-hero-sub">Sabores Express · Extremas — datos actualizados a {mesLabelFor(latestMonth)}</p>
+        <div className="panel-hero-brand">
+          <img className="panel-hero-logo" src="assets/logo-equipo-seleccion.png" alt="Equipo de Selección" />
+          <div className="panel-hero-text">
+            <h1>Equipo de <span className="he-accent">Selección</span></h1>
+            <p className="panel-hero-sub">Sabores Express · Extremas — datos actualizados a {mesLabelFor(latestMonth)}</p>
+          </div>
         </div>
+        <WelcomeWeatherCard />
       </div>
 
       {hasResumen && (

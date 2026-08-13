@@ -281,14 +281,16 @@ button { font-family: inherit; cursor: pointer; }
     var(--surface);
   color: var(--text);
   border-radius: var(--radius-lg);
-  padding: 30px 32px;
+  padding: 24px 32px;
   min-height: 124px;
   margin-bottom: 6px;
   border: 1px solid var(--border);
   box-shadow: 0 8px 28px rgba(20, 35, 60, 0.14), 0 2px 6px rgba(10, 16, 30, 0.06);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
   position: relative;
   overflow: hidden;
 }
@@ -299,25 +301,27 @@ button { font-family: inherit; cursor: pointer; }
   height: 5px;
   background: linear-gradient(90deg, #2C4D7D, #3E6294 45%, #57697F 100%);
 }
+.panel-hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
 .panel-hero-logo {
-  position: absolute;
-  left: 30px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 5.2rem;
+  height: 4.6rem;
   width: auto;
   object-fit: contain;
   background: transparent;
+  flex-shrink: 0;
 }
-.panel-hero-text { text-align: center; }
+.panel-hero-text { text-align: left; }
 .panel-hero h1 {
   margin: 0;
   font-family: 'Quicksand', 'Inter', sans-serif;
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: 0.2px;
   line-height: 1.1;
-  text-align: center;
+  text-align: left;
   color: var(--text);
 }
 .panel-hero h1 .he-accent {
@@ -333,6 +337,61 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 500;
   letter-spacing: 0.1px;
 }
+
+/* ── Tarjeta de bienvenida con clima ── */
+.panel-welcome-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #2C4D7D, #4A7CBE);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  color: white;
+  min-width: 210px;
+  box-shadow: 0 6px 18px rgba(10,16,30,0.2);
+  transition: background 0.5s ease;
+  position: relative;
+  z-index: 1;
+}
+.panel-welcome-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.16);
+  color: white;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.panel-welcome-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  opacity: 0.75;
+}
+.panel-welcome-greeting {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.panel-welcome-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  opacity: 0.92;
+}
+.panel-welcome-time {
+  font-size: 11px;
+  opacity: 0.82;
+  margin-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+/* Variantes por clima real — siempre dentro de la paleta navy/teal/gris, sin fotos. */
+.panel-welcome-card.wx-clear.is-day    { background: linear-gradient(135deg, #2C4D7D, #4A7CBE); }
+.panel-welcome-card.wx-clear.is-night  { background: linear-gradient(135deg, #0A0E17, #1D3860); }
+.panel-welcome-card.wx-cloudy          { background: linear-gradient(135deg, #37414F, #5A6675); }
+.panel-welcome-card.wx-fog             { background: linear-gradient(135deg, #46505E, #6E7889); }
+.panel-welcome-card.wx-rain            { background: linear-gradient(135deg, #16233B, #2A3547); }
+.panel-welcome-card.wx-storm           { background: linear-gradient(135deg, #060811, #232C3C); }
+.panel-welcome-card.wx-snow            { background: linear-gradient(135deg, #55606E, #8B96A6); }
 
 .hero-divider {
   height: 0;

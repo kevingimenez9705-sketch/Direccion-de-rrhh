@@ -31,6 +31,10 @@ const Icon = ({ name, size = 18, stroke = 1.7 }) => {
     case 'chart':      return <svg {...common}><path d="M3 20V4M3 20h18M7 16V10M11 16V7M15 16v-9M19 16v-5"/></svg>;
     case 'sun':        return <svg {...common}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>;
     case 'moon':       return <svg {...common}><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>;
+    case 'cloud':           return <svg {...common}><path d="M7 18a4 4 0 0 1-1-7.9 5 5 0 0 1 9.9-1.1A4.5 4.5 0 0 1 17 18H7z"/></svg>;
+    case 'cloud-rain':      return <svg {...common}><path d="M7 15a4 4 0 0 1-1-7.9A5 5 0 0 1 15.9 8 4.5 4.5 0 0 1 17 15H7z"/><path d="M8 19v1.5M12 19v2.5M16 19v1.5"/></svg>;
+    case 'cloud-snow':      return <svg {...common}><path d="M7 14a4 4 0 0 1-1-7.9A5 5 0 0 1 15.9 7 4.5 4.5 0 0 1 17 14H7z"/><path d="M8 18h.01M12 18h.01M16 18h.01M8 21h.01M12 21h.01M16 21h.01"/></svg>;
+    case 'cloud-lightning': return <svg {...common}><path d="M7 14a4 4 0 0 1-1-7.9A5 5 0 0 1 15.9 7 4.5 4.5 0 0 1 17 14H7z"/><path d="M13 14l-3 5h3l-2 4"/></svg>;
     default: return null;
   }
 };
