@@ -276,14 +276,15 @@ button { font-family: inherit; cursor: pointer; }
 /* ============ Panel Ejecutivo (landing) ============ */
 .panel-hero {
   background:
-    radial-gradient(circle at 88% -40%, rgba(111,160,242,0.28), transparent 55%),
-    radial-gradient(circle at 6% 140%, rgba(168,164,240,0.22), transparent 50%),
+    radial-gradient(circle at 88% -40%, rgba(44,77,125,0.16), transparent 55%),
+    radial-gradient(circle at 6% 140%, rgba(12,71,80,0.12), transparent 50%),
+    radial-gradient(circle, rgba(29,56,96,0.14) 1.2px, transparent 1.2px) 0 0/22px 22px,
     var(--surface);
   color: var(--text);
   border-radius: var(--radius-lg);
   padding: 30px 32px;
   min-height: 124px;
-  margin-bottom: 6px;
+  margin-bottom: 20px;
   border: 1px solid var(--border);
   box-shadow: 0 8px 28px rgba(20, 35, 60, 0.14), 0 2px 6px rgba(10, 16, 30, 0.06);
   display: flex;
@@ -333,6 +334,16 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 500;
   letter-spacing: 0.1px;
 }
+
+.panel-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.panel-summary .kpi-grid { margin-bottom: 0; }
 
 .hero-divider {
   height: 0;

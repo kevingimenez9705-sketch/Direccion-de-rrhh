@@ -224,10 +224,12 @@ function BarChart({ data, activeLabel, dimOthers }) {
 // ============ Grouped bar chart (comparación de varios meses) ============
 // series: [{ label, color, data:[{x,y}, ...] }] — todas las series comparten
 // las mismas categorías (mismo orden de "x") para poder agruparlas.
-function GroupedBarChart({ series, activeLabel, dimOthers }) {
+function GroupedBarChart({ series, activeLabel, dimOthers, rotateLabels }) {
   const t = chartTheme();
   const categories = (series[0]?.data || []).map(d => d.x);
-  const rotate = categories.length > 7 || categories.some(c => String(c).length > 10);
+  // rotateLabels permite forzar sí/no (ej. pocas categorías anchas no necesitan rotar
+  // aunque el nombre sea largo); si no se especifica, se decide automáticamente.
+  const rotate = rotateLabels != null ? rotateLabels : (categories.length > 7 || categories.some(c => String(c).length > 10));
   const W = 560;
   const padL = 44, padR = 14, padT = 14;
   // Ídem BarChart: el texto rotado -45° cuelga hacia abajo del anclaje.
