@@ -126,7 +126,7 @@ function WelcomeWeatherCard() {
         <div className="panel-welcome-greeting">{greetingFor(hour)}</div>
         <div className="panel-welcome-name">Alejandra Baltar</div>
         <div className="panel-welcome-time">
-          {timeText} hs{weather ? ` · ${WEATHER_LABELS[weather.bucket]} · ${weather.tempC}°` : ''}
+          {timeText}{weather ? ` · ${WEATHER_LABELS[weather.bucket]} · ${weather.tempC}°` : ''}
         </div>
       </div>
     </div>

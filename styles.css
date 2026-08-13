@@ -287,10 +287,9 @@ button { font-family: inherit; cursor: pointer; }
   border: 1px solid var(--border);
   box-shadow: 0 8px 28px rgba(20, 35, 60, 0.14), 0 2px 6px rgba(10, 16, 30, 0.06);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
+  gap: 20px;
   position: relative;
   overflow: hidden;
 }
@@ -304,24 +303,25 @@ button { font-family: inherit; cursor: pointer; }
 .panel-hero-brand {
   display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: center;
+  gap: 20px;
 }
 .panel-hero-logo {
-  height: 4.6rem;
+  height: 5.2rem;
   width: auto;
   object-fit: contain;
   background: transparent;
   flex-shrink: 0;
 }
-.panel-hero-text { text-align: left; }
+.panel-hero-text { text-align: center; }
 .panel-hero h1 {
   margin: 0;
   font-family: 'Quicksand', 'Inter', sans-serif;
-  font-size: 30px;
+  font-size: 40px;
   font-weight: 700;
   letter-spacing: 0.2px;
   line-height: 1.1;
-  text-align: left;
+  text-align: center;
   color: var(--text);
 }
 .panel-hero h1 .he-accent {
@@ -342,13 +342,15 @@ button { font-family: inherit; cursor: pointer; }
 .panel-welcome-card {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   background: linear-gradient(135deg, #2C4D7D, #4A7CBE);
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: var(--radius);
   padding: 16px 28px;
   color: white;
-  min-width: 300px;
+  align-self: stretch;
+  width: 100%;
   box-shadow: 0 6px 18px rgba(10,16,30,0.2);
   transition: background 0.5s ease;
   position: relative;
@@ -413,7 +415,7 @@ button { font-family: inherit; cursor: pointer; }
   animation: wx-flash 6.5s ease-in-out infinite;
 }
 
-@keyframes wx-drift { from { transform: translateX(-60px); } to { transform: translateX(420px); } }
+@keyframes wx-drift { from { transform: translateX(-10vw); } to { transform: translateX(105vw); } }
 @keyframes wx-fall { 0% { transform: translateY(-10%); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(320%); opacity: 0.15; } }
 @keyframes wx-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes wx-pulse-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.15); } }
