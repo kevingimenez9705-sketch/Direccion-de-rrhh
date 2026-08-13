@@ -419,11 +419,6 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: -0.2px;
   color: var(--text);
 }
-.sector-btn-sub {
-  font-size: 12.5px;
-  color: var(--text-3);
-  margin-top: 2px;
-}
 .sector-btn-tags {
   display: flex;
   flex-wrap: wrap;

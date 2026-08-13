@@ -82,7 +82,6 @@ function SectorButton({ sector, onOpen }) {
       </div>
       <div>
         <div className="sector-btn-title">{sector.name}</div>
-        <div className="sector-btn-sub">{sector.sub}</div>
       </div>
       {sector.tags && sector.tags.length > 0 && (
         <div className="sector-btn-tags">
