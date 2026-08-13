@@ -7,31 +7,22 @@ function PanelEjecutivo({ onOpen }) {
   const latestMonth = window.MONTHS[window.MONTHS.length - 1];
   const prevMonth = window.MONTHS[window.MONTHS.length - 2] || null;
 
-  // Resumen combinado + desglose por marca (para la comparativa) del mes más reciente.
+  // Resumen combinado (todas las unidades con datos de Altas) del mes más reciente.
   let totalAcumulado = 0, totalMesActivo = 0, totalMesPrev = 0, totalNoPresentes = 0;
-  const brandStats = [];
+  let hasResumen = false;
   unidades.forEach(s => {
     const sectorData = window.SECTOR_DATA[s.id];
     const monthData = sectorData && sectorData[latestMonth.key];
     if (!monthData) return;
-    const altas       = sumOrPick(chartByKind(monthData.charts, 'gerencia-mes'), null, 'y') || 0;
-    const noPresentes = sumOrPick(chartByKind(monthData.charts, 'no-presentes-gerencia'), null, 'y') || 0;
+    hasResumen = true;
     totalAcumulado   += sumOrPick(chartByKind(monthData.charts, 'gerencia-total'), null, 'value') || 0;
-    totalMesActivo   += altas;
-    totalNoPresentes += noPresentes;
+    totalMesActivo   += sumOrPick(chartByKind(monthData.charts, 'gerencia-mes'), null, 'y') || 0;
+    totalNoPresentes += sumOrPick(chartByKind(monthData.charts, 'no-presentes-gerencia'), null, 'y') || 0;
     const prevData = prevMonth && sectorData[prevMonth.key];
     if (prevData) totalMesPrev += sumOrPick(chartByKind(prevData.charts, 'gerencia-mes'), null, 'y') || 0;
-    const accent = window.ACCENTS[s.accent] || window.ACCENTS.blue;
-    brandStats.push({ name: s.name, color: accent['--accent-color'], altas, noPresentes });
   });
-  const hasResumen = brandStats.length > 0;
   const totalDelta = deltaInfo(totalMesActivo, prevMonth ? totalMesPrev : null, false);
   const totalPct = pctOf(totalNoPresentes, totalMesActivo);
-  const compareSeries = brandStats.map(b => ({
-    label: b.name,
-    color: b.color,
-    data: [{ x: 'Altas', y: b.altas }, { x: 'No presentes', y: b.noPresentes }],
-  }));
 
   return (
     <div>
@@ -44,26 +35,14 @@ function PanelEjecutivo({ onOpen }) {
       </div>
 
       {hasResumen && (
-        <div className="panel-summary">
-          <div className="section-label" style={{ marginTop: 0 }}>Resumen general — ambas marcas</div>
+        <>
+          <div className="section-label" style={{ marginTop: 18 }}>Resumen general — ambas marcas</div>
           <div className="kpi-grid">
             <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado) }} />
             <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
             <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
           </div>
-
-          {compareSeries.length > 1 && (
-            <div className="chart-card" style={{ marginTop: 14 }}>
-              <div className="chart-head">
-                <div className="chart-title">Sabores vs Extremas</div>
-                <div className="chart-sub">{mesLabelFor(latestMonth)}</div>
-              </div>
-              <div className="chart-body">
-                <window.GroupedBarChart series={compareSeries} rotateLabels={false} />
-              </div>
-            </div>
-          )}
-        </div>
+        </>
       )}
 
       <hr className="hero-divider" />
