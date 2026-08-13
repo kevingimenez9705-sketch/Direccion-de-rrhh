@@ -353,7 +353,77 @@ button { font-family: inherit; cursor: pointer; }
   transition: background 0.5s ease;
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
+/* ── Animación de fondo según el clima — sutil, detrás del texto ── */
+.wx-fx {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.panel-welcome-icon, .panel-welcome-body { position: relative; z-index: 1; }
+
+.wx-sun-glow {
+  position: absolute;
+  top: -35%; right: -6%;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.55), transparent 70%);
+  animation: wx-pulse-glow 3.6s ease-in-out infinite;
+}
+.wx-star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 50%;
+  animation: wx-twinkle 2.6s ease-in-out infinite;
+  box-shadow: 0 0 3px 1px rgba(255,255,255,0.5);
+}
+.wx-cloud {
+  position: absolute;
+  background: rgba(255,255,255,0.32);
+  border-radius: 40px;
+  filter: blur(1px);
+  animation: wx-drift linear infinite;
+}
+.wx-cloud-fog { filter: blur(3px); animation-duration: 34s; }
+.wx-drop {
+  position: absolute;
+  top: -14%;
+  width: 2px; height: 15px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.75));
+  border-radius: 2px;
+  animation: wx-fall 0.95s linear infinite;
+}
+.wx-flake {
+  position: absolute;
+  top: -10%;
+  width: 4px; height: 4px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  animation: wx-fall linear infinite, wx-sway ease-in-out infinite;
+}
+.wx-flash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  animation: wx-flash 6.5s ease-in-out infinite;
+}
+
+@keyframes wx-drift { from { transform: translateX(-60px); } to { transform: translateX(420px); } }
+@keyframes wx-fall { 0% { transform: translateY(-10%); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(320%); opacity: 0.15; } }
+@keyframes wx-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes wx-pulse-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.15); } }
+@keyframes wx-sway { 0%, 100% { margin-left: 0; } 50% { margin-left: 7px; } }
+@keyframes wx-flash { 0%, 90%, 100% { opacity: 0; } 92% { opacity: 0.85; } 93.5% { opacity: 0.1; } 95% { opacity: 0.6; } 96.5% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .wx-sun-glow, .wx-star, .wx-cloud, .wx-drop, .wx-flake, .wx-flash { animation: none !important; }
+}
+
 .panel-welcome-icon {
   width: 46px; height: 46px;
   border-radius: 12px;

@@ -29,6 +29,62 @@ function greetingFor(hour) {
   return 'Buenas noches';
 }
 
+// Posiciones fijas (no random en cada render, si no "saltan" cada vez que
+// se actualiza el reloj cada 30s) para las animaciones de fondo del clima.
+const WX_STARS  = [{l:8,t:15,d:0},{l:20,t:45,d:0.6},{l:35,t:12,d:1.2},{l:55,t:60,d:0.3},{l:72,t:28,d:1.6},{l:88,t:50,d:0.9}];
+const WX_CLOUDS = [{t:12,w:70,h:16,dur:20,delay:0,op:0.4},{t:45,w:50,h:12,dur:26,delay:-8,op:0.28},{t:65,w:85,h:18,dur:32,delay:-18,op:0.32}];
+const WX_DROPS  = [{l:8,delay:0},{l:22,delay:0.3},{l:38,delay:0.1},{l:52,delay:0.5},{l:66,delay:0.2},{l:80,delay:0.45},{l:92,delay:0.35}];
+const WX_FLAKES = [{l:6,delay:0,dur:5.5},{l:18,delay:1.1,dur:4.5},{l:32,delay:0.4,dur:6},{l:46,delay:2,dur:5},{l:60,delay:0.8,dur:4.8},{l:74,delay:1.6,dur:5.8},{l:88,delay:0.2,dur:5.2}];
+
+function WeatherFx({ bucket, isDay }) {
+  if (bucket === 'clear' && isDay) {
+    return <div className="wx-fx"><span className="wx-sun-glow" /></div>;
+  }
+  if (bucket === 'clear' && !isDay) {
+    return (
+      <div className="wx-fx">
+        {WX_STARS.map((s, i) => (
+          <span key={i} className="wx-star" style={{ left: `${s.l}%`, top: `${s.t}%`, animationDelay: `${s.d}s` }} />
+        ))}
+      </div>
+    );
+  }
+  if (bucket === 'cloudy' || bucket === 'fog') {
+    return (
+      <div className="wx-fx">
+        {WX_CLOUDS.map((c, i) => (
+          <span
+            key={i}
+            className={'wx-cloud' + (bucket === 'fog' ? ' wx-cloud-fog' : '')}
+            style={{ top: `${c.t}%`, width: c.w, height: c.h, opacity: c.op, animationDuration: `${c.dur}s`, animationDelay: `${c.delay}s` }}
+          />
+        ))}
+      </div>
+    );
+  }
+  if (bucket === 'rain' || bucket === 'storm') {
+    return (
+      <div className="wx-fx">
+        <span className="wx-cloud" style={{ top: '2%', left: '48%', width: 90, height: 20, opacity: 0.4 }} />
+        {WX_DROPS.map((r, i) => (
+          <span key={i} className="wx-drop" style={{ left: `${r.l}%`, animationDelay: `${r.delay}s` }} />
+        ))}
+        {bucket === 'storm' && <span className="wx-flash" />}
+      </div>
+    );
+  }
+  if (bucket === 'snow') {
+    return (
+      <div className="wx-fx">
+        {WX_FLAKES.map((s, i) => (
+          <span key={i} className="wx-flake" style={{ left: `${s.l}%`, animationDelay: `${s.delay}s, ${s.delay}s`, animationDuration: `${s.dur}s, 2.4s` }} />
+        ))}
+      </div>
+    );
+  }
+  return null;
+}
+
 function WelcomeWeatherCard() {
   const [now, setNow] = useState(() => new Date());
   const [weather, setWeather] = useState(null); // { bucket, tempC, isDay } | null si falla/está cargando
@@ -63,6 +119,7 @@ function WelcomeWeatherCard() {
 
   return (
     <div className={`panel-welcome-card wx-${bucket} ${isDay ? 'is-day' : 'is-night'}`}>
+      <WeatherFx bucket={bucket} isDay={isDay} />
       <div className="panel-welcome-icon"><window.Icon name={weatherIconName(bucket, isDay)} size={24} /></div>
       <div className="panel-welcome-body">
         <div className="panel-welcome-label">Hora local</div>
