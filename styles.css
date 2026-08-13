@@ -286,8 +286,8 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 6px;
   border: 1px solid var(--border);
   box-shadow: 0 8px 28px rgba(20, 35, 60, 0.14), 0 2px 6px rgba(10, 16, 30, 0.06);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 20px;
   position: relative;
@@ -301,6 +301,8 @@ button { font-family: inherit; cursor: pointer; }
   background: linear-gradient(90deg, #2C4D7D, #3E6294 45%, #57697F 100%);
 }
 .panel-hero-brand {
+  grid-column: 2;
+  justify-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -340,17 +342,19 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ── Tarjeta de bienvenida con clima ── */
 .panel-welcome-card {
+  grid-column: 3;
+  justify-self: end;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
   background: linear-gradient(135deg, #2C4D7D, #4A7CBE);
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: var(--radius);
-  padding: 16px 28px;
+  padding: 12px 20px;
   color: white;
-  align-self: stretch;
   width: 100%;
+  max-width: 300px;
   box-shadow: 0 6px 18px rgba(10,16,30,0.2);
   transition: background 0.5s ease;
   position: relative;
@@ -415,7 +419,7 @@ button { font-family: inherit; cursor: pointer; }
   animation: wx-flash 6.5s ease-in-out infinite;
 }
 
-@keyframes wx-drift { from { transform: translateX(-10vw); } to { transform: translateX(105vw); } }
+@keyframes wx-drift { from { transform: translateX(-60px); } to { transform: translateX(340px); } }
 @keyframes wx-fall { 0% { transform: translateY(-10%); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(320%); opacity: 0.15; } }
 @keyframes wx-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes wx-pulse-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.15); } }
@@ -1022,6 +1026,9 @@ button { font-family: inherit; cursor: pointer; }
   .app { grid-template-columns: 1fr; }
   .sidebar { display: none; }
   .chart-grid { grid-template-columns: 1fr; }
+  .panel-hero { grid-template-columns: 1fr; justify-items: center; }
+  .panel-hero-brand, .panel-welcome-card { grid-column: 1; justify-self: center; }
+  .panel-welcome-card { max-width: 100%; }
 }
 
 /* ============ Details / Accordions ============ */
