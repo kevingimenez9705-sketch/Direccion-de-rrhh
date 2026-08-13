@@ -4,13 +4,46 @@ const { useState, useEffect, useRef } = React;
 function PanelEjecutivo({ onOpen }) {
   const unidades = window.SECTORS.filter(s => s.group === 'UNIDADES');
   const gestion  = window.SECTORS.filter(s => s.group === 'GESTIÓN');
+  const latestMonth = window.MONTHS[window.MONTHS.length - 1];
+  const prevMonth = window.MONTHS[window.MONTHS.length - 2] || null;
+
+  // Resumen combinado (todas las unidades con datos de Altas) del mes más reciente.
+  let totalAcumulado = 0, totalMesActivo = 0, totalMesPrev = 0, totalNoPresentes = 0;
+  let hasResumen = false;
+  unidades.forEach(s => {
+    const sectorData = window.SECTOR_DATA[s.id];
+    const monthData = sectorData && sectorData[latestMonth.key];
+    if (!monthData) return;
+    hasResumen = true;
+    totalAcumulado   += sumOrPick(chartByKind(monthData.charts, 'gerencia-total'), null, 'value') || 0;
+    totalMesActivo   += sumOrPick(chartByKind(monthData.charts, 'gerencia-mes'), null, 'y') || 0;
+    totalNoPresentes += sumOrPick(chartByKind(monthData.charts, 'no-presentes-gerencia'), null, 'y') || 0;
+    const prevData = prevMonth && sectorData[prevMonth.key];
+    if (prevData) totalMesPrev += sumOrPick(chartByKind(prevData.charts, 'gerencia-mes'), null, 'y') || 0;
+  });
+  const totalDelta = deltaInfo(totalMesActivo, prevMonth ? totalMesPrev : null, false);
+  const totalPct = pctOf(totalNoPresentes, totalMesActivo);
 
   return (
     <div>
       <div className="panel-hero">
         <img className="panel-hero-logo" src="assets/logo-equipo-seleccion.png" alt="Equipo de Selección" />
-        <h1>Equipo de <span className="he-accent">Selección</span></h1>
+        <div className="panel-hero-text">
+          <h1>Equipo de <span className="he-accent">Selección</span></h1>
+          <p className="panel-hero-sub">Sabores Express · Extremas — datos actualizados a {mesLabelFor(latestMonth)}</p>
+        </div>
       </div>
+
+      {hasResumen && (
+        <>
+          <div className="section-label" style={{ marginTop: 18 }}>Resumen general — ambas marcas</div>
+          <div className="kpi-grid">
+            <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado) }} />
+            <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
+            <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
+          </div>
+        </>
+      )}
 
       <hr className="hero-divider" />
 
@@ -51,6 +84,11 @@ function SectorButton({ sector, onOpen }) {
         <div className="sector-btn-title">{sector.name}</div>
         <div className="sector-btn-sub">{sector.sub}</div>
       </div>
+      {sector.tags && sector.tags.length > 0 && (
+        <div className="sector-btn-tags">
+          {sector.tags.map((t, i) => <span key={i} className="sector-btn-tag-chip">{t}</span>)}
+        </div>
+      )}
       <div className="sector-btn-cta">
         <span>Ver indicadores</span>
         <window.Icon name="arrow-right" size={16} />

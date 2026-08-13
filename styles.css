@@ -309,6 +309,7 @@ button { font-family: inherit; cursor: pointer; }
   object-fit: contain;
   background: transparent;
 }
+.panel-hero-text { text-align: center; }
 .panel-hero h1 {
   margin: 0;
   font-family: 'Quicksand', 'Inter', sans-serif;
@@ -324,6 +325,13 @@ button { font-family: inherit; cursor: pointer; }
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.panel-hero-sub {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--text-3);
+  font-weight: 500;
+  letter-spacing: 0.1px;
 }
 
 .hero-divider {
@@ -351,49 +359,52 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .sector-btn {
-  background: var(--surface);
+  background:
+    linear-gradient(165deg, var(--accent-soft, var(--blue-50)) 0%, transparent 55%),
+    var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
+  border-radius: var(--radius-lg);
+  padding: 22px 22px 20px;
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 130px;
-  flex: 1 1 260px;
-  max-width: 320px;
+  gap: 14px;
+  min-height: 190px;
+  flex: 1 1 300px;
+  max-width: 380px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
 }
 .sector-btn::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 3px;
+  height: 4px;
   background: var(--accent, var(--grad-blue));
-  opacity: 0.9;
+  opacity: 0.95;
 }
 .sector-btn:hover {
-  border-color: var(--blue-300);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  border-color: var(--accent-color, var(--blue-300));
+  box-shadow: 0 10px 26px rgba(20,35,60,0.14), var(--shadow-md);
+  transform: translateY(-2px);
 }
 .sector-btn-head {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .sector-btn-ico {
-  width: 40px; height: 40px;
-  border-radius: 10px;
+  width: 52px; height: 52px;
+  border-radius: 12px;
   background: var(--accent-soft, var(--blue-50));
   color: var(--accent-color, var(--blue-500));
   display: grid; place-items: center;
   overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(20,35,60,0.05);
 }
 .sector-btn-logo {
   width: 100%; height: 100%;
   object-fit: contain;
-  padding: 4px;
+  padding: 5px;
 }
 .sector-btn-tag {
   font-size: 10.5px;
@@ -403,7 +414,7 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 600;
 }
 .sector-btn-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.2px;
   color: var(--text);
@@ -411,6 +422,22 @@ button { font-family: inherit; cursor: pointer; }
 .sector-btn-sub {
   font-size: 12.5px;
   color: var(--text-3);
+  margin-top: 2px;
+}
+.sector-btn-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sector-btn-tag-chip {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-color, var(--blue-500));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 .sector-btn-cta {
   margin-top: auto;
