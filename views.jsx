@@ -63,7 +63,7 @@ function WelcomeWeatherCard() {
 
   return (
     <div className={`panel-welcome-card wx-${bucket} ${isDay ? 'is-day' : 'is-night'}`}>
-      <div className="panel-welcome-icon"><window.Icon name={weatherIconName(bucket, isDay)} size={20} /></div>
+      <div className="panel-welcome-icon"><window.Icon name={weatherIconName(bucket, isDay)} size={24} /></div>
       <div className="panel-welcome-body">
         <div className="panel-welcome-label">Hora local</div>
         <div className="panel-welcome-greeting">{greetingFor(hour)}</div>
@@ -99,6 +99,19 @@ function PanelEjecutivo({ onOpen }) {
   const totalDelta = deltaInfo(totalMesActivo, prevMonth ? totalMesPrev : null, false);
   const totalPct = pctOf(totalNoPresentes, totalMesActivo);
 
+  // No presentes ACUMULADOS: suma de los 15 meses completos (no solo el mes activo).
+  let totalNoPresentesAcumulado = 0;
+  unidades.forEach(s => {
+    const sectorData = window.SECTOR_DATA[s.id];
+    if (!sectorData) return;
+    window.MONTHS.forEach(m => {
+      const md = sectorData[m.key];
+      if (!md) return;
+      totalNoPresentesAcumulado += sumOrPick(chartByKind(md.charts, 'no-presentes-gerencia'), null, 'y') || 0;
+    });
+  });
+  const totalNoPresentesAcumuladoPct = pctOf(totalNoPresentesAcumulado, totalAcumulado);
+
   return (
     <div>
       <div className="panel-hero">
@@ -119,6 +132,7 @@ function PanelEjecutivo({ onOpen }) {
             <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
             <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
             <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
+            <KpiCard kpi={{ label: 'No presentes acumulados', value: `${fmtInt(totalNoPresentesAcumulado)}${totalNoPresentesAcumuladoPct != null ? ` (${totalNoPresentesAcumuladoPct}%)` : ''}`, delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
           </div>
         </>
       )}
