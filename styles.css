@@ -814,6 +814,12 @@ button { font-family: inherit; cursor: pointer; }
 .compare-col-delta.down { color: #A8453C; background: #F8E5E3; }
 [data-theme="dark"] .compare-col-delta.up { color: #7FD3A5; background: #16301F; }
 [data-theme="dark"] .compare-col-delta.down { color: #EBA29A; background: #3A1F1E; }
+.compare-col-note {
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--text-3);
+}
+.compare-col-note strong { color: var(--text-2); font-weight: 700; font-variant-numeric: tabular-nums; }
 
 /* ============ Selector de gerencias (con foto) ============ */
 .gerencia-picker {
@@ -976,6 +982,12 @@ button { font-family: inherit; cursor: pointer; }
 .kpi-delta.up { color: #2C7E51; background: #E4F2EA; }
 .kpi-delta.down { color: #A8453C; background: #F8E5E3; }
 .kpi-delta-arrow { font-size: 10px; }
+.kpi-note {
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.kpi-note strong { color: var(--text-2); font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .chart-grid {
   display: grid;
