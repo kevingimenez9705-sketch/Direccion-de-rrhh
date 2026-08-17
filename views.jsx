@@ -169,6 +169,12 @@ function PanelEjecutivo({ onOpen }) {
   });
   const totalNoPresentesAcumuladoPct = pctOf(totalNoPresentesAcumulado, totalAcumulado);
 
+  // Bajas (empresa total, ambas marcas) — acumulado del período y mes activo.
+  const totalBajasAcumulado = window.MONTHS.reduce((a, m) => a + (window.BAJAS_MENSUAL[m.key] || 0), 0);
+  const totalBajasMes = window.BAJAS_MENSUAL[latestMonth.key] ?? null;
+  const totalBajasMesPrev = prevMonth ? (window.BAJAS_MENSUAL[prevMonth.key] ?? null) : null;
+  const bajasDelta = deltaInfo(totalBajasMes, prevMonth ? totalBajasMesPrev : null, true);
+
   return (
     <div>
       <div className="panel-hero">
@@ -190,6 +196,8 @@ function PanelEjecutivo({ onOpen }) {
             <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
             <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
             <KpiCard kpi={{ label: 'No presentes acumulados', value: `${fmtInt(totalNoPresentesAcumulado)}${totalNoPresentesAcumuladoPct != null ? ` (${totalNoPresentesAcumuladoPct}%)` : ''}`, delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
+            <KpiCard kpi={{ label: 'Bajas acumuladas', value: fmtInt(totalBajasAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
+            <KpiCard kpi={{ label: `Bajas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalBajasMes) ?? 'S/D', delta: bajasDelta }} />
           </div>
         </>
       )}
@@ -467,6 +475,11 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const gPct = pctOf(stat.noPresentes, stat.altasMes);
   const mesLabel = mesLabelFor(activeMonth);
 
+  // Altas del mes activo, netas de los "no presentes" — el total real de gente que quedó.
+  const altasNetas = (stat.altasMes != null && stat.noPresentes != null) ? stat.altasMes - stat.noPresentes : null;
+  const altasNetasPrev = (stat.altasMesPrev != null && stat.noPresentesPrev != null) ? stat.altasMesPrev - stat.noPresentesPrev : null;
+  const altasNetasDelta = deltaInfo(altasNetas, altasNetasPrev, false);
+
   // Datos por columna cuando se está comparando
   const compareStats = isComparing ? sortedCompareIdxs.map(idx => {
     const m = window.MONTHS[idx];
@@ -553,6 +566,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
             { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D', delta: { dir: 'neutral', text: periodoAcumuladoTexto() } },
             { label: `Altas — ${mesLabel}`, value: fmtInt(stat.altasMes) ?? '0', delta: altasDelta },
             { label: `No presentes — ${mesLabel}`, value: `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}`, delta: noPresentesDelta },
+            { label: 'Altas - no presentes', value: fmtInt(altasNetas) ?? '0', delta: altasNetasDelta },
           ].map((k, i) => <KpiCard key={i} kpi={k} />)}
         </div>
       )}

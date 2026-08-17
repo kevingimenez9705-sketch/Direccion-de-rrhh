@@ -245,6 +245,26 @@ window.MONTHS = [
   { key: 'jul26', short: 'JUL', year: 2026 },
 ];
 
+// ─── BAJAS — empresa total (ambas marcas), por mes ───
+// Fuente: planilla de bajas.xlsx (fila "Bajas"), May 2025 – Jul 2026.
+window.BAJAS_MENSUAL = {
+  may25: 172,
+  jun25: 168,
+  jul25: 179,
+  ago25: 242,
+  sep25: 217,
+  oct25: 222,
+  nov25: 170,
+  dic25: 309,
+  ene26: 381,
+  feb26: 337,
+  mar26: 424,
+  abr26: 332,
+  may26: 288,
+  jun26: 224,
+  jul26: 260,
+};
+
 const acc = {
   blue:   { '--accent': 'linear-gradient(90deg,#2C4D7D,#3E6294)', '--accent-color': '#1D3860', '--accent-soft': '#E6ECF5', '--accent-glow': 'rgba(29,56,96,0.30)' },
   cyan:   { '--accent': 'linear-gradient(90deg,#0F5C66,#1F7A85)', '--accent-color': '#0C4750', '--accent-soft': '#E1EFF0', '--accent-glow': 'rgba(12,71,80,0.30)' },
