@@ -140,7 +140,7 @@ function PanelEjecutivo({ onOpen }) {
   const prevMonth = window.MONTHS[window.MONTHS.length - 2] || null;
 
   // Resumen combinado (todas las unidades con datos de Altas) del mes más reciente.
-  let totalAcumulado = 0, totalMesActivo = 0, totalMesPrev = 0, totalNoPresentes = 0;
+  let totalAcumulado = 0, totalMesActivo = 0, totalMesPrev = 0, totalNoPresentes = 0, totalNoPresentesPrev = 0;
   let hasResumen = false;
   unidades.forEach(s => {
     const sectorData = window.SECTOR_DATA[s.id];
@@ -151,10 +151,18 @@ function PanelEjecutivo({ onOpen }) {
     totalMesActivo   += sumOrPick(chartByKind(monthData.charts, 'gerencia-mes'), null, 'y') || 0;
     totalNoPresentes += sumOrPick(chartByKind(monthData.charts, 'no-presentes-gerencia'), null, 'y') || 0;
     const prevData = prevMonth && sectorData[prevMonth.key];
-    if (prevData) totalMesPrev += sumOrPick(chartByKind(prevData.charts, 'gerencia-mes'), null, 'y') || 0;
+    if (prevData) {
+      totalMesPrev += sumOrPick(chartByKind(prevData.charts, 'gerencia-mes'), null, 'y') || 0;
+      totalNoPresentesPrev += sumOrPick(chartByKind(prevData.charts, 'no-presentes-gerencia'), null, 'y') || 0;
+    }
   });
   const totalDelta = deltaInfo(totalMesActivo, prevMonth ? totalMesPrev : null, false);
   const totalPct = pctOf(totalNoPresentes, totalMesActivo);
+
+  // Altas del mes activo, netas de los "no presentes" — el total real (ambas marcas).
+  const totalAltasNetas = totalMesActivo - totalNoPresentes;
+  const totalAltasNetasPrev = prevMonth ? (totalMesPrev - totalNoPresentesPrev) : null;
+  const totalAltasNetasDelta = deltaInfo(totalAltasNetas, totalAltasNetasPrev, false);
 
   // No presentes ACUMULADOS: suma de los 15 meses completos (no solo el mes activo).
   let totalNoPresentesAcumulado = 0;
@@ -196,6 +204,7 @@ function PanelEjecutivo({ onOpen }) {
             <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
             <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
             <KpiCard kpi={{ label: 'No presentes acumulados', value: `${fmtInt(totalNoPresentesAcumulado)}${totalNoPresentesAcumuladoPct != null ? ` (${totalNoPresentesAcumuladoPct}%)` : ''}`, delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
+            <KpiCard kpi={{ label: 'Altas - no presentes', value: fmtInt(totalAltasNetas), delta: totalAltasNetasDelta }} />
             <KpiCard kpi={{ label: 'Bajas acumuladas', value: fmtInt(totalBajasAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
             <KpiCard kpi={{ label: `Bajas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalBajasMes) ?? 'S/D', delta: bajasDelta }} />
           </div>
