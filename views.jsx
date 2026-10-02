@@ -755,15 +755,17 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const stat = hasAltasMes
     ? buildStat(sectorData, activeMonth.key, prevMonth && sectorData[prevMonth.key] ? prevMonth.key : null, matchLabel)
     : { altasTotal: buildStat(sectorData, lastAltasMonth.key, null, matchLabel).altasTotal, altasMes: null, altasMesPrev: null, noPresentes: null, noPresentesPrev: null };
-  const altasDelta = deltaInfo(stat.altasMes, stat.altasMesPrev, false);
-  const noPresentesDelta = deltaInfo(stat.noPresentes, stat.noPresentesPrev, true);
-  const gPct = pctOf(stat.noPresentes, stat.altasMes);
   const mesLabel = mesLabelFor(activeMonth);
 
-  // Altas del mes activo, netas de los "no presentes" — el total real de gente que quedó.
+  // "Altas" = ingresos del mes netos de los no presentes (la gente que efectivamente entró).
   const altasNetas = (stat.altasMes != null && stat.noPresentes != null) ? stat.altasMes - stat.noPresentes : null;
   const altasNetasPrev = (stat.altasMesPrev != null && stat.noPresentesPrev != null) ? stat.altasMesPrev - stat.noPresentesPrev : null;
   const altasNetasDelta = deltaInfo(altasNetas, altasNetasPrev, false);
+
+  // Bajas y rotación del mes (tablas de rotación; solo meses cargados en window.ROTACION).
+  const rotMes = rotacionStats(window.ROTACION?.[sector.id]?.[activeMonth.key], matchLabel);
+  const rotPrevMes = prevMonth ? rotacionStats(window.ROTACION?.[sector.id]?.[prevMonth.key], matchLabel) : null;
+  const sinRotacion = { dir: 'neutral', text: 'Sin datos de rotación para este mes' };
 
   const visibleCharts = data.charts.filter(c => !CHARTS_OCULTOS.includes(c.matchKind));
 
@@ -772,7 +774,9 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
     const m = window.MONTHS[idx];
     const mData = sectorData[m.key];
     const s = mData ? buildStat(sectorData, m.key, null, matchLabel) : { altasMes: null, noPresentes: null, altasTotal: null };
-    return { idx, month: m, hasData: !!mData, ...s };
+    const netas = s.altasMes != null && s.noPresentes != null ? s.altasMes - s.noPresentes : null;
+    const rot = rotacionStats(window.ROTACION?.[sector.id]?.[m.key], matchLabel);
+    return { idx, month: m, hasData: !!mData, ...s, netas, rot };
   }) : [];
 
   // ── Tarjetas de gráficos ──
@@ -910,9 +914,9 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           {compareStats.map((cs, i) => {
             const prev = i > 0 ? compareStats[i - 1] : null;
             const prevLabel = prev ? mesLabelFor(prev.month) : null;
-            const aDelta = prev ? deltaInfo(cs.altasMes, prev.altasMes, false, prevLabel) : null;
-            const nDelta = prev ? deltaInfo(cs.noPresentes, prev.noPresentes, true, prevLabel) : null;
-            const pct = pctOf(cs.noPresentes, cs.altasMes);
+            const aDelta = prev ? deltaInfo(cs.netas, prev.netas, false, prevLabel) : null;
+            const bDelta = prev && cs.rot && prev.rot ? deltaInfo(cs.rot.bajas, prev.rot.bajas, true, prevLabel) : null;
+            const rDelta = prev && cs.rot && prev.rot ? rotDelta(cs.rot.rot, prev.rot.rot, prevLabel) : null;
             return (
               <div key={cs.idx} className="compare-col" style={{ borderTopColor: COMPARE_COLORS[i] }}>
                 <div className="compare-col-head">
@@ -921,13 +925,18 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                 </div>
                 <div className="compare-col-metric">
                   <div className="compare-col-metric-label">Altas</div>
-                  <div className="compare-col-metric-value">{cs.hasData ? (fmtInt(cs.altasMes) ?? '0') : 'S/D'}</div>
+                  <div className="compare-col-metric-value">{cs.hasData ? (fmtInt(cs.netas) ?? '0') : 'S/D'}</div>
                   {aDelta && <div className={'compare-col-delta ' + aDelta.dir}>{aDelta.text}</div>}
                 </div>
                 <div className="compare-col-metric">
-                  <div className="compare-col-metric-label">No presentes</div>
-                  <div className="compare-col-metric-value">{cs.hasData ? `${fmtInt(cs.noPresentes) ?? '0'}${pct != null ? ` (${pct}%)` : ''}` : 'S/D'}</div>
-                  {nDelta && <div className={'compare-col-delta ' + nDelta.dir}>{nDelta.text}</div>}
+                  <div className="compare-col-metric-label">Bajas</div>
+                  <div className="compare-col-metric-value">{cs.rot ? fmtInt(cs.rot.bajas) : 'S/D'}</div>
+                  {bDelta && <div className={'compare-col-delta ' + bDelta.dir}>{bDelta.text}</div>}
+                </div>
+                <div className="compare-col-metric">
+                  <div className="compare-col-metric-label">Rotación</div>
+                  <div className="compare-col-metric-value">{cs.rot ? fmtPct(cs.rot.rot) : 'S/D'}</div>
+                  {rDelta && <div className={'compare-col-delta ' + rDelta.dir}>{rDelta.text}</div>}
                 </div>
               </div>
             );
@@ -940,9 +949,9 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         <div className="kpi-grid">
           {[
             { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D', delta: { dir: 'neutral', text: periodoAcumuladoTexto(lastAltasMonth) } },
-            { label: `Altas — ${mesLabel}`, value: hasAltasMes ? (fmtInt(stat.altasMes) ?? '0') : 'S/D', delta: hasAltasMes ? altasDelta : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
-            { label: `No presentes — ${mesLabel}`, value: hasAltasMes ? `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}` : 'S/D', delta: noPresentesDelta },
-            { label: 'Altas - no presentes', value: hasAltasMes ? (fmtInt(altasNetas) ?? '0') : 'S/D', delta: altasNetasDelta },
+            { label: `Altas — ${mesLabel}`, value: hasAltasMes ? (fmtInt(altasNetas) ?? '0') : 'S/D', delta: hasAltasMes ? altasNetasDelta : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
+            { label: `Bajas — ${mesLabel}`, value: rotMes ? fmtInt(rotMes.bajas) : 'S/D', delta: !rotMes ? sinRotacion : rotPrevMes ? deltaInfo(rotMes.bajas, rotPrevMes.bajas, true) : { dir: 'neutral', text: 'Sin dato de mes ant.' } },
+            { label: `Rotación — ${mesLabel}`, value: rotMes ? fmtPct(rotMes.rot) : 'S/D', delta: !rotMes ? sinRotacion : rotDelta(rotMes.rot, rotPrevMes?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${fmtInt(rotMes.dotIni)} → ${fmtInt(rotMes.dotFin)}` } },
           ].map((k, i) => <KpiCard key={i} kpi={k} />)}
         </div>
       )}
