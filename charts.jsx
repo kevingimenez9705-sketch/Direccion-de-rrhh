@@ -22,6 +22,55 @@ function chartTheme() {
   };
 }
 
+// --- tooltip compartido --- //
+// Un único div posicionado dentro del contenedor del gráfico. El contenido se arma
+// con nodos de React (texto escapado), nunca con innerHTML.
+function useChartTip() {
+  const wrapRef = React.useRef(null);
+  const [tip, setTip] = React.useState(null);
+  // Posición en px relativa al contenedor; viene del puntero o, con teclado, del elemento enfocado.
+  function show(evt, content) {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const r = wrap.getBoundingClientRect();
+    let x, y;
+    if (evt.type === 'focus' || evt.clientX == null) {
+      const b = evt.currentTarget.getBoundingClientRect();
+      x = b.left + b.width / 2 - r.left; y = b.top - r.top;
+    } else {
+      x = evt.clientX - r.left; y = evt.clientY - r.top;
+    }
+    setTip({ x, y, w: r.width, ...content });
+  }
+  function showAt(x, y, content) {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    setTip({ x, y, w: wrap.getBoundingClientRect().width, ...content });
+  }
+  return { wrapRef, tip, show, showAt, hide: () => setTip(null) };
+}
+
+function ChartTip({ tip }) {
+  if (!tip) return null;
+  const flip = tip.x > tip.w * 0.6;
+  return (
+    <div className="viz-tip" style={{ left: tip.x, top: tip.y, transform: `translate(${flip ? 'calc(-100% - 12px)' : '12px'}, calc(-100% - 10px))` }}>
+      {tip.title && <div className="viz-tip-title">{tip.title}</div>}
+      {(tip.rows || []).map((r, i) => (
+        <div key={i} className="viz-tip-row">
+          {r.color && <span className="viz-tip-key" style={{ background: r.color }} />}
+          <span className="viz-tip-value">{r.value}</span>
+          {r.label && <span className="viz-tip-label">{r.label}</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Clave que cambia con los datos: al remontar el SVG se repiten las animaciones de entrada.
+const dataKey = data => JSON.stringify(data);
+const fmtMiles = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
 // --- helpers --- //
 function niceMax(max) {
   if (max <= 0) return 1;
@@ -42,8 +91,10 @@ function ticks(max, count = 5) {
 }
 
 // ============ Line chart ============
-function LineChart({ data, activeIndex, activeIndices, wide }) {
+function LineChart({ data, activeIndex, activeIndices, wide, seriesLabel = '' }) {
   const t = chartTheme();
+  const { wrapRef, tip, showAt, hide } = useChartTip();
+  const [hi, setHi] = React.useState(null);
   // activeIndices (comparación de varios meses) tiene prioridad sobre activeIndex (mes único).
   const actives = activeIndices && activeIndices.length ? activeIndices : (activeIndex != null ? [activeIndex] : []);
   // "wide": series largas (ej. 15 meses) piden más ancho por punto para que
@@ -59,7 +110,8 @@ function LineChart({ data, activeIndex, activeIndices, wide }) {
   const yMax = Math.max(...ys);
   const span = Math.max(yMax - yMin, 1);
   const padY = span * 0.6;
-  const yLo = Math.floor(yMin - padY);
+  // Cantidades y % no van por debajo de 0: el eje arranca en 0 si los datos son positivos.
+  const yLo = yMin >= 0 ? Math.max(0, Math.floor(yMin - padY)) : Math.floor(yMin - padY);
   const yHi = Math.ceil(yMax + padY);
   const yRange = yHi - yLo;
 
@@ -81,8 +133,25 @@ function LineChart({ data, activeIndex, activeIndices, wide }) {
     yTicks.push({ v: Math.round(v), y: padT + (1 - i / tickCount) * innerH });
   }
 
+  // Crosshair: el puntero busca el mes más cercano (no hace falta apuntarle al punto).
+  function onMove(e) {
+    const svg = e.currentTarget.ownerSVGElement;
+    const r = svg.getBoundingClientRect();
+    const scale = r.width / W;
+    const vx = (e.clientX - r.left) / scale;
+    const i = Math.max(0, Math.min(pts.length - 1, Math.round((vx - padL) / xStep)));
+    setHi(i);
+    const wr = wrapRef.current.getBoundingClientRect();
+    showAt(r.left - wr.left + pts[i].x * scale, r.top - wr.top + pts[i].y * scale, {
+      title: pts[i].d.x,
+      rows: [{ value: fmtMiles(pts[i].d.y), label: seriesLabel, color: t.blueDark }],
+    });
+  }
+  function onLeave() { setHi(null); hide(); }
+
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: wide ? 320 : 260 }}>
+    <div className="viz-wrap" ref={wrapRef}>
+    <svg key={dataKey(data)} viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: wide ? 320 : 260 }}>
       <defs>
         <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={t.blue} stopOpacity="0.28" />
@@ -97,12 +166,15 @@ function LineChart({ data, activeIndex, activeIndices, wide }) {
         </g>
       ))}
       {/* area + line */}
-      <path d={areaPath} fill="url(#lineFill)" />
-      <path d={path} fill="none" stroke={t.blueDark} strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" />
+      <path d={areaPath} fill="url(#lineFill)" className="viz-fade" style={{ animationDelay: '350ms' }} />
+      <path d={path} fill="none" stroke={t.blueDark} strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" pathLength="1" className="viz-draw" />
+      {hi != null && (
+        <line x1={pts[hi].x} x2={pts[hi].x} y1={padT} y2={padT + innerH} stroke={t.axis} strokeWidth="1" strokeDasharray="3 3" />
+      )}
       {/* points */}
       {pts.map((p, i) => (
-        <g key={i}>
-          <circle cx={p.x} cy={p.y} r={actives.includes(i) ? 6 : 4} fill={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'} stroke={t.blueDark} strokeWidth={actives.includes(i) ? 3 : 2} />
+        <g key={i} className="viz-pop" style={{ animationDelay: `${250 + i * 45}ms` }}>
+          <circle cx={p.x} cy={p.y} r={actives.includes(i) || hi === i ? 6 : 4} fill={t.tooltipBg === '#0A0E17' ? '#121722' : 'white'} stroke={t.blueDark} strokeWidth={actives.includes(i) || hi === i ? 3 : 2} style={{ transition: 'r 150ms ease' }} />
           {actives.includes(i) && (
             <g>
               <rect x={p.x - 22} y={p.y - 30} width="44" height="20" rx="5" fill={t.tooltipBg} />
@@ -131,9 +203,13 @@ function LineChart({ data, activeIndex, activeIndices, wide }) {
       ))}
       {/* x labels */}
       {pts.map((p, i) => (
-        <text key={i} x={p.x} y={H - 8} fontSize="11" textAnchor="middle" fill={t.axis}>{p.d.x}</text>
+        <text key={i} x={p.x} y={H - 8} fontSize="11" textAnchor="middle" fill={t.axis} fontWeight={hi === i ? 700 : 400}>{p.d.x}</text>
       ))}
+      {/* capa de hover (encima de todo) */}
+      <rect x={padL - xStep / 2} y={padT} width={innerW + xStep} height={innerH} fill="transparent" onPointerMove={onMove} onPointerLeave={onLeave} />
     </svg>
+    <ChartTip tip={tip} />
+    </div>
   );
 }
 
@@ -196,6 +272,7 @@ function BarChart({ data, activeLabel, dimOthers, valueFormat }) {
               x={x} y={y} width={barW} height={h}
               rx="4"
               fill={isActive ? 'url(#barFillActive)' : 'url(#barFill)'}
+              className="viz-grow-y" style={{ animationDelay: `${i * 60}ms` }}
             />
             {Number.isFinite(d.y) && (
               <text
@@ -305,8 +382,10 @@ function GroupedBarChart({ series, activeLabel, dimOthers }) {
 }
 
 // ============ Horizontal bar chart ============
-function HBarChart({ data }) {
+function HBarChart({ data, valueLabel = 'altas' }) {
   const t = chartTheme();
+  const { wrapRef, tip, show, hide } = useChartTip();
+  const [hi, setHi] = React.useState(null);
   const W = 560;
   const rowH = 22;
   const gap = 6;
@@ -320,7 +399,8 @@ function HBarChart({ data }) {
   const tickVals = ticks(max, 6);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
+    <div className="viz-wrap" ref={wrapRef}>
+    <svg key={dataKey(data)} viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
       <defs>
         <linearGradient id="hbarFill" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#6E8CBB" />
@@ -341,17 +421,31 @@ function HBarChart({ data }) {
       {data.map((d, i) => {
         const y = padT + i * (rowH + gap);
         const w = (d.y / max) * innerW;
+        const tipContent = { title: d.x, rows: [{ value: fmtMiles(d.y), label: valueLabel, color: '#6E8CBB' }] };
         return (
-          <g key={i}>
-            <text x={padL - 8} y={y + rowH/2 + 3.5} fontSize="10.5" textAnchor="end" fill={t.axis}>{d.x}</text>
-            <rect x={padL} y={y} width={w} height={rowH} rx="3" fill="url(#hbarFill)" />
+          <g key={i}
+            tabIndex={0}
+            className="viz-mark"
+            onPointerMove={e => { setHi(i); show(e, tipContent); }}
+            onPointerLeave={() => { setHi(null); hide(); }}
+            onFocus={e => { setHi(i); show(e, tipContent); }}
+            onBlur={() => { setHi(null); hide(); }}
+          >
+            {/* zona de hover: toda la fila, más grande que la barra */}
+            <rect x={0} y={y - gap / 2} width={W} height={rowH + gap} fill="transparent" />
+            <text x={padL - 8} y={y + rowH/2 + 3.5} fontSize="10.5" textAnchor="end" fill={hi === i ? t.ink : t.axis} fontWeight={hi === i ? 700 : 400}>{d.x}</text>
+            <rect x={padL} y={y} width={w} height={rowH} rx="3" fill="url(#hbarFill)"
+              className="viz-grow-x" style={{ animationDelay: `${i * 70}ms`, filter: hi === i ? 'brightness(0.88)' : 'none' }} />
             {Number.isFinite(d.y) && (
-              <text x={padL + w + 6} y={y + rowH/2 + 3.5} fontSize="10.5" textAnchor="start" fill={t.ink} fontWeight="700">{d.y}</text>
+              <text x={padL + w + 6} y={y + rowH/2 + 3.5} fontSize="10.5" textAnchor="start" fill={t.ink} fontWeight="700"
+                className="viz-fade" style={{ animationDelay: `${350 + i * 70}ms` }}>{d.y}</text>
             )}
           </g>
         );
       })}
     </svg>
+    <ChartTip tip={tip} />
+    </div>
   );
 }
 
@@ -419,4 +513,187 @@ function DonutChart({ data, center, activeLabel }) {
   );
 }
 
-Object.assign(window, { LineChart, BarChart, HBarChart, DonutChart, GroupedBarChart });
+// ============ Torta (distribución YTD por gerencia) ============
+// data: [{ label, short, value, color }] en orden fijo (el color sigue a la gerencia).
+// Etiquetas afuera (nombre + %), hover separa la porción, click elige la gerencia.
+function PieChart({ data, activeLabel, onSelect, valueLabel = 'altas' }) {
+  const t = chartTheme();
+  const { wrapRef, tip, show, hide } = useChartTip();
+  const [hi, setHi] = React.useState(null);
+  const W = 330, H = 262, cx = W / 2, cy = H / 2, R = 98;
+  const total = data.reduce((a, d) => a + d.value, 0) || 1;
+  const surface = t.tooltipBg === '#0A0E17' ? '#121722' : '#FFFFFF';
+
+  let angle = -Math.PI / 2;
+  const slices = data.map((d, i) => {
+    const pct = d.value / total;
+    const a0 = angle, a1 = angle + pct * Math.PI * 2;
+    angle = a1;
+    const mid = (a0 + a1) / 2;
+    const large = a1 - a0 > Math.PI ? 1 : 0;
+    const path = pct >= 0.9999
+      ? `M ${cx - R} ${cy} A ${R} ${R} 0 1 1 ${cx + R} ${cy} A ${R} ${R} 0 1 1 ${cx - R} ${cy} Z`
+      : `M ${cx} ${cy} L ${cx + R * Math.cos(a0)} ${cy + R * Math.sin(a0)} A ${R} ${R} 0 ${large} 1 ${cx + R * Math.cos(a1)} ${cy + R * Math.sin(a1)} Z`;
+    return { ...d, i, pct, mid, path };
+  });
+  const pctTxt = p => `${(p * 100).toFixed(1).replace('.', ',')}%`;
+
+  return (
+    <div className="viz-wrap" ref={wrapRef}>
+      <svg key={dataKey(data)} viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxWidth: 380, margin: '0 auto', overflow: 'visible' }}>
+        <g className="viz-spin">
+          {slices.map(s => {
+            const isActive = activeLabel != null && s.label === activeLabel;
+            const dim = activeLabel != null && !isActive;
+            const out = hi === s.i || isActive ? 7 : 0;
+            const tipContent = { title: s.label, rows: [{ value: fmtMiles(s.value), label: `${valueLabel} · ${pctTxt(s.pct)}`, color: s.color }] };
+            return (
+              <path key={s.i} d={s.path} fill={s.color} stroke={surface} strokeWidth="2"
+                tabIndex={0} className="viz-mark"
+                style={{ transform: `translate(${Math.cos(s.mid) * out}px, ${Math.sin(s.mid) * out}px)`, transition: 'transform 200ms ease, opacity 200ms ease', opacity: dim ? 0.35 : 1, cursor: onSelect && s.label !== 'Otros' ? 'pointer' : 'default' }}
+                onPointerMove={e => { setHi(s.i); show(e, tipContent); }}
+                onPointerLeave={() => { setHi(null); hide(); }}
+                onFocus={e => { setHi(s.i); show(e, tipContent); }}
+                onBlur={() => { setHi(null); hide(); }}
+                onClick={() => onSelect && s.label !== 'Otros' && onSelect(s.label)}
+                onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && onSelect && s.label !== 'Otros') { e.preventDefault(); onSelect(s.label); } }}
+              />
+            );
+          })}
+        </g>
+        {/* etiquetas afuera: nombre + % (las porciones muy chicas quedan en el tooltip) */}
+        {slices.filter(s => s.pct >= 0.04).map(s => {
+          const lr = R + 16;
+          const x = cx + lr * Math.cos(s.mid), y = cy + lr * Math.sin(s.mid);
+          const c = Math.cos(s.mid);
+          const anchor = c > 0.2 ? 'start' : c < -0.2 ? 'end' : 'middle';
+          const dim = activeLabel != null && s.label !== activeLabel;
+          return (
+            <text key={s.i} x={x} y={y - 2} textAnchor={anchor} fontSize="12" fill={t.ink} opacity={dim ? 0.4 : 1}
+              className="viz-fade" style={{ animationDelay: '500ms' }}>
+              <tspan x={x} fontWeight={activeLabel === s.label || hi === s.i ? 700 : 500}>{s.short}</tspan>
+              <tspan x={x} dy="14" fill={t.inkSub}>{pctTxt(s.pct)}</tspan>
+            </text>
+          );
+        })}
+      </svg>
+      <ChartTip tip={tip} />
+    </div>
+  );
+}
+
+// Flecha de tendencia (estado): sube = rojo ↗, baja = verde ↘. Siempre acompañada de texto.
+function TrendArrow({ dir, size = 14 }) {
+  const up = dir === 'up';
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" aria-hidden="true" style={{ display: 'inline-block', verticalAlign: '-2px' }}>
+      <path d={up ? 'M4 12 L12 4 M6 4 H12 V10' : 'M4 4 L12 12 M12 6 V12 H6'} fill="none"
+        stroke={up ? 'var(--viz-bad)' : 'var(--viz-good)'} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// Pictograma de personas: "filled" en color principal, el resto en el color secundario.
+function PeopleRow({ total = 6, filled = total, color = 'var(--viz-people)', empty = 'var(--viz-people-empty)', size = 30 }) {
+  return (
+    <div className="people-row" aria-hidden="true">
+      {Array.from({ length: total }).map((_, i) => (
+        <svg key={i} width={size * 0.55} height={size} viewBox="0 0 16 30" className="viz-pop" style={{ animationDelay: `${i * 70}ms` }}>
+          <g fill={i < filled ? color : empty}>
+            <circle cx="8" cy="4.6" r="4.2" />
+            <path d="M3.2 21 V14.6 Q3.2 10.2 8 10.2 Q12.8 10.2 12.8 14.6 V21 Z" />
+            <rect x="0.4" y="11.2" width="2.6" height="9.4" rx="1.3" />
+            <rect x="13" y="11.2" width="2.6" height="9.4" rx="1.3" />
+            <rect x="3.9" y="19" width="3.5" height="10.6" rx="1.6" />
+            <rect x="8.6" y="19" width="3.5" height="10.6" rx="1.6" />
+          </g>
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+// ============ Barras de rotación por gerencia (réplica de la referencia) ============
+// rows: [{ label, short, rot, prevRot, dotIni, dotFin, altas, bajas }] — la barra es la
+// rotación del mes; arriba el valor con flecha vs. mes anterior; adentro, arriba, el valor
+// del mes anterior; adentro, abajo, la dotación final de la región.
+function RotacionBars({ rows, activeLabel, onSelect, mesLabel, prevLabel, fmtPct }) {
+  const t = chartTheme();
+  const { wrapRef, tip, show, hide } = useChartTip();
+  const [hi, setHi] = React.useState(null);
+  const n = rows.length;
+  const W = Math.max(760, 220 + n * 165), H = 300;
+  const padL = 128, padR = 12, padT = 34, padB = 30;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  // Escala de a 2 puntos (niceMax salta 10 → 20 y aplasta las barras).
+  const top = Math.max(1, ...rows.map(r => Math.max(r.rot || 0, r.prevRot || 0)));
+  const max = Math.max(4, Math.ceil((top * 1.1) / 2) * 2);
+  const gap = 30;
+  const barW = Math.min(150, (innerW - gap * (n - 1)) / n);
+  const x0 = padL + (innerW - (barW * n + gap * (n - 1))) / 2;
+  const base = padT + innerH;
+  const BAR = '#3B66A8';
+
+  return (
+    <div className="viz-wrap" ref={wrapRef}>
+      <svg key={dataKey(rows)} viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: 360, overflow: 'visible' }}>
+        {[0.25, 0.5, 0.75, 1].map(f => (
+          <line key={f} x1={padL} x2={W - padR} y1={base - f * innerH} y2={base - f * innerH} stroke={t.grid} />
+        ))}
+        <text x={padL - 10} y={base - 14} textAnchor="end" fontSize="11.5" fill={t.inkSub}>Dotación x región =</text>
+        {rows.map((r, i) => {
+          const h = Math.max(2, ((r.rot || 0) / max) * innerH);
+          const x = x0 + i * (barW + gap), y = base - h;
+          const isActive = activeLabel != null && r.label === activeLabel;
+          const dim = activeLabel != null && !isActive;
+          const hasPrev = r.prevRot != null;
+          const dir = hasPrev ? (Math.round(r.rot * 100) > Math.round(r.prevRot * 100) ? 'up' : Math.round(r.rot * 100) < Math.round(r.prevRot * 100) ? 'down' : null) : null;
+          const valTxt = fmtPct(r.rot).replace('%', '');
+          const tipContent = {
+            title: r.label,
+            rows: [
+              { value: fmtPct(r.rot), label: `rotación ${mesLabel}`, color: BAR },
+              ...(hasPrev ? [{ value: fmtPct(r.prevRot), label: `rotación ${prevLabel}` }] : []),
+              { value: `${fmtMiles(r.dotIni)} → ${fmtMiles(r.dotFin)}`, label: 'dotación' },
+              { value: `${r.altas} / ${r.bajas}`, label: 'altas / bajas (nómina)' },
+            ],
+          };
+          return (
+            <g key={r.label} tabIndex={0} className="viz-mark"
+              style={{ opacity: dim ? 0.38 : 1, transition: 'opacity 200ms ease', cursor: onSelect ? 'pointer' : 'default' }}
+              onPointerMove={e => { setHi(i); show(e, tipContent); }}
+              onPointerLeave={() => { setHi(null); hide(); }}
+              onFocus={e => { setHi(i); show(e, tipContent); }}
+              onBlur={() => { setHi(null); hide(); }}
+              onClick={() => onSelect && onSelect(r.label)}
+              onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && onSelect) { e.preventDefault(); onSelect(r.label); } }}
+            >
+              <rect x={x - gap / 2} y={padT - 30} width={barW + gap} height={innerH + 60} fill="transparent" />
+              <rect x={x} y={y} width={barW} height={h} rx="10" fill={BAR}
+                className="viz-grow-y" style={{ animationDelay: `${i * 90}ms`, filter: hi === i || isActive ? 'brightness(1.12)' : 'none', transition: 'filter 150ms ease' }} />
+              <g className="viz-fade" style={{ animationDelay: `${450 + i * 90}ms` }}>
+                <text x={x + barW / 2 - (dir ? 8 : 0)} y={y - 9} textAnchor="middle" fontSize="13" fontWeight="700" fill={t.ink}>{valTxt}</text>
+                {dir && (
+                  <g transform={`translate(${x + barW / 2 + valTxt.length * 3.6 - 4}, ${y - 22})`}>
+                    <path d={dir === 'up' ? 'M2 12 L11 3 M5 3 H11 V9' : 'M2 3 L11 12 M11 6 V12 H5'} fill="none"
+                      stroke={dir === 'up' ? 'var(--viz-bad)' : 'var(--viz-good)'} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </g>
+                )}
+                {hasPrev && h >= 70 && (
+                  <text x={x + barW / 2} y={y + 20} textAnchor="middle" fontSize="12" fontWeight="600" fill="#FFFFFF" opacity="0.85">{fmtPct(r.prevRot).replace('%', '')}</text>
+                )}
+                {h >= 44
+                  ? <text x={x + barW / 2} y={base - 12} textAnchor="middle" fontSize="20" fontWeight="800" fill="#FFFFFF">{fmtMiles(r.dotFin)}</text>
+                  : <text x={x + barW / 2} y={y - 26} textAnchor="middle" fontSize="12" fontWeight="700" fill={t.inkSub}>{fmtMiles(r.dotFin)}</text>}
+              </g>
+              <text x={x + barW / 2} y={base + 18} textAnchor="middle" fontSize="12" fill={t.ink} fontWeight={isActive || hi === i ? 700 : 500}>{r.short}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <ChartTip tip={tip} />
+    </div>
+  );
+}
+
+Object.assign(window, { LineChart, BarChart, HBarChart, DonutChart, GroupedBarChart, PieChart, RotacionBars, PeopleRow, TrendArrow });

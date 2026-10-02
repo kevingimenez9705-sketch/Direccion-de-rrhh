@@ -297,6 +297,17 @@ function rotacionStats(rows, matchLabel) {
   s.rot = dotProm > 0 ? ((s.altas + s.bajas) / 2) / dotProm * 100 : null;
   return s;
 }
+// Colores fijos por gerencia (paleta validada en claro y oscuro: daltonismo, contraste
+// y separación). El color sigue a la gerencia según su orden en window.GERENCIAS; "Otros" en gris.
+const SERIE_COLORES = ['#3B66A8', '#B97C33', '#00918E', '#7A5BB0', '#6B8E2F'];
+const COLOR_OTROS = '#8B94A3';
+function colorGerencia(sectorId, label) {
+  const idx = (window.GERENCIAS[sectorId] || []).findIndex(g => g.matchLabel === label);
+  return idx >= 0 ? SERIE_COLORES[idx % SERIE_COLORES.length] : COLOR_OTROS;
+}
+const nombreCorto = label => (label === 'Otros' ? 'Otros' : label.split(' ')[0]);
+const MES_LARGO = { ENE:'Enero', FEB:'Febrero', MAR:'Marzo', ABR:'Abril', MAY:'Mayo', JUN:'Junio', JUL:'Julio', AGO:'Agosto', SEP:'Septiembre', OCT:'Octubre', NOV:'Noviembre', DIC:'Diciembre' };
+
 function fmtPct(n) {
   return n == null ? 'S/D' : `${n.toFixed(2).replace('.', ',')}%`;
 }
@@ -479,9 +490,112 @@ function pctOf(noPresentes, altasMes) {
 }
 
 // Gráficos que ya no se muestran. Sus datos se mantienen porque alimentan las
-// tarjetas (altas / no presentes del mes), el resumen general, la comparación
-// de meses y "Altas por mes" por gerencia.
-const CHARTS_OCULTOS = ['gerencia-mes', 'no-presentes-gerencia'];
+// tarjetas (altas / no presentes del mes, altas acumuladas), el resumen general,
+// la comparación de meses, "Altas por mes" por gerencia y el panel YTD.
+const CHARTS_OCULTOS = ['gerencia-mes', 'no-presentes-gerencia', 'gerencia-total'];
+
+// ============ Panel "MARCA · YTD" (réplica de la referencia) ============
+// Torta de altas del año en curso por gerencia + altas presentes vs. bajas del mes.
+function YtdPanel({ sector, sectorData, monthIdx, matchLabel, selectedName, onSelect }) {
+  const active = window.MONTHS[monthIdx];
+  const ytd = window.MONTHS.filter((m, i) => i <= monthIdx && m.year === active.year && sectorData[m.key]);
+  if (ytd.length === 0) return null;
+  const totals = {};
+  ytd.forEach(m => chartByKind(sectorData[m.key].charts, 'gerencia-mes').data.forEach(d => { totals[d.x] = (totals[d.x] || 0) + d.y; }));
+  const order = [...(window.GERENCIAS[sector.id] || []).map(g => g.matchLabel), 'Otros'];
+  const pie = order.filter(l => totals[l] > 0).map(l => ({ label: l, short: nombreCorto(l), value: totals[l], color: colorGerencia(sector.id, l) }));
+  const totalYtd = pie.reduce((a, d) => a + d.value, 0);
+  const rango = `${mesLabelFor(ytd[0])} – ${mesLabelFor(ytd[ytd.length - 1])}`;
+
+  // Mes activo: altas presentes (ingresos − no presentes) vs. bajas (tabla de rotación).
+  const md = sectorData[active.key];
+  const altasMes = md ? sumOrPick(chartByKind(md.charts, 'gerencia-mes'), matchLabel, 'y') : null;
+  const npMes = md ? sumOrPick(chartByKind(md.charts, 'no-presentes-gerencia'), matchLabel, 'y') : null;
+  const presentes = altasMes != null ? altasMes - (npMes || 0) : null;
+  const rot = rotacionStats(window.ROTACION?.[sector.id]?.[active.key], matchLabel);
+  const bajas = rot ? rot.bajas : null;
+  const hayPill = presentes != null && bajas != null && presentes + bajas > 0;
+  const prev = window.MONTHS[monthIdx - 1];
+  const aperturas = matchLabel ? [] : [active, prev].filter(Boolean)
+    .map(m => ({ m, n: window.APERTURAS?.[sector.id]?.[m.key] })).filter(a => a.n != null);
+
+  return (
+    <div className="chart-card viz-panel">
+      <div className="viz-title">{sector.name.split(' ')[0]} · YTD</div>
+      <div className="viz-panel-sub">
+        Altas {rango} · {fmtInt(totalYtd)} ingresos{matchLabel ? ` · ${selectedName}: ${fmtInt(totals[matchLabel] || 0)}` : ''}
+      </div>
+      <div className="ytd-body">
+        <window.PieChart data={pie} activeLabel={matchLabel ?? undefined} onSelect={onSelect} />
+        <div className="ytd-side">
+          {hayPill && <window.PeopleRow total={6} filled={Math.round(presentes / (presentes + bajas) * 6)} color="var(--viz-pill-a)" empty="var(--viz-pill-b-icon)" />}
+          {aperturas.length > 0 && (
+            <div className="ytd-aper">
+              {aperturas.map(a => <div key={a.m.key}>Ingresos por aperturas {mesLabelFor(a.m)} — <strong>{a.n}</strong></div>)}
+            </div>
+          )}
+          {hayPill ? (
+            <div className="viz-pill" title={`${mesLabelFor(active)}: ${presentes} altas presentes · ${bajas} bajas`}>
+              <div className="viz-pill-a" style={{ flexGrow: presentes }}>Altas {fmtInt(presentes)}</div>
+              <div className="viz-pill-b" style={{ flexGrow: bajas }}>Bajas {fmtInt(bajas)}</div>
+            </div>
+          ) : presentes != null ? (
+            <div className="ytd-aper">Altas presentes {mesLabelFor(active)} — <strong>{fmtInt(presentes)}</strong></div>
+          ) : null}
+          <div className="ytd-foot">
+            {mesLabelFor(active)}{hayPill ? ' · Altas = ingresos que se presentaron · Bajas = egresos del mes' : ' · sin bajas por gerencia cargadas para este mes'}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============ Panel "ROTACIÓN · MES" (réplica de la referencia) ============
+function RotacionPanel({ sector, monthIdx, matchLabel, selectedName, onSelect }) {
+  const m = window.MONTHS[monthIdx];
+  const rows = window.ROTACION?.[sector.id]?.[m.key];
+  if (!rows) return null;
+  const prevM = window.MONTHS[monthIdx - 1] || null;
+  const prevRows = prevM ? window.ROTACION?.[sector.id]?.[prevM.key] : null;
+  const scope = rows.some(r => r.x === matchLabel) ? matchLabel : null;
+  const cur = rotacionStats(rows, scope);
+  const prev = prevRows ? rotacionStats(prevRows, scope) : null;
+  const r2 = n => Math.round(n * 100) / 100;
+  const diff = prev ? r2(r2(cur.rot) - r2(prev.rot)) : null;
+  const bars = rows.map(r => {
+    const p = prevRows?.find(q => q.x === r.x);
+    return { label: r.x, short: nombreCorto(r.x), rot: rotacionStats([r], null).rot, prevRot: p ? rotacionStats([p], null).rot : null, dotIni: r.dotIni, dotFin: r.dotFin, altas: r.altas, bajas: r.bajas };
+  }).sort((a, b) => b.rot - a.rot);
+
+  return (
+    <div className="chart-card chart-card--wide viz-panel">
+      <div className="viz-title">Rotación · {MES_LARGO[m.short]}</div>
+      <div className="viz-panel-sub">{mesLabelFor(m)} · {scope ? selectedName : `Total ${sector.name}`}</div>
+      <div className="rot-body">
+        <div className="rot-side">
+          <div className="rot-month"><window.Icon name="users" size={20} /><span>{MES_LARGO[m.short]}</span><strong>{fmtPct(cur.rot)}</strong></div>
+          {prev && (
+            <div className="rot-month is-prev"><window.Icon name="users" size={18} /><span>{MES_LARGO[prevM.short]}</span><strong>{fmtPct(prev.rot)}</strong></div>
+          )}
+          {diff != null && (
+            <div className={'rot-delta ' + (diff > 0 ? 'bad' : diff < 0 ? 'good' : '')}>
+              {diff !== 0 && <window.TrendArrow dir={diff > 0 ? 'up' : 'down'} />}
+              {diff === 0 ? 'Sin cambios' : `${diff > 0 ? '+' : '−'}${Math.abs(diff).toFixed(2).replace('.', ',')} pp`} vs. {MES_LARGO[prevM.short].toLowerCase()}
+            </div>
+          )}
+          <window.PeopleRow total={6} filled={6} color="var(--viz-people)" />
+          <div className="rot-dot">Dotación total — <strong>{fmtInt(cur.dotFin)}</strong></div>
+        </div>
+        <window.RotacionBars rows={bars} activeLabel={scope ?? undefined} onSelect={onSelect}
+          mesLabel={mesLabelFor(m)} prevLabel={prevM ? mesLabelFor(prevM) : ''} fmtPct={fmtPct} />
+      </div>
+      <div className="viz-legend-note">
+        Barra y número arriba: {mesLabelFor(m)}{prevRows ? ` · número dentro de la barra: ${mesLabelFor(prevM)}` : ''} · abajo: dotación final de la región · tocá una barra para ver esa gerencia
+      </div>
+    </div>
+  );
+}
 
 // ============ Sector detail view ============
 function SectorView({ sector, monthIdx, onMonthChange }) {
@@ -492,6 +606,11 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const pickerItems = gerencias.length > 0 ? [totalEntry, ...gerencias] : [];
   const [selectedGerenciaKey, setSelectedGerenciaKey] = useState('total');
   const selectedGerencia = pickerItems.find(g => g.key === selectedGerenciaKey) || totalEntry;
+  // Click en una porción / barra: elige esa gerencia (o vuelve al total si ya estaba elegida).
+  function selectByLabel(label) {
+    const g = gerencias.find(x => x.matchLabel === label);
+    if (g) setSelectedGerenciaKey(k => (k === g.key ? 'total' : g.key));
+  }
   const isTotalSelected = selectedGerencia.isTotal;
   const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
 
@@ -541,11 +660,6 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const altasNetasPrev = (stat.altasMesPrev != null && stat.noPresentesPrev != null) ? stat.altasMesPrev - stat.noPresentesPrev : null;
   const altasNetasDelta = deltaInfo(altasNetas, altasNetasPrev, false);
 
-  // Rotación del mes activo (solo meses con datos cargados en window.ROTACION).
-  const rotRows = window.ROTACION?.[sector.id]?.[activeMonth.key] || null;
-  const rot = rotRows ? rotacionStats(rotRows, matchLabel) : null;
-  const rotPrev = prevMonth ? rotacionStats(window.ROTACION?.[sector.id]?.[prevMonth.key], matchLabel) : null;
-  const rotPrevLabel = prevMonth ? mesLabelFor(prevMonth) : null;
   const visibleCharts = data.charts.filter(c => !CHARTS_OCULTOS.includes(c.matchKind));
 
   // Datos por columna cuando se está comparando
@@ -643,6 +757,9 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         {visibleCharts.map((c, i) => {
           const filtering = !!c.matchKind && !isTotalSelected;
 
+          const ytdPanel = c.matchKind === 'top5-zonales' && !isComparing
+            ? <YtdPanel key="ytd" sector={sector} sectorData={sectorData} monthIdx={effectiveMonthIdx} matchLabel={matchLabel} selectedName={selectedGerencia.name} onSelect={selectByLabel} />
+            : null;
           if (c.matchKind === 'top5-zonales') {
             const bucketKey = filtering ? selectedGerencia.matchLabel : 'total';
             const zonalMonthKeys = isComparing ? sortedCompareIdxs.map(idx => window.MONTHS[idx].key) : [activeMonth.key];
@@ -651,7 +768,9 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
               ? `Acumulado de ${sortedCompareIdxs.length} meses elegidos`
               : mesLabel;
             return (
-              <div key={i} className="chart-card">
+              <React.Fragment key={i}>
+              {ytdPanel}
+              <div className="chart-card">
                 <div className="chart-head">
                   <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
                   <div className="chart-sub">{zonalSub}</div>
@@ -662,6 +781,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                     : <div className="chart-empty">{!isComparing && !hasAltasMes ? 'Sin datos de altas cargados para' : 'Sin altas registradas para'} {zonalSub.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
                 </div>
               </div>
+              </React.Fragment>
             );
           }
 
@@ -691,7 +811,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                 <div className="chart-sub">{c.type === 'line' ? lineSub : (isComparableBar ? 'Comparando meses elegidos' : c.sub)}</div>
               </div>
               <div className="chart-body">
-                {c.type === 'line'  && <window.LineChart  data={lineData} activeIndex={effectiveMonthIdx < lineData.length ? effectiveMonthIdx : undefined} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < lineData.length) : undefined} wide={c.wide} />}
+                {c.type === 'line'  && <window.LineChart  data={lineData} activeIndex={effectiveMonthIdx < lineData.length ? effectiveMonthIdx : undefined} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < lineData.length) : undefined} wide={c.wide} seriesLabel="altas" />}
                 {c.type === 'bar' && (isComparableBar
                   ? <window.GroupedBarChart series={compareSeries} activeLabel={barActiveLabel} dimOthers={filtering} />
                   : <window.BarChart data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />)}
@@ -703,34 +823,10 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         })}
       </div>
 
-      {rot && !isComparing && (
-        <>
-          <div className="section-label">Rotación — {mesLabel}{isTotalSelected ? '' : ` · ${selectedGerencia.name}`}</div>
-          <div className="kpi-grid">
-            {[
-              { label: `Rotación — ${mesLabel}`, value: fmtPct(rot.rot), delta: rotDelta(rot.rot, rotPrev?.rot, rotPrevLabel) || { dir: 'neutral', text: '(altas + bajas) / 2 ÷ dotación prom.' } },
-              { label: 'Dotación final', value: fmtInt(rot.dotFin), delta: { dir: 'neutral', text: `Inicial ${fmtInt(rot.dotIni)} · ${rot.dotFin - rot.dotIni >= 0 ? '+' : '−'}${fmtInt(Math.abs(rot.dotFin - rot.dotIni))}` } },
-              { label: 'Altas', value: fmtInt(rot.altas), delta: rotPrev ? deltaInfo(rot.altas, rotPrev.altas, false, rotPrevLabel) : undefined },
-              { label: 'Bajas', value: fmtInt(rot.bajas), delta: rotPrev ? deltaInfo(rot.bajas, rotPrev.bajas, true, rotPrevLabel) : undefined },
-            ].map((k, i) => <KpiCard key={i} kpi={k} />)}
-          </div>
-          <div className="chart-grid one">
-            <div className="chart-card">
-              <div className="chart-head">
-                <div className="chart-title">Rotación por gerencia</div>
-                <div className="chart-sub">% del mes · {mesLabel} · Total {sector.name}: {fmtPct(rotacionStats(rotRows, null).rot)}</div>
-              </div>
-              <div className="chart-body">
-                <window.BarChart
-                  data={rotRows.map(r => ({ x: r.x, y: Math.round(rotacionStats([r], null).rot * 100) / 100 }))}
-                  activeLabel={matchLabel ?? undefined}
-                  dimOthers={!isTotalSelected}
-                  valueFormat={fmtPct}
-                />
-              </div>
-            </div>
-          </div>
-        </>
+      {!isComparing && (
+        <div className="chart-grid one" style={{ marginTop: 14 }}>
+          <RotacionPanel sector={sector} monthIdx={effectiveMonthIdx} matchLabel={matchLabel} selectedName={selectedGerencia.name} onSelect={selectByLabel} />
+        </div>
       )}
 
       {data.details && data.details.length > 0 && (
@@ -745,15 +841,45 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
 }
 window.SectorView = SectorView;
 
+// Anima el primer número del valor (formato es-AR: "4.151", "9,79%", "5 (2.2%)").
+// Con "reducir movimiento" activado muestra el valor final directo.
+function useCountUp(text) {
+  const m = typeof text === 'string' ? text.match(/^(\d{1,3}(?:\.\d{3})+|\d+)(?:,(\d+))?/) : null;
+  const target = m ? Number(m[1].replace(/\./g, '') + (m[2] ? '.' + m[2] : '')) : null;
+  const decimals = m && m[2] ? m[2].length : 0;
+  const [val, setVal] = useState(0);
+  const fromRef = useRef(0);
+  useEffect(() => {
+    if (target == null) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const from = fromRef.current;
+    fromRef.current = target;
+    if (reduce || from === target) { setVal(target); return; }
+    let raf;
+    const t0 = performance.now(), dur = 750;
+    const step = now => {
+      const k = Math.min(1, (now - t0) / dur);
+      setVal(from + (target - from) * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target]);
+  if (target == null) return text;
+  const [ent, dec] = val.toFixed(decimals).split('.');
+  return fmtInt(Number(ent)) + (dec ? ',' + dec : '') + text.slice(m[0].length);
+}
+
 function KpiCard({ kpi }) {
   const dir = kpi.delta?.dir;
+  const shown = useCountUp(kpi.value);
   return (
     <div className="kpi">
       <div className="kpi-head">
         <div className="kpi-label">{kpi.label}</div>
         <div className="kpi-ico"><window.Icon name="chart" size={14} /></div>
       </div>
-      <div className={'kpi-value ' + (kpi.valueClass || '')}>{kpi.value}</div>
+      <div className={'kpi-value ' + (kpi.valueClass || '')} aria-label={kpi.value}>{shown}</div>
       {kpi.delta && (
         <div className={'kpi-delta ' + (dir === 'up' ? 'up' : dir === 'down' ? 'down' : '')}>
           <span className="kpi-delta-arrow">{dir === 'up' ? '▲' : dir === 'down' ? '▼' : '•'}</span>
