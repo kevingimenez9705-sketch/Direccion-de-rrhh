@@ -607,8 +607,8 @@ window.ACCENTS = acc;
 // Inspecciones, Horas Extras, Accidentabilidad) permanecen en SECTOR_DATA por si
 // se necesitan reactivar, pero no se listan en window.SECTORS.
 window.SECTORS = [
-  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Altas May 2025–Sep 2026',    tags:['4.151 altas acumuladas','197 no presentes'] },
-  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Altas May 2025–Sep 2026', tags:['3.253 altas acumuladas','169 no presentes'] },
+  { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Altas May 2025–Sep 2026',    tags:['3.954 altas acumuladas','197 no presentes'] },
+  { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Altas May 2025–Sep 2026', tags:['3.084 altas acumuladas','169 no presentes'] },
 ];
 
 // ─── TENDENCIAS AUSENTISMO ───
