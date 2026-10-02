@@ -7,7 +7,8 @@
 //   · Fábrica: agregado detalle "Gestión y Acompañamiento de Bajas Voluntarias" (Mar-Jun 2026).
 //   · Accidentabilidad Jun: agregado detalle "Arrastre — Siniestros Cerrados de Meses Anteriores" (13 de 14 casos).
 //   · Judiciales Jun: agregado KPI "Efectividad de acuerdos" (42%).
-//   · Rotación por regional JULIO 2026 (Sabores / Extremas): window.ROTACION.
+//   · Rotación por regional JUL / AGO / SEP 2026 (Sabores / Extremas): window.ROTACION.
+//     AGO y SEP solo tienen rotación cargada (sin altas / no presentes todavía).
 
 // ─── GERENCIAS (con foto) — usadas en el selector de gerencia dentro de cada unidad ───
 // matchLabel debe coincidir exactamente con el "x" / "label" usado en los charts
@@ -246,6 +247,8 @@ window.MONTHS = [
   { key: 'may26', short: 'MAY', year: 2026 },
   { key: 'jun26', short: 'JUN', year: 2026 },
   { key: 'jul26', short: 'JUL', year: 2026 },
+  { key: 'ago26', short: 'AGO', year: 2026 },
+  { key: 'sep26', short: 'SEP', year: 2026 },
 ];
 
 // ─── BAJAS — empresa total (ambas marcas), por mes ───
@@ -269,7 +272,8 @@ window.BAJAS_MENSUAL = {
 };
 
 // ─── ROTACIÓN POR REGIONAL — por marca y por mes ───
-// Fuente: tablas "ROTACIÓN SABORES" / "ROTACIÓN EXTREMAS" (Jul 2026).
+// Fuente: tablas "ROTACIÓN SABORES" / "ROTACIÓN EXTREMAS" (Jul–Sep 2026).
+// Sep 2026: Sebastián Calderón toma la regional de Ivo Pisaniello (sin foto en GERENCIAS).
 // "x" debe coincidir con el matchLabel de window.GERENCIAS. El % de rotación se
 // calcula en vivo: ((altas + bajas) / 2) / ((dotación inicial + final) / 2).
 window.ROTACION = {
@@ -281,12 +285,36 @@ window.ROTACION = {
       { x:'Lucía Vélez',      dotIni:253, dotFin:247, altas: 7, bajas:13 },
       { x:'Marcelo Biurra',   dotIni:460, dotFin:472, altas:46, bajas:34 },
     ],
+    ago26: [
+      { x:'Agustín Sbampato', dotIni:449, dotFin:470, altas:42, bajas:21 },
+      { x:'Gustavo Cabrera',  dotIni:415, dotFin:436, altas:48, bajas:27 },
+      { x:'Ivo Pisaniello',   dotIni:413, dotFin:430, altas:58, bajas:41 },
+      { x:'Lucía Vélez',      dotIni:247, dotFin:252, altas:26, bajas:21 },
+      { x:'Marcelo Biurra',   dotIni:472, dotFin:498, altas:54, bajas:28 },
+    ],
+    sep26: [
+      { x:'Agustín Sbampato',   dotIni:470, dotFin:456, altas:24, bajas:38 },
+      { x:'Gustavo Cabrera',    dotIni:436, dotFin:426, altas:22, bajas:32 },
+      { x:'Sebastián Calderón', dotIni:430, dotFin:420, altas:20, bajas:30 },
+      { x:'Lucía Vélez',        dotIni:252, dotFin:265, altas:25, bajas:12 },
+      { x:'Marcelo Biurra',     dotIni:498, dotFin:483, altas:22, bajas:37 },
+    ],
   },
   extremas: {
     jul26: [
       { x:'Facundo Aramburo', dotIni:458, dotFin:465, altas: 52, bajas:45 },
       { x:'Federico Gómez',   dotIni:486, dotFin:509, altas: 66, bajas:43 },
       { x:'Gustavo Gómez',    dotIni:287, dotFin:362, altas:100, bajas:25 },
+    ],
+    ago26: [
+      { x:'Facundo Aramburo', dotIni:465, dotFin:524, altas:103, bajas:44 },
+      { x:'Federico Gómez',   dotIni:509, dotFin:537, altas: 70, bajas:42 },
+      { x:'Gustavo Gómez',    dotIni:362, dotFin:365, altas: 55, bajas:52 },
+    ],
+    sep26: [
+      { x:'Facundo Aramburo', dotIni:524, dotFin:507, altas:27, bajas:44 },
+      { x:'Federico Gómez',   dotIni:537, dotFin:547, altas:60, bajas:50 },
+      { x:'Gustavo Gómez',    dotIni:365, dotFin:369, altas:51, bajas:47 },
     ],
   },
 };

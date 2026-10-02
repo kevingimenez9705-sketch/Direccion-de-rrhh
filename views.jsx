@@ -136,8 +136,11 @@ function WelcomeWeatherCard() {
 function PanelEjecutivo({ onOpen }) {
   const unidades = window.SECTORS.filter(s => s.group === 'UNIDADES');
   const gestion  = window.SECTORS.filter(s => s.group === 'GESTIÓN');
-  const latestMonth = window.MONTHS[window.MONTHS.length - 1];
-  const prevMonth = window.MONTHS[window.MONTHS.length - 2] || null;
+  // Último mes con altas cargadas: los meses más nuevos pueden tener solo rotación.
+  const altasIdx = ultimoIdxCon(m => unidades.some(s => window.SECTOR_DATA[s.id]?.[m.key]));
+  const latestMonth = window.MONTHS[altasIdx];
+  const prevMonth = window.MONTHS[altasIdx - 1] || null;
+  const ultimoMes = window.MONTHS[window.MONTHS.length - 1];
 
   // Resumen combinado (todas las unidades con datos de Altas) del mes más reciente.
   let totalAcumulado = 0, totalMesActivo = 0, totalMesPrev = 0, totalNoPresentes = 0, totalNoPresentesPrev = 0;
@@ -183,8 +186,13 @@ function PanelEjecutivo({ onOpen }) {
   const totalBajasMesPrev = prevMonth ? (window.BAJAS_MENSUAL[prevMonth.key] ?? null) : null;
   const bajasDelta = deltaInfo(totalBajasMes, prevMonth ? totalBajasMesPrev : null, true);
 
-  // Rotación (ambas marcas) del mes más reciente, si hay datos cargados.
-  const rotTotal = rotacionStats(unidades.flatMap(s => window.ROTACION?.[s.id]?.[latestMonth.key] || []), null);
+  // Rotación (ambas marcas) del último mes con datos, y su variación vs. el mes anterior.
+  const rotIdx = ultimoIdxCon(m => unidades.some(s => window.ROTACION?.[s.id]?.[m.key]));
+  const rotMonth = window.MONTHS[rotIdx] || null;
+  const rotPrevMonth = window.MONTHS[rotIdx - 1] || null;
+  const rotRowsAmbas = m => m ? unidades.flatMap(s => window.ROTACION?.[s.id]?.[m.key] || []) : [];
+  const rotTotal = rotacionStats(rotRowsAmbas(rotMonth), null);
+  const rotTotalPrev = rotacionStats(rotRowsAmbas(rotPrevMonth), null);
 
   return (
     <div>
@@ -193,7 +201,7 @@ function PanelEjecutivo({ onOpen }) {
           <img className="panel-hero-logo" src="assets/logo-equipo-seleccion.png" alt="Equipo de Selección" />
           <div className="panel-hero-text">
             <h1>Equipo de <span className="he-accent">Selección</span></h1>
-            <p className="panel-hero-sub">Sabores Express · Extremas — datos actualizados a {mesLabelFor(latestMonth)}</p>
+            <p className="panel-hero-sub">Sabores Express · Extremas — datos actualizados a {mesLabelFor(ultimoMes)}</p>
           </div>
         </div>
         <WelcomeWeatherCard />
@@ -203,14 +211,14 @@ function PanelEjecutivo({ onOpen }) {
         <>
           <div className="section-label" style={{ marginTop: 18 }}>Resumen general — ambas marcas</div>
           <div className="kpi-grid">
-            <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
+            <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
             <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
             <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
-            <KpiCard kpi={{ label: 'No presentes acumulados', value: `${fmtInt(totalNoPresentesAcumulado)}${totalNoPresentesAcumuladoPct != null ? ` (${totalNoPresentesAcumuladoPct}%)` : ''}`, delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
+            <KpiCard kpi={{ label: 'No presentes acumulados', value: `${fmtInt(totalNoPresentesAcumulado)}${totalNoPresentesAcumuladoPct != null ? ` (${totalNoPresentesAcumuladoPct}%)` : ''}`, delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
             <KpiCard kpi={{ label: 'Altas - no presentes', value: fmtInt(totalAltasNetas), delta: totalAltasNetasDelta }} />
-            <KpiCard kpi={{ label: 'Bajas acumuladas', value: fmtInt(totalBajasAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
+            <KpiCard kpi={{ label: 'Bajas acumuladas', value: fmtInt(totalBajasAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
             <KpiCard kpi={{ label: `Bajas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalBajasMes) ?? 'S/D', delta: bajasDelta }} />
-            {rotTotal && <KpiCard kpi={{ label: `Rotación — ${mesLabelFor(latestMonth)}`, value: fmtPct(rotTotal.rot), delta: { dir: 'neutral', text: `Dotación ${fmtInt(rotTotal.dotIni)} → ${fmtInt(rotTotal.dotFin)}` } }} />}
+            {rotTotal && <KpiCard kpi={{ label: `Rotación — ${mesLabelFor(rotMonth)}`, value: fmtPct(rotTotal.rot), delta: rotDelta(rotTotal.rot, rotTotalPrev?.rot, rotPrevMonth && mesLabelFor(rotPrevMonth)) || { dir: 'neutral', text: `Dotación ${fmtInt(rotTotal.dotIni)} → ${fmtInt(rotTotal.dotFin)}` } }} />}
           </div>
         </>
       )}
@@ -291,6 +299,20 @@ function rotacionStats(rows, matchLabel) {
 }
 function fmtPct(n) {
   return n == null ? 'S/D' : `${n.toFixed(2).replace('.', ',')}%`;
+}
+// Variación de rotación en puntos porcentuales (sobre los valores ya redondeados
+// que se muestran). Subir la rotación es mala noticia → "down"/rojo.
+function rotDelta(cur, prev, refLabel) {
+  if (cur == null || prev == null) return null;
+  const r2 = n => Math.round(n * 100) / 100;
+  const diff = r2(r2(cur) - r2(prev));
+  if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. ${refLabel} (${fmtPct(prev)})` };
+  return { dir: diff > 0 ? 'down' : 'up', text: `${diff > 0 ? '+' : '−'}${Math.abs(diff).toFixed(2).replace('.', ',')} pp vs. ${refLabel} (${fmtPct(prev)})` };
+}
+// Índice del último mes de window.MONTHS que cumple la condición (-1 si ninguno).
+function ultimoIdxCon(pred) {
+  for (let i = window.MONTHS.length - 1; i >= 0; i--) if (pred(window.MONTHS[i])) return i;
+  return -1;
 }
 
 function chartByKind(charts, matchKind) {
@@ -434,9 +456,9 @@ function mesShortXY(m) {
 // Serie mensual de "Altas por mes" de UNA gerencia puntual (matchLabel null = total del
 // sector, igual al c.data ya guardado). Se arma leyendo, mes a mes, el chart "gerencia-mes".
 function monthlySeriesFor(sectorData, matchLabel) {
-  return window.MONTHS.map(m => {
+  return window.MONTHS.filter(m => sectorData[m.key]).map(m => {
     const md = sectorData[m.key];
-    const val = md ? sumOrPick(chartByKind(md.charts, 'gerencia-mes'), matchLabel, 'y') : null;
+    const val = sumOrPick(chartByKind(md.charts, 'gerencia-mes'), matchLabel, 'y');
     return { x: mesShortXY(m), y: val ?? 0 };
   });
 }
@@ -444,10 +466,11 @@ function monthlySeriesFor(sectorData, matchLabel) {
 function mesLabelFor(m) {
   return `${m.short.charAt(0)}${m.short.slice(1).toLowerCase()} ${m.year}`;
 }
-// Texto de contexto para "Altas acumuladas": cuántos meses se están sumando y qué rango.
-function periodoAcumuladoTexto() {
-  const first = window.MONTHS[0], last = window.MONTHS[window.MONTHS.length - 1];
-  return `${mesLabelFor(first)} – ${mesLabelFor(last)} · ${window.MONTHS.length} meses`;
+// Texto de contexto para "Altas acumuladas": cuántos meses se están sumando y qué rango
+// (desde el primer mes hasta "last", el último mes con datos cargados).
+function periodoAcumuladoTexto(last) {
+  const first = window.MONTHS[0];
+  return `${mesLabelFor(first)} – ${mesLabelFor(last)} · ${window.MONTHS.indexOf(last) + 1} meses`;
 }
 function pctOf(noPresentes, altasMes) {
   return (altasMes != null && noPresentes != null && altasMes > 0)
@@ -502,7 +525,12 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const monthKeys = Object.keys(sectorData);
   const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
   const prevMonth = effectiveMonthIdx > 0 ? window.MONTHS[effectiveMonthIdx - 1] : null;
-  const stat = buildStat(sectorData, activeMonth.key, prevMonth && sectorData[prevMonth.key] ? prevMonth.key : null, matchLabel);
+  // Meses con solo rotación cargada (sin altas): las tarjetas de altas quedan en S/D.
+  const hasAltasMes = !!sectorData[activeMonth.key];
+  const lastAltasMonth = window.MONTHS[ultimoIdxCon(m => sectorData[m.key])];
+  const stat = hasAltasMes
+    ? buildStat(sectorData, activeMonth.key, prevMonth && sectorData[prevMonth.key] ? prevMonth.key : null, matchLabel)
+    : { altasTotal: buildStat(sectorData, lastAltasMonth.key, null, matchLabel).altasTotal, altasMes: null, altasMesPrev: null, noPresentes: null, noPresentesPrev: null };
   const altasDelta = deltaInfo(stat.altasMes, stat.altasMesPrev, false);
   const noPresentesDelta = deltaInfo(stat.noPresentes, stat.noPresentesPrev, true);
   const gPct = pctOf(stat.noPresentes, stat.altasMes);
@@ -516,6 +544,8 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   // Rotación del mes activo (solo meses con datos cargados en window.ROTACION).
   const rotRows = window.ROTACION?.[sector.id]?.[activeMonth.key] || null;
   const rot = rotRows ? rotacionStats(rotRows, matchLabel) : null;
+  const rotPrev = prevMonth ? rotacionStats(window.ROTACION?.[sector.id]?.[prevMonth.key], matchLabel) : null;
+  const rotPrevLabel = prevMonth ? mesLabelFor(prevMonth) : null;
   const visibleCharts = data.charts.filter(c => !CHARTS_OCULTOS.includes(c.matchKind));
 
   // Datos por columna cuando se está comparando
@@ -523,7 +553,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
     const m = window.MONTHS[idx];
     const mData = sectorData[m.key];
     const s = mData ? buildStat(sectorData, m.key, null, matchLabel) : { altasMes: null, noPresentes: null, altasTotal: null };
-    return { idx, month: m, ...s };
+    return { idx, month: m, hasData: !!mData, ...s };
   }) : [];
 
   return (
@@ -583,12 +613,12 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                 </div>
                 <div className="compare-col-metric">
                   <div className="compare-col-metric-label">Altas</div>
-                  <div className="compare-col-metric-value">{fmtInt(cs.altasMes) ?? '0'}</div>
+                  <div className="compare-col-metric-value">{cs.hasData ? (fmtInt(cs.altasMes) ?? '0') : 'S/D'}</div>
                   {aDelta && <div className={'compare-col-delta ' + aDelta.dir}>{aDelta.text}</div>}
                 </div>
                 <div className="compare-col-metric">
                   <div className="compare-col-metric-label">No presentes</div>
-                  <div className="compare-col-metric-value">{fmtInt(cs.noPresentes) ?? '0'}{pct != null ? ` (${pct}%)` : ''}</div>
+                  <div className="compare-col-metric-value">{cs.hasData ? `${fmtInt(cs.noPresentes) ?? '0'}${pct != null ? ` (${pct}%)` : ''}` : 'S/D'}</div>
                   {nDelta && <div className={'compare-col-delta ' + nDelta.dir}>{nDelta.text}</div>}
                 </div>
               </div>
@@ -601,10 +631,10 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
            en vez de los del sector completo. */
         <div className="kpi-grid">
           {[
-            { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D', delta: { dir: 'neutral', text: periodoAcumuladoTexto() } },
-            { label: `Altas — ${mesLabel}`, value: fmtInt(stat.altasMes) ?? '0', delta: altasDelta },
-            { label: `No presentes — ${mesLabel}`, value: `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}`, delta: noPresentesDelta },
-            { label: 'Altas - no presentes', value: fmtInt(altasNetas) ?? '0', delta: altasNetasDelta },
+            { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D', delta: { dir: 'neutral', text: periodoAcumuladoTexto(lastAltasMonth) } },
+            { label: `Altas — ${mesLabel}`, value: hasAltasMes ? (fmtInt(stat.altasMes) ?? '0') : 'S/D', delta: hasAltasMes ? altasDelta : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
+            { label: `No presentes — ${mesLabel}`, value: hasAltasMes ? `${fmtInt(stat.noPresentes) ?? '0'}${gPct != null ? ` (${gPct}%)` : ''}` : 'S/D', delta: noPresentesDelta },
+            { label: 'Altas - no presentes', value: hasAltasMes ? (fmtInt(altasNetas) ?? '0') : 'S/D', delta: altasNetasDelta },
           ].map((k, i) => <KpiCard key={i} kpi={k} />)}
         </div>
       )}
@@ -629,7 +659,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                 <div className="chart-body">
                   {zonalData.length > 0
                     ? <window.HBarChart data={zonalData} />
-                    : <div className="chart-empty">Sin altas registradas para {zonalSub.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
+                    : <div className="chart-empty">{!isComparing && !hasAltasMes ? 'Sin datos de altas cargados para' : 'Sin altas registradas para'} {zonalSub.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
                 </div>
               </div>
             );
@@ -661,7 +691,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                 <div className="chart-sub">{c.type === 'line' ? lineSub : (isComparableBar ? 'Comparando meses elegidos' : c.sub)}</div>
               </div>
               <div className="chart-body">
-                {c.type === 'line'  && <window.LineChart  data={lineData} activeIndex={effectiveMonthIdx < lineData.length ? effectiveMonthIdx : lineData.length - 1} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < lineData.length) : undefined} wide={c.wide} />}
+                {c.type === 'line'  && <window.LineChart  data={lineData} activeIndex={effectiveMonthIdx < lineData.length ? effectiveMonthIdx : undefined} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < lineData.length) : undefined} wide={c.wide} />}
                 {c.type === 'bar' && (isComparableBar
                   ? <window.GroupedBarChart series={compareSeries} activeLabel={barActiveLabel} dimOthers={filtering} />
                   : <window.BarChart data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />)}
@@ -678,10 +708,10 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           <div className="section-label">Rotación — {mesLabel}{isTotalSelected ? '' : ` · ${selectedGerencia.name}`}</div>
           <div className="kpi-grid">
             {[
-              { label: `Rotación — ${mesLabel}`, value: fmtPct(rot.rot), delta: { dir: 'neutral', text: '(altas + bajas) / 2 ÷ dotación prom.' } },
+              { label: `Rotación — ${mesLabel}`, value: fmtPct(rot.rot), delta: rotDelta(rot.rot, rotPrev?.rot, rotPrevLabel) || { dir: 'neutral', text: '(altas + bajas) / 2 ÷ dotación prom.' } },
               { label: 'Dotación final', value: fmtInt(rot.dotFin), delta: { dir: 'neutral', text: `Inicial ${fmtInt(rot.dotIni)} · ${rot.dotFin - rot.dotIni >= 0 ? '+' : '−'}${fmtInt(Math.abs(rot.dotFin - rot.dotIni))}` } },
-              { label: 'Altas', value: fmtInt(rot.altas) },
-              { label: 'Bajas', value: fmtInt(rot.bajas) },
+              { label: 'Altas', value: fmtInt(rot.altas), delta: rotPrev ? deltaInfo(rot.altas, rotPrev.altas, false, rotPrevLabel) : undefined },
+              { label: 'Bajas', value: fmtInt(rot.bajas), delta: rotPrev ? deltaInfo(rot.bajas, rotPrev.bajas, true, rotPrevLabel) : undefined },
             ].map((k, i) => <KpiCard key={i} kpi={k} />)}
           </div>
           <div className="chart-grid one">
