@@ -183,6 +183,9 @@ function PanelEjecutivo({ onOpen }) {
   const totalBajasMesPrev = prevMonth ? (window.BAJAS_MENSUAL[prevMonth.key] ?? null) : null;
   const bajasDelta = deltaInfo(totalBajasMes, prevMonth ? totalBajasMesPrev : null, true);
 
+  // Rotación (ambas marcas) del mes más reciente, si hay datos cargados.
+  const rotTotal = rotacionStats(unidades.flatMap(s => window.ROTACION?.[s.id]?.[latestMonth.key] || []), null);
+
   return (
     <div>
       <div className="panel-hero">
@@ -207,6 +210,7 @@ function PanelEjecutivo({ onOpen }) {
             <KpiCard kpi={{ label: 'Altas - no presentes', value: fmtInt(totalAltasNetas), delta: totalAltasNetasDelta }} />
             <KpiCard kpi={{ label: 'Bajas acumuladas', value: fmtInt(totalBajasAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto() } }} />
             <KpiCard kpi={{ label: `Bajas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalBajasMes) ?? 'S/D', delta: bajasDelta }} />
+            {rotTotal && <KpiCard kpi={{ label: `Rotación — ${mesLabelFor(latestMonth)}`, value: fmtPct(rotTotal.rot), delta: { dir: 'neutral', text: `Dotación ${fmtInt(rotTotal.dotIni)} → ${fmtInt(rotTotal.dotFin)}` } }} />}
           </div>
         </>
       )}
@@ -272,6 +276,21 @@ window.SectorButton = SectorButton;
 
 function fmtInt(n) {
   return n == null ? null : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Rotación = ((altas + bajas) / 2) / ((dotación inicial + final) / 2), en %.
+// matchLabel null = todas las filas sumadas (total de la marca); si no, una regional.
+function rotacionStats(rows, matchLabel) {
+  const sel = matchLabel == null ? (rows || []) : (rows || []).filter(r => r.x === matchLabel);
+  if (sel.length === 0) return null;
+  const sum = k => sel.reduce((a, r) => a + r[k], 0);
+  const s = { dotIni: sum('dotIni'), dotFin: sum('dotFin'), altas: sum('altas'), bajas: sum('bajas') };
+  const dotProm = (s.dotIni + s.dotFin) / 2;
+  s.rot = dotProm > 0 ? ((s.altas + s.bajas) / 2) / dotProm * 100 : null;
+  return s;
+}
+function fmtPct(n) {
+  return n == null ? 'S/D' : `${n.toFixed(2).replace('.', ',')}%`;
 }
 
 function chartByKind(charts, matchKind) {
@@ -436,6 +455,11 @@ function pctOf(noPresentes, altasMes) {
     : null;
 }
 
+// Gráficos que ya no se muestran. Sus datos se mantienen porque alimentan las
+// tarjetas (altas / no presentes del mes), el resumen general, la comparación
+// de meses y "Altas por mes" por gerencia.
+const CHARTS_OCULTOS = ['gerencia-mes', 'no-presentes-gerencia'];
+
 // ============ Sector detail view ============
 function SectorView({ sector, monthIdx, onMonthChange }) {
   const accent = window.ACCENTS[sector.accent] || window.ACCENTS.blue;
@@ -488,6 +512,11 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const altasNetas = (stat.altasMes != null && stat.noPresentes != null) ? stat.altasMes - stat.noPresentes : null;
   const altasNetasPrev = (stat.altasMesPrev != null && stat.noPresentesPrev != null) ? stat.altasMesPrev - stat.noPresentesPrev : null;
   const altasNetasDelta = deltaInfo(altasNetas, altasNetasPrev, false);
+
+  // Rotación del mes activo (solo meses con datos cargados en window.ROTACION).
+  const rotRows = window.ROTACION?.[sector.id]?.[activeMonth.key] || null;
+  const rot = rotRows ? rotacionStats(rotRows, matchLabel) : null;
+  const visibleCharts = data.charts.filter(c => !CHARTS_OCULTOS.includes(c.matchKind));
 
   // Datos por columna cuando se está comparando
   const compareStats = isComparing ? sortedCompareIdxs.map(idx => {
@@ -580,8 +609,8 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         </div>
       )}
 
-      <div className={'chart-grid' + (data.charts.length === 1 ? ' one' : '')}>
-        {data.charts.map((c, i) => {
+      <div className={'chart-grid' + (visibleCharts.length === 1 ? ' one' : '')}>
+        {visibleCharts.map((c, i) => {
           const filtering = !!c.matchKind && !isTotalSelected;
 
           if (c.matchKind === 'top5-zonales') {
@@ -643,6 +672,36 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           );
         })}
       </div>
+
+      {rot && !isComparing && (
+        <>
+          <div className="section-label">Rotación — {mesLabel}{isTotalSelected ? '' : ` · ${selectedGerencia.name}`}</div>
+          <div className="kpi-grid">
+            {[
+              { label: `Rotación — ${mesLabel}`, value: fmtPct(rot.rot), delta: { dir: 'neutral', text: '(altas + bajas) / 2 ÷ dotación prom.' } },
+              { label: 'Dotación final', value: fmtInt(rot.dotFin), delta: { dir: 'neutral', text: `Inicial ${fmtInt(rot.dotIni)} · ${rot.dotFin - rot.dotIni >= 0 ? '+' : '−'}${fmtInt(Math.abs(rot.dotFin - rot.dotIni))}` } },
+              { label: 'Altas', value: fmtInt(rot.altas) },
+              { label: 'Bajas', value: fmtInt(rot.bajas) },
+            ].map((k, i) => <KpiCard key={i} kpi={k} />)}
+          </div>
+          <div className="chart-grid one">
+            <div className="chart-card">
+              <div className="chart-head">
+                <div className="chart-title">Rotación por gerencia</div>
+                <div className="chart-sub">% del mes · {mesLabel} · Total {sector.name}: {fmtPct(rotacionStats(rotRows, null).rot)}</div>
+              </div>
+              <div className="chart-body">
+                <window.BarChart
+                  data={rotRows.map(r => ({ x: r.x, y: Math.round(rotacionStats([r], null).rot * 100) / 100 }))}
+                  activeLabel={matchLabel ?? undefined}
+                  dimOthers={!isTotalSelected}
+                  valueFormat={fmtPct}
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {data.details && data.details.length > 0 && (
         <div className="details-stack">

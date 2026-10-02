@@ -138,7 +138,7 @@ function LineChart({ data, activeIndex, activeIndices, wide }) {
 }
 
 // ============ Vertical bar chart ============
-function BarChart({ data, activeLabel, dimOthers }) {
+function BarChart({ data, activeLabel, dimOthers, valueFormat }) {
   const t = chartTheme();
   // Rota etiquetas 45° cuando hay muchas barras, o cuando los nombres son largos
   // (ej. "Agustín Sbampato") y se pisan aunque haya pocas barras.
@@ -204,7 +204,7 @@ function BarChart({ data, activeLabel, dimOthers }) {
                 textAnchor="middle"
                 fill={t.ink}
                 fontWeight="700"
-              >{d.y}</text>
+              >{valueFormat ? valueFormat(d.y) : d.y}</text>
             )}
             <text
               x={lx} y={ly}
