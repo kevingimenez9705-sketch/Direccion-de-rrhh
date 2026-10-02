@@ -362,8 +362,9 @@ window.ROTACION = {
 };
 
 const acc = {
-  blue:   { '--accent': 'linear-gradient(90deg,#2C4D7D,#3E6294)', '--accent-color': '#1D3860', '--accent-soft': '#E6ECF5', '--accent-glow': 'rgba(29,56,96,0.30)' },
-  cyan:   { '--accent': 'linear-gradient(90deg,#0F5C66,#1F7A85)', '--accent-color': '#0C4750', '--accent-soft': '#E1EFF0', '--accent-glow': 'rgba(12,71,80,0.30)' },
+  // Sabores = azul acero, Extremas = pizarra (tema "Editorial" de los informes)
+  blue:   { '--accent': 'linear-gradient(90deg,#3F6189,#3F6189)', '--accent-color': '#3F6189', '--accent-soft': '#E8EDF4', '--accent-glow': 'rgba(63,97,137,0.22)' },
+  cyan:   { '--accent': 'linear-gradient(90deg,#3D5A62,#3D5A62)', '--accent-color': '#3D5A62', '--accent-soft': '#E6EDEE', '--accent-glow': 'rgba(61,90,98,0.22)' },
   purple: { '--accent': 'linear-gradient(90deg,#5B5A85,#787AA8)', '--accent-color': '#3D3D63', '--accent-soft': '#EAEAF2', '--accent-glow': 'rgba(61,61,99,0.28)' },
   amber:  { '--accent': 'linear-gradient(90deg,#8A6A38,#A4855A)', '--accent-color': '#5E4622', '--accent-soft': '#EFEAE0', '--accent-glow': 'rgba(94,70,34,0.26)' },
   green:  { '--accent': 'linear-gradient(90deg,#2C6E51,#3F8A6A)', '--accent-color': '#1B4A36', '--accent-soft': '#E2ECE7', '--accent-glow': 'rgba(27,74,54,0.26)' },

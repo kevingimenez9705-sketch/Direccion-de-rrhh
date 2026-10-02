@@ -4,131 +4,158 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Equipo de Selección — Acceso</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    /* Tema "Editorial" (igual que el panel): arena, azul acero, pizarra y marco navy. */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: #0f172a;
+      font-family: 'Open Sans', -apple-system, 'Segoe UI', sans-serif;
+      background: #F1EEE9;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 16px;
     }
 
     .card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+      background: #FFFFFF;
+      border: 1px solid #E4DED4;
+      border-radius: 6px;
+      padding: 40px 52px 48px 36px;
       width: 100%;
-      max-width: 380px;
-      box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+      max-width: 420px;
+      box-shadow: 0 2px 4px rgba(43,58,74,0.06), 0 12px 32px rgba(43,58,74,0.12);
+      text-align: center;
+    }
+    /* marco tipo diapositiva: barra navy a la derecha con filete acero y banda abajo */
+    .card::before {
+      content: "";
+      position: absolute; top: 0; right: 0; bottom: 0;
+      width: 14px;
+      background: #2B3A4A;
+      border-left: 5px solid #3F6189;
+    }
+    .card::after {
+      content: "";
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 8px;
+      background: #2B3A4A;
     }
 
     .logo {
       display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 10px;
-      margin-bottom: 32px;
+      margin-bottom: 26px;
     }
 
     .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: #2C4D7D;
-      border-radius: 8px;
+      width: 44px;
+      height: 44px;
+      background: #3F6189;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .logo-icon svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       fill: white;
     }
 
     .logo-text {
-      font-size: 14px;
-      font-weight: 600;
-      color: #e2e8f0;
-      line-height: 1.2;
+      font-size: 13px;
+      font-weight: 700;
+      color: #22303C;
+      letter-spacing: 0.08em;
     }
 
     .logo-sub {
       font-size: 11px;
-      font-weight: 400;
-      color: #64748b;
+      font-weight: 600;
+      color: #7A8691;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.14em;
     }
 
     h1 {
-      font-size: 22px;
-      font-weight: 600;
-      color: #f1f5f9;
-      margin-bottom: 6px;
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #3D5A62;
+      margin-bottom: 8px;
     }
 
     .subtitle {
       font-size: 13px;
-      color: #64748b;
+      color: #7A8691;
       margin-bottom: 28px;
     }
 
     label {
       display: block;
-      font-size: 12px;
-      font-weight: 500;
-      color: #94a3b8;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475763;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.12em;
       margin-bottom: 6px;
     }
 
     input {
       width: 100%;
-      background: #0f172a;
-      border: 1px solid #334155;
+      background: #FFFFFF;
+      border: 1px solid #D3CBBE;
       border-radius: 8px;
-      color: #e2e8f0;
-      font-family: 'DM Sans', sans-serif;
+      color: #22303C;
+      font-family: inherit;
       font-size: 14px;
       padding: 10px 14px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
       margin-bottom: 16px;
     }
 
     input:focus {
-      border-color: #2C4D7D;
+      border-color: #3F6189;
+      box-shadow: 0 0 0 3px #E8EDF4;
     }
 
     button {
       width: 100%;
-      background: #2C4D7D;
+      background: #2B3A4A;
       color: white;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       border: none;
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 999px;
+      padding: 13px;
       cursor: pointer;
-      margin-top: 4px;
+      margin-top: 6px;
       transition: background 0.2s;
     }
 
-    button:hover { background: #1D3860; }
-    button:active { background: #142A47; }
+    button:hover { background: #3F6189; }
+    button:active { background: #24323D; }
 
     .error {
       display: none;
-      background: #450a0a;
-      border: 1px solid #7f1d1d;
-      color: #fca5a5;
+      background: #F8E5E3;
+      border: 1px solid #EBC3BE;
+      color: #A8453C;
       font-size: 13px;
       border-radius: 8px;
       padding: 10px 14px;
