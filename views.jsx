@@ -419,6 +419,75 @@ function GerenciaPicker({ items, selectedKey, onSelect }) {
   );
 }
 
+// ============ Visor de gráficos ============
+// Un gráfico (o par de gráficos) por vez, con pestañas, flechas a los costados,
+// teclado (← →) y deslizamiento en el celular. Cada uno entra deslizándose desde el
+// lado hacia el que se avanza, y sus gráficos se animan al aparecer.
+// slides: [{ key, label, render }]. Recuerda la pestaña elegida al cambiar de mes/gerencia.
+function ChartDeck({ slides }) {
+  const [selKey, setSelKey] = useState(slides[0]?.key);
+  const [dir, setDir] = useState(1);
+  const touchX = useRef(null);
+  const n = slides.length;
+  const found = slides.findIndex(s => s.key === selKey);
+  const cur = found >= 0 ? found : 0;
+  function go(to) {
+    if (to < 0 || to >= n || to === cur) return;
+    setDir(to > cur ? 1 : -1);
+    setSelKey(slides[to].key);
+  }
+  useEffect(() => {
+    function onKey(e) {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+      if (e.key === 'ArrowRight') go(cur + 1);
+      else if (e.key === 'ArrowLeft') go(cur - 1);
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [cur, n]);
+  if (n === 0) return null;
+  const slide = slides[cur];
+  return (
+    <div className="deck">
+      <div className="deck-tabs" role="tablist" aria-label="Gráficos">
+        {slides.map((s, i) => (
+          <button key={s.key} role="tab" aria-selected={i === cur} className={'deck-tab' + (i === cur ? ' active' : '')} onClick={() => go(i)}>
+            {s.label}
+          </button>
+        ))}
+      </div>
+      <div className="deck-stage"
+        onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
+        onTouchEnd={e => {
+          if (touchX.current == null) return;
+          const dx = e.changedTouches[0].clientX - touchX.current;
+          touchX.current = null;
+          if (Math.abs(dx) > 60) go(cur + (dx < 0 ? 1 : -1));
+        }}
+      >
+        <button className="deck-arrow prev" onClick={() => go(cur - 1)} disabled={cur === 0} aria-label="Gráfico anterior">
+          <window.Icon name="arrow-left" size={20} />
+        </button>
+        <div className="deck-viewport">
+          <div key={slide.key} className={'deck-slide ' + (dir > 0 ? 'from-right' : 'from-left')} role="tabpanel" aria-label={slide.label}>
+            {slide.render()}
+          </div>
+        </div>
+        <button className="deck-arrow next" onClick={() => go(cur + 1)} disabled={cur === n - 1} aria-label="Gráfico siguiente">
+          <window.Icon name="arrow-right" size={20} />
+        </button>
+      </div>
+      <div className="deck-foot">
+        {slides.map((s, i) => (
+          <button key={s.key} className={'deck-dot' + (i === cur ? ' active' : '')} onClick={() => go(i)} aria-label={s.label} />
+        ))}
+        <span className="deck-count">{cur + 1} / {n}</span>
+      </div>
+    </div>
+  );
+}
+
 // Colores para distinguir hasta 4 meses en modo comparación (barras agrupadas,
 // línea de Altas por mes, insignias de la tira de meses).
 const COMPARE_COLORS = ['#1D3860', '#1F7A85', '#8B96A6', '#55606E'];
@@ -476,13 +545,14 @@ function MonthStrip({ monthIdx, onMonthChange, compareMode, onToggleCompareMode,
   );
 }
 
-// Top 5 zonales sumando uno o varios meses (para comparar se suma el
-// desglose COMPLETO de cada mes elegido antes de recortar a 5 — sumar
-// listas ya truncadas a 5 subestimaría zonales que quedaron justo afuera).
-function computeTop5Zonales(sectorId, monthKeys, bucketKey) {
+// Top 5 (zonales o locales) sumando uno o varios meses: para comparar se suma el
+// desglose COMPLETO de cada mes elegido antes de recortar a 5 — sumar listas ya
+// truncadas a 5 subestimaría a quienes quedaron justo afuera.
+// source: window.ZONALES_FULL o window.LOCALES_FULL.
+function computeTop5(source, sectorId, monthKeys, bucketKey) {
   const totals = {};
   monthKeys.forEach(mk => {
-    const arr = window.ZONALES_FULL?.[sectorId]?.[mk]?.[bucketKey] || [];
+    const arr = source?.[sectorId]?.[mk]?.[bucketKey] || [];
     arr.forEach(({ x, y }) => { totals[x] = (totals[x] || 0) + y; });
   });
   return Object.entries(totals)
@@ -705,6 +775,95 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
     return { idx, month: m, hasData: !!mData, ...s };
   }) : [];
 
+  // ── Tarjetas de gráficos ──
+  // Top 5 (zonales o locales) del mes activo, o sumando los meses elegidos al comparar.
+  function renderTop5(source, title) {
+    const filtering = !isTotalSelected;
+    const bucketKey = filtering ? selectedGerencia.matchLabel : 'total';
+    const keys = isComparing ? sortedCompareIdxs.map(idx => window.MONTHS[idx].key) : [activeMonth.key];
+    const top = computeTop5(source, sector.id, keys, bucketKey);
+    const sub = isComparing ? `Acumulado de ${sortedCompareIdxs.length} meses elegidos` : mesLabel;
+    return (
+      <div className="chart-card">
+        <div className="chart-head">
+          <div className="chart-title">{title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
+          <div className="chart-sub">{sub}</div>
+        </div>
+        <div className="chart-body">
+          {top.length > 0
+            ? <window.HBarChart data={top} />
+            : <div className="chart-empty">{!isComparing && !hasAltasMes ? 'Sin datos de altas cargados para' : 'Sin altas registradas para'} {sub.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
+        </div>
+      </div>
+    );
+  }
+
+  function renderChartCard(c, i) {
+    const filtering = !!c.matchKind && !isTotalSelected;
+    const barActiveLabel = filtering && (c.matchKind === 'gerencia-mes' || c.matchKind === 'no-presentes-gerencia')
+      ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x
+      : undefined;
+    const donutActiveLabel = filtering && c.matchKind === 'gerencia-total' ? selectedGerencia.matchLabel : undefined;
+    const isComparableBar = isComparing && (c.matchKind === 'gerencia-mes' || c.matchKind === 'no-presentes-gerencia');
+    const compareSeries = isComparableBar ? sortedCompareIdxs.map((idx, si) => {
+      const m = window.MONTHS[idx];
+      const mData = sectorData[m.key];
+      const chart = mData ? chartByKind(mData.charts, c.matchKind) : null;
+      return { label: mesLabelFor(m), color: COMPARE_COLORS[si], data: chart ? chart.data : [] };
+    }) : null;
+    // "Altas por mes" (línea) también sigue a la gerencia elegida: en vez del
+    // total del sector, arma su propia serie mensual mes a mes.
+    const isLineFiltering = c.type === 'line' && !isTotalSelected;
+    const lineData = isLineFiltering ? monthlySeriesFor(sectorData, selectedGerencia.matchLabel) : c.data;
+    const titleSuffix = (filtering || isLineFiltering) ? ` — ${selectedGerencia.name}` : '';
+    const lineSub = isLineFiltering
+      ? `${mesLabelFor(window.MONTHS[0])} – ${mesLabelFor(lastAltasMonth)} · altas de ${selectedGerencia.name} por mes`
+      : c.sub;
+    return (
+      <div key={i} className={'chart-card' + (c.full ? ' chart-card--wide' : '')}>
+        <div className="chart-head">
+          <div className="chart-title">{c.title}{titleSuffix}</div>
+          <div className="chart-sub">{c.type === 'line' ? lineSub : (isComparableBar ? 'Comparando meses elegidos' : c.sub)}</div>
+        </div>
+        <div className="chart-body">
+          {c.type === 'line'  && <window.LineChart  data={lineData} activeIndex={effectiveMonthIdx < lineData.length ? effectiveMonthIdx : undefined} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < lineData.length) : undefined} wide={c.wide} seriesLabel="altas" />}
+          {c.type === 'bar' && (isComparableBar
+            ? <window.GroupedBarChart series={compareSeries} activeLabel={barActiveLabel} dimOthers={filtering} />
+            : <window.BarChart data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />)}
+          {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
+          {c.type === 'donut' && <window.DonutChart data={c.data} center={c.center} activeLabel={donutActiveLabel} />}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Diapositivas del visor (solo las que tienen datos para el mes / modo actual) ──
+  const lineCharts = visibleCharts.filter(c => c.type === 'line');
+  const otrosCharts = visibleCharts.filter(c => c.type !== 'line' && c.matchKind !== 'top5-zonales');
+  const hasTop5 = visibleCharts.some(c => c.matchKind === 'top5-zonales');
+  const hasYtd = window.MONTHS.some((m, i) => i <= effectiveMonthIdx && m.year === activeMonth.year && sectorData[m.key]);
+  const hasRot = !!window.ROTACION?.[sector.id]?.[activeMonth.key];
+  const slides = [
+    lineCharts.length > 0 && { key: 'altas', label: 'Altas por mes', render: () => <div className="chart-grid one">{lineCharts.map(renderChartCard)}</div> },
+    !isComparing && hasYtd && { key: 'ytd', label: `${sector.name.split(' ')[0]} · YTD`, render: () => (
+      <div className="chart-grid one">
+        <YtdPanel sector={sector} sectorData={sectorData} monthIdx={effectiveMonthIdx} matchLabel={matchLabel} selectedName={selectedGerencia.name} onSelect={selectByLabel} />
+      </div>
+    ) },
+    hasTop5 && { key: 'top5', label: 'Top 5 zonales y locales', render: () => (
+      <div className="chart-grid">
+        {renderTop5(window.ZONALES_FULL, 'Top 5 zonales con más altas')}
+        {renderTop5(window.LOCALES_FULL, 'Top 5 locales con más altas')}
+      </div>
+    ) },
+    !isComparing && hasRot && { key: 'rot', label: 'Rotación', render: () => (
+      <div className="chart-grid one">
+        <RotacionPanel sector={sector} monthIdx={effectiveMonthIdx} matchLabel={matchLabel} selectedName={selectedGerencia.name} onSelect={selectByLabel} />
+      </div>
+    ) },
+    otrosCharts.length > 0 && { key: 'otros', label: 'Otros gráficos', render: () => <div className="chart-grid">{otrosCharts.map(renderChartCard)}</div> },
+  ].filter(Boolean);
+
   return (
     <div style={accent}>
       <div className="sector-hero">
@@ -788,81 +947,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         </div>
       )}
 
-      <div className={'chart-grid' + (visibleCharts.length === 1 ? ' one' : '')}>
-        {visibleCharts.map((c, i) => {
-          const filtering = !!c.matchKind && !isTotalSelected;
-
-          const ytdPanel = c.matchKind === 'top5-zonales' && !isComparing
-            ? <YtdPanel key="ytd" sector={sector} sectorData={sectorData} monthIdx={effectiveMonthIdx} matchLabel={matchLabel} selectedName={selectedGerencia.name} onSelect={selectByLabel} />
-            : null;
-          if (c.matchKind === 'top5-zonales') {
-            const bucketKey = filtering ? selectedGerencia.matchLabel : 'total';
-            const zonalMonthKeys = isComparing ? sortedCompareIdxs.map(idx => window.MONTHS[idx].key) : [activeMonth.key];
-            const zonalData = computeTop5Zonales(sector.id, zonalMonthKeys, bucketKey);
-            const zonalSub = isComparing
-              ? `Acumulado de ${sortedCompareIdxs.length} meses elegidos`
-              : mesLabel;
-            return (
-              <React.Fragment key={i}>
-              {ytdPanel}
-              <div className="chart-card">
-                <div className="chart-head">
-                  <div className="chart-title">{c.title}{filtering ? ` — ${selectedGerencia.name}` : ''}</div>
-                  <div className="chart-sub">{zonalSub}</div>
-                </div>
-                <div className="chart-body">
-                  {zonalData.length > 0
-                    ? <window.HBarChart data={zonalData} />
-                    : <div className="chart-empty">{!isComparing && !hasAltasMes ? 'Sin datos de altas cargados para' : 'Sin altas registradas para'} {zonalSub.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
-                </div>
-              </div>
-              </React.Fragment>
-            );
-          }
-
-          const barActiveLabel = filtering && (c.matchKind === 'gerencia-mes' || c.matchKind === 'no-presentes-gerencia')
-            ? c.data.find(d => d.x === selectedGerencia.matchLabel)?.x
-            : undefined;
-          const donutActiveLabel = filtering && c.matchKind === 'gerencia-total' ? selectedGerencia.matchLabel : undefined;
-          const isComparableBar = isComparing && (c.matchKind === 'gerencia-mes' || c.matchKind === 'no-presentes-gerencia');
-          const compareSeries = isComparableBar ? sortedCompareIdxs.map((idx, si) => {
-            const m = window.MONTHS[idx];
-            const mData = sectorData[m.key];
-            const chart = mData ? chartByKind(mData.charts, c.matchKind) : null;
-            return { label: mesLabelFor(m), color: COMPARE_COLORS[si], data: chart ? chart.data : [] };
-          }) : null;
-          // "Altas por mes" (línea) también sigue a la gerencia elegida: en vez del
-          // total del sector, arma su propia serie mensual mes a mes.
-          const isLineFiltering = c.type === 'line' && !isTotalSelected;
-          const lineData = isLineFiltering ? monthlySeriesFor(sectorData, selectedGerencia.matchLabel) : c.data;
-          const titleSuffix = (filtering || isLineFiltering) ? ` — ${selectedGerencia.name}` : '';
-          const lineSub = isLineFiltering
-            ? `${mesLabelFor(window.MONTHS[0])} – ${mesLabelFor(lastAltasMonth)} · altas de ${selectedGerencia.name} por mes`
-            : c.sub;
-          return (
-            <div key={i} className={'chart-card' + (c.full ? ' chart-card--wide' : '')}>
-              <div className="chart-head">
-                <div className="chart-title">{c.title}{titleSuffix}</div>
-                <div className="chart-sub">{c.type === 'line' ? lineSub : (isComparableBar ? 'Comparando meses elegidos' : c.sub)}</div>
-              </div>
-              <div className="chart-body">
-                {c.type === 'line'  && <window.LineChart  data={lineData} activeIndex={effectiveMonthIdx < lineData.length ? effectiveMonthIdx : undefined} activeIndices={isComparing ? sortedCompareIdxs.filter(idx => idx < lineData.length) : undefined} wide={c.wide} seriesLabel="altas" />}
-                {c.type === 'bar' && (isComparableBar
-                  ? <window.GroupedBarChart series={compareSeries} activeLabel={barActiveLabel} dimOthers={filtering} />
-                  : <window.BarChart data={c.data} activeLabel={barActiveLabel} dimOthers={filtering} />)}
-                {c.type === 'hbar'  && <window.HBarChart  data={c.data} />}
-                {c.type === 'donut' && <window.DonutChart data={c.data} center={c.center} activeLabel={donutActiveLabel} />}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {!isComparing && (
-        <div className="chart-grid one" style={{ marginTop: 14 }}>
-          <RotacionPanel sector={sector} monthIdx={effectiveMonthIdx} matchLabel={matchLabel} selectedName={selectedGerencia.name} onSelect={selectByLabel} />
-        </div>
-      )}
+      <ChartDeck slides={slides} />
 
       {data.details && data.details.length > 0 && (
         <div className="details-stack">
