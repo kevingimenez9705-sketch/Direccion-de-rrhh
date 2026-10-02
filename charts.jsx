@@ -12,13 +12,14 @@ function chartTheme() {
     inkSub: '#A7B0C0',
     tooltipBg: '#0A0E17',
   } : {
-    blue: '#47699C',
-    blueDark: '#2C4D7D',
-    grid: '#DBDFE7',
-    axis: '#6E7889',
-    ink: '#161B26',
-    inkSub: '#6E7889',
-    tooltipBg: '#1D3860',
+    // Tema "Editorial": azul acero para las marcas, navy para destacados, grilla arena.
+    blue: '#3F6189',
+    blueDark: '#3F6189',
+    grid: '#ECE7DF',
+    axis: '#7A8691',
+    ink: '#22303C',
+    inkSub: '#7A8691',
+    tooltipBg: '#2B3A4A',
   };
 }
 
@@ -239,12 +240,12 @@ function BarChart({ data, activeLabel, dimOthers, valueFormat }) {
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: rotate ? 320 : 280, overflow: 'visible' }}>
       <defs>
         <linearGradient id="barFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#6E8CBB" />
-          <stop offset="100%" stopColor="#9DB3D6" />
+          <stop offset="0%" stopColor="#7894B6" />
+          <stop offset="100%" stopColor="#A3B7CF" />
         </linearGradient>
         <linearGradient id="barFillActive" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1D3860" />
-          <stop offset="100%" stopColor="#2C4D7D" />
+          <stop offset="0%" stopColor="#2B3A4A" />
+          <stop offset="100%" stopColor="#3F6189" />
         </linearGradient>
       </defs>
       {/* gridlines */}
@@ -403,8 +404,8 @@ function HBarChart({ data, valueLabel = 'altas' }) {
     <svg key={dataKey(data)} viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
       <defs>
         <linearGradient id="hbarFill" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#6E8CBB" />
-          <stop offset="100%" stopColor="#9DB3D6" />
+          <stop offset="0%" stopColor="#3F6189" />
+          <stop offset="100%" stopColor="#7894B6" />
         </linearGradient>
       </defs>
       {/* gridlines */}
@@ -421,7 +422,7 @@ function HBarChart({ data, valueLabel = 'altas' }) {
       {data.map((d, i) => {
         const y = padT + i * (rowH + gap);
         const w = (d.y / max) * innerW;
-        const tipContent = { title: d.x, rows: [{ value: fmtMiles(d.y), label: valueLabel, color: '#6E8CBB' }] };
+        const tipContent = { title: d.x, rows: [{ value: fmtMiles(d.y), label: valueLabel, color: '#3F6189' }] };
         return (
           <g key={i}
             tabIndex={0}
@@ -632,7 +633,7 @@ function RotacionBars({ rows, activeLabel, onSelect, mesLabel, prevLabel, fmtPct
   const barW = Math.min(150, (innerW - gap * (n - 1)) / n);
   const x0 = padL + (innerW - (barW * n + gap * (n - 1))) / 2;
   const base = padT + innerH;
-  const BAR = '#3B66A8';
+  const BAR = '#3F6189'; // azul acero de la referencia (texto blanco adentro: contraste 6,3:1)
 
   return (
     <div className="viz-wrap" ref={wrapRef}>
