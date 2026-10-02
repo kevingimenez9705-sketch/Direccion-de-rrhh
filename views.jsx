@@ -142,46 +142,22 @@ function PanelEjecutivo({ onOpen }) {
   const prevMonth = window.MONTHS[altasIdx - 1] || null;
   const ultimoMes = window.MONTHS[window.MONTHS.length - 1];
 
-  // Resumen combinado (todas las unidades con datos de Altas) del mes más reciente.
-  let totalAcumulado = 0, totalMesActivo = 0, totalMesPrev = 0, totalNoPresentes = 0, totalNoPresentesPrev = 0;
+  // Resumen combinado (ambas marcas): mismas tarjetas que cada marca.
+  // "Altas" = ingresos netos de los no presentes (la gente que efectivamente entró).
+  let totalAcumNetas = 0, totalNetas = 0, totalNetasPrev = 0;
   let hasResumen = false;
   unidades.forEach(s => {
     const sectorData = window.SECTOR_DATA[s.id];
     const monthData = sectorData && sectorData[latestMonth.key];
     if (!monthData) return;
     hasResumen = true;
-    totalAcumulado   += sumOrPick(chartByKind(monthData.charts, 'gerencia-total'), null, 'value') || 0;
-    totalMesActivo   += sumOrPick(chartByKind(monthData.charts, 'gerencia-mes'), null, 'y') || 0;
-    totalNoPresentes += sumOrPick(chartByKind(monthData.charts, 'no-presentes-gerencia'), null, 'y') || 0;
-    const prevData = prevMonth && sectorData[prevMonth.key];
-    if (prevData) {
-      totalMesPrev += sumOrPick(chartByKind(prevData.charts, 'gerencia-mes'), null, 'y') || 0;
-      totalNoPresentesPrev += sumOrPick(chartByKind(prevData.charts, 'no-presentes-gerencia'), null, 'y') || 0;
-    }
+    totalAcumNetas += altasAcumuladasNetas(sectorData, null);
+    totalNetas += altasNetasMes(sectorData, latestMonth.key, null) || 0;
+    if (prevMonth) totalNetasPrev += altasNetasMes(sectorData, prevMonth.key, null) || 0;
   });
-  const totalDelta = deltaInfo(totalMesActivo, prevMonth ? totalMesPrev : null, false);
-  const totalPct = pctOf(totalNoPresentes, totalMesActivo);
+  const totalNetasDelta = deltaInfo(totalNetas, prevMonth ? totalNetasPrev : null, false);
 
-  // Altas del mes activo, netas de los "no presentes" — el total real (ambas marcas).
-  const totalAltasNetas = totalMesActivo - totalNoPresentes;
-  const totalAltasNetasPrev = prevMonth ? (totalMesPrev - totalNoPresentesPrev) : null;
-  const totalAltasNetasDelta = deltaInfo(totalAltasNetas, totalAltasNetasPrev, false);
-
-  // No presentes ACUMULADOS: suma de los 15 meses completos (no solo el mes activo).
-  let totalNoPresentesAcumulado = 0;
-  unidades.forEach(s => {
-    const sectorData = window.SECTOR_DATA[s.id];
-    if (!sectorData) return;
-    window.MONTHS.forEach(m => {
-      const md = sectorData[m.key];
-      if (!md) return;
-      totalNoPresentesAcumulado += sumOrPick(chartByKind(md.charts, 'no-presentes-gerencia'), null, 'y') || 0;
-    });
-  });
-  const totalNoPresentesAcumuladoPct = pctOf(totalNoPresentesAcumulado, totalAcumulado);
-
-  // Bajas (empresa total, ambas marcas) — acumulado del período y mes activo.
-  const totalBajasAcumulado = window.MONTHS.reduce((a, m) => a + (window.BAJAS_MENSUAL[m.key] || 0), 0);
+  // Bajas (empresa total, ambas marcas) del mes activo.
   const totalBajasMes = window.BAJAS_MENSUAL[latestMonth.key] ?? null;
   const totalBajasMesPrev = prevMonth ? (window.BAJAS_MENSUAL[prevMonth.key] ?? null) : null;
   const bajasDelta = deltaInfo(totalBajasMes, prevMonth ? totalBajasMesPrev : null, true);
@@ -211,12 +187,8 @@ function PanelEjecutivo({ onOpen }) {
         <>
           <div className="section-label" style={{ marginTop: 18 }}>Resumen general — ambas marcas</div>
           <div className="kpi-grid">
-            <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
-            <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalMesActivo), delta: totalDelta }} />
-            <KpiCard kpi={{ label: `No presentes — ${mesLabelFor(latestMonth)}`, value: `${fmtInt(totalNoPresentes)}${totalPct != null ? ` (${totalPct}%)` : ''}` }} />
-            <KpiCard kpi={{ label: 'No presentes acumulados', value: `${fmtInt(totalNoPresentesAcumulado)}${totalNoPresentesAcumuladoPct != null ? ` (${totalNoPresentesAcumuladoPct}%)` : ''}`, delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
-            <KpiCard kpi={{ label: 'Altas - no presentes', value: fmtInt(totalAltasNetas), delta: totalAltasNetasDelta }} />
-            <KpiCard kpi={{ label: 'Bajas acumuladas', value: fmtInt(totalBajasAcumulado), delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
+            <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumNetas), delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
+            <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalNetas), delta: totalNetasDelta }} />
             <KpiCard kpi={{ label: `Bajas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalBajasMes) ?? 'S/D', delta: bajasDelta }} />
             {rotTotal && <KpiCard kpi={{ label: `Rotación — ${mesLabelFor(rotMonth)}`, value: fmtPct(rotTotal.rot), delta: rotDelta(rotTotal.rot, rotTotalPrev?.rot, rotPrevMonth && mesLabelFor(rotPrevMonth)) || { dir: 'neutral', text: `Dotación ${fmtInt(rotTotal.dotIni)} → ${fmtInt(rotTotal.dotFin)}` } }} />}
           </div>
@@ -371,18 +343,33 @@ function sumOrPick(chart, matchLabel, valueKey) {
   return hit ? hit[valueKey] : null;
 }
 
+// Altas netas de no presentes de un mes (null si el mes no tiene altas cargadas).
+function altasNetasMes(sectorData, monthKey, matchLabel) {
+  const md = sectorData[monthKey];
+  if (!md) return null;
+  const altas = sumOrPick(chartByKind(md.charts, 'gerencia-mes'), matchLabel, 'y');
+  if (altas == null) return null;
+  return altas - (sumOrPick(chartByKind(md.charts, 'no-presentes-gerencia'), matchLabel, 'y') || 0);
+}
+// Las "Altas acumuladas" cuentan desde este mes hasta el último cargado.
+const INICIO_ACUMULADO = 'ene26';
+// Altas acumuladas netas de no presentes, desde INICIO_ACUMULADO hasta el último mes cargado.
+function altasAcumuladasNetas(sectorData, matchLabel) {
+  const desde = window.MONTHS.findIndex(m => m.key === INICIO_ACUMULADO);
+  return window.MONTHS.slice(desde).reduce((a, m) => a + (altasNetasMes(sectorData, m.key, matchLabel) || 0), 0);
+}
+
 // Construye el set de estadísticas (para el Total del sector si matchLabel es
 // null, o para una gerencia puntual) a partir de los charts del mes activo y
 // del mes anterior — todo calculado en vivo, nada queda "pisado" al cambiar de mes.
 function buildStat(sectorData, monthKey, prevMonthKey, matchLabel) {
   const data = sectorData[monthKey];
   const prevData = prevMonthKey ? sectorData[prevMonthKey] : null;
-  const altasTotal = sumOrPick(chartByKind(data.charts, 'gerencia-total'), matchLabel, 'value');
   const altasMes = sumOrPick(chartByKind(data.charts, 'gerencia-mes'), matchLabel, 'y');
   const altasMesPrev = prevData ? sumOrPick(chartByKind(prevData.charts, 'gerencia-mes'), matchLabel, 'y') : null;
   const noPresentes = sumOrPick(chartByKind(data.charts, 'no-presentes-gerencia'), matchLabel, 'y');
   const noPresentesPrev = prevData ? sumOrPick(chartByKind(prevData.charts, 'no-presentes-gerencia'), matchLabel, 'y') : null;
-  return { altasTotal, altasMes, altasMesPrev, noPresentes, noPresentesPrev };
+  return { altasMes, altasMesPrev, noPresentes, noPresentesPrev };
 }
 
 // Texto + dirección de la variación vs. una referencia con nombre propio
@@ -579,15 +566,10 @@ function mesLabelFor(m) {
   return `${m.short.charAt(0)}${m.short.slice(1).toLowerCase()} ${m.year}`;
 }
 // Texto de contexto para "Altas acumuladas": cuántos meses se están sumando y qué rango
-// (desde el primer mes hasta "last", el último mes con datos cargados).
+// (desde INICIO_ACUMULADO hasta "last", el último mes con datos cargados).
 function periodoAcumuladoTexto(last) {
-  const first = window.MONTHS[0];
-  return `${mesLabelFor(first)} – ${mesLabelFor(last)} · ${window.MONTHS.indexOf(last) + 1} meses`;
-}
-function pctOf(noPresentes, altasMes) {
-  return (altasMes != null && noPresentes != null && altasMes > 0)
-    ? Math.round((noPresentes / altasMes) * 1000) / 10
-    : null;
+  const desde = window.MONTHS.findIndex(m => m.key === INICIO_ACUMULADO);
+  return `${mesLabelFor(window.MONTHS[desde])} – ${mesLabelFor(last)} · ${window.MONTHS.indexOf(last) - desde + 1} meses`;
 }
 
 // Gráficos que ya no se muestran. Sus datos se mantienen porque alimentan las
@@ -754,7 +736,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const lastAltasMonth = window.MONTHS[ultimoIdxCon(m => sectorData[m.key])];
   const stat = hasAltasMes
     ? buildStat(sectorData, activeMonth.key, prevMonth && sectorData[prevMonth.key] ? prevMonth.key : null, matchLabel)
-    : { altasTotal: buildStat(sectorData, lastAltasMonth.key, null, matchLabel).altasTotal, altasMes: null, altasMesPrev: null, noPresentes: null, noPresentesPrev: null };
+    : { altasMes: null, altasMesPrev: null, noPresentes: null, noPresentesPrev: null };
   const mesLabel = mesLabelFor(activeMonth);
 
   // "Altas" = ingresos del mes netos de los no presentes (la gente que efectivamente entró).
@@ -773,7 +755,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const compareStats = isComparing ? sortedCompareIdxs.map(idx => {
     const m = window.MONTHS[idx];
     const mData = sectorData[m.key];
-    const s = mData ? buildStat(sectorData, m.key, null, matchLabel) : { altasMes: null, noPresentes: null, altasTotal: null };
+    const s = mData ? buildStat(sectorData, m.key, null, matchLabel) : { altasMes: null, noPresentes: null };
     const netas = s.altasMes != null && s.noPresentes != null ? s.altasMes - s.noPresentes : null;
     const rot = rotacionStats(window.ROTACION?.[sector.id]?.[m.key], matchLabel);
     return { idx, month: m, hasData: !!mData, ...s, netas, rot };
@@ -948,7 +930,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
            en vez de los del sector completo. */
         <div className="kpi-grid">
           {[
-            { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(stat.altasTotal) ?? 'S/D', delta: { dir: 'neutral', text: periodoAcumuladoTexto(lastAltasMonth) } },
+            { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(altasAcumuladasNetas(sectorData, matchLabel)), delta: { dir: 'neutral', text: periodoAcumuladoTexto(lastAltasMonth) } },
             { label: `Altas — ${mesLabel}`, value: hasAltasMes ? (fmtInt(altasNetas) ?? '0') : 'S/D', delta: hasAltasMes ? altasNetasDelta : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
             { label: `Bajas — ${mesLabel}`, value: rotMes ? fmtInt(rotMes.bajas) : 'S/D', delta: !rotMes ? sinRotacion : rotPrevMes ? deltaInfo(rotMes.bajas, rotPrevMes.bajas, true) : { dir: 'neutral', text: 'Sin dato de mes ant.' } },
             { label: `Rotación — ${mesLabel}`, value: rotMes ? fmtPct(rotMes.rot) : 'S/D', delta: !rotMes ? sinRotacion : rotDelta(rotMes.rot, rotPrevMes?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${fmtInt(rotMes.dotIni)} → ${fmtInt(rotMes.dotFin)}` } },
