@@ -7,6 +7,7 @@
 //   · Fábrica: agregado detalle "Gestión y Acompañamiento de Bajas Voluntarias" (Mar-Jun 2026).
 //   · Accidentabilidad Jun: agregado detalle "Arrastre — Siniestros Cerrados de Meses Anteriores" (13 de 14 casos).
 //   · Judiciales Jun: agregado KPI "Efectividad de acuerdos" (42%).
+//   · Rotación por regional JULIO 2026 (Sabores / Extremas): window.ROTACION.
 
 // ─── GERENCIAS (con foto) — usadas en el selector de gerencia dentro de cada unidad ───
 // matchLabel debe coincidir exactamente con el "x" / "label" usado en los charts
@@ -265,6 +266,29 @@ window.BAJAS_MENSUAL = {
   may26: 288,
   jun26: 224,
   jul26: 260,
+};
+
+// ─── ROTACIÓN POR REGIONAL — por marca y por mes ───
+// Fuente: tablas "ROTACIÓN SABORES" / "ROTACIÓN EXTREMAS" (Jul 2026).
+// "x" debe coincidir con el matchLabel de window.GERENCIAS. El % de rotación se
+// calcula en vivo: ((altas + bajas) / 2) / ((dotación inicial + final) / 2).
+window.ROTACION = {
+  sabores: {
+    jul26: [
+      { x:'Agustín Sbampato', dotIni:452, dotFin:449, altas:24, bajas:27 },
+      { x:'Gustavo Cabrera',  dotIni:422, dotFin:415, altas:26, bajas:33 },
+      { x:'Ivo Pisaniello',   dotIni:382, dotFin:413, altas:71, bajas:40 },
+      { x:'Lucía Vélez',      dotIni:253, dotFin:247, altas: 7, bajas:13 },
+      { x:'Marcelo Biurra',   dotIni:460, dotFin:472, altas:46, bajas:34 },
+    ],
+  },
+  extremas: {
+    jul26: [
+      { x:'Facundo Aramburo', dotIni:458, dotFin:465, altas: 52, bajas:45 },
+      { x:'Federico Gómez',   dotIni:486, dotFin:509, altas: 66, bajas:43 },
+      { x:'Gustavo Gómez',    dotIni:287, dotFin:362, altas:100, bajas:25 },
+    ],
+  },
 };
 
 const acc = {
