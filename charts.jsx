@@ -562,7 +562,7 @@ function PieChart({ data, activeLabel, onSelect, valueLabel = 'altas' }) {
           })}
         </g>
         {/* etiquetas afuera: nombre + % (las porciones muy chicas quedan en el tooltip) */}
-        {slices.filter(s => s.pct >= 0.04).map(s => {
+        {slices.filter(s => s.pct >= 0.01).map(s => {
           const lr = R + 16;
           const x = cx + lr * Math.cos(s.mid), y = cy + lr * Math.sin(s.mid);
           const c = Math.cos(s.mid);

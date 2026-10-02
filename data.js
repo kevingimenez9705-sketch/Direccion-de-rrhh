@@ -11,16 +11,20 @@
 //   · Altas / no presentes / zonales de Sabores y Extremas (May 2025 – Sep 2026) regenerados
 //     desde informe_anual_drive (listado nominal de ingresos). Bajas Ago/Sep 2026 desde
 //     "Altas y Bajas - YTD graficos".
-//   · Gerencia de Ivo Pisaniello reasignada a Sebastián Calderón en todo el histórico.
+//   · Regional de Ivo Pisaniello (hasta Ago 2026) → Sebastián Calderón (desde Sep 2026).
 
 // ─── GERENCIAS (con foto) — usadas en el selector de gerencia dentro de cada unidad ───
 // matchLabel debe coincidir exactamente con el "x" / "label" usado en los charts
 // "Rotación por gerencia..." y "Distribución de bajas por gerencia..." de cada sector.
+// desde / hasta (clave de mes): período en que la persona estuvo a cargo de la regional;
+// "reemplaza" = key de quien tenía la misma regional antes (se usa para el color y para
+// pasar de una persona a la otra al cambiar de mes).
 window.GERENCIAS = {
   sabores: [
     { key:'sbampato',   name:'Agustín Sbampato', role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/sbampato.jpg',   matchLabel:'Agustín Sbampato' },
     { key:'cabrera',    name:'Gustavo Cabrera',   role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/cabrera.jpg',    matchLabel:'Gustavo Cabrera' },
-    { key:'calderon',   name:'Sebastián Calderón', role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/calderon.jpg', matchLabel:'Sebastián Calderón' },
+    { key:'pisaniello', name:'Ivo Pisaniello',    role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/pisaniello.jpg', matchLabel:'Ivo Pisaniello', hasta:'ago26' },
+    { key:'calderon',   name:'Sebastián Calderón', role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/calderon.jpg', matchLabel:'Sebastián Calderón', desde:'sep26', reemplaza:'pisaniello' },
     { key:'velez',      name:'Lucía Vélez',       role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/velez.jpg',      matchLabel:'Lucía Vélez' },
     { key:'biurra',     name:'Marcelo Biurra',    role:'Gerente de Operaciones', photo:'assets/gerencias/sabores/biurra.jpg',     matchLabel:'Marcelo Biurra' },
   ],
@@ -124,7 +128,7 @@ window.ZONALES_FULL = {
       "total": [{ x:"Douglas Seprum", y:25 }, { x:"Ronaldo Arguello", y:21 }, { x:"Magali Sandoval", y:18 }, { x:"Michelle Alvarez", y:17 }, { x:"Greisnell Mejias", y:17 }, { x:"Ezequiel Acosta", y:16 }, { x:"Veronica Gonzalez", y:16 }, { x:"Camila Carranza", y:15 }, { x:"Ariana Gomez", y:14 }, { x:"Pamela Maidana", y:13 }, { x:"Marianella Yñiguez", y:11 }, { x:"Camila Almeida", y:11 }, { x:"Agustina Sussi", y:9 }, { x:"Renata Fedullo", y:9 }, { x:"Gabriela Ferreyra", y:9 }, { x:"Emanuel Mazueco", y:8 }, { x:"Aylen Ponce", y:8 }, { x:"Sofia D´antuono", y:8 }, { x:"Cecilia Montoya", y:6 }, { x:"Luciana Bianco", y:6 }, { x:"Micaela Ponce", y:6 }, { x:"Tamara Migoya", y:5 }, { x:"Pablo Muga", y:5 }, { x:"Nahuel Sanchez", y:4 }, { x:"Adriana Alvarez", y:3 }, { x:"Lujan Brandan", y:3 }, { x:"Melanie Pueblas", y:3 }, { x:"Camila Fredes", y:3 }, { x:"Giovanna Solerez", y:3 }, { x:"Franco Pedraza", y:2 }, { x:"Tomas Moreno", y:1 }, { x:"Malena Aguera", y:1 }],
       "Agustín Sbampato": [{ x:"Magali Sandoval", y:18 }, { x:"Michelle Alvarez", y:17 }, { x:"Camila Carranza", y:15 }, { x:"Adriana Alvarez", y:3 }, { x:"Lujan Brandan", y:3 }, { x:"Franco Pedraza", y:2 }, { x:"Tomas Moreno", y:1 }],
       "Gustavo Cabrera": [{ x:"Pamela Maidana", y:13 }, { x:"Marianella Yñiguez", y:11 }, { x:"Agustina Sussi", y:9 }, { x:"Cecilia Montoya", y:6 }, { x:"Tamara Migoya", y:5 }, { x:"Melanie Pueblas", y:3 }, { x:"Camila Fredes", y:3 }],
-      "Sebastián Calderón": [{ x:"Douglas Seprum", y:21 }, { x:"Ariana Gomez", y:14 }, { x:"Ezequiel Acosta", y:11 }, { x:"Greisnell Mejias", y:9 }, { x:"Emanuel Mazueco", y:8 }, { x:"Luciana Bianco", y:6 }],
+      "Ivo Pisaniello": [{ x:"Douglas Seprum", y:21 }, { x:"Ariana Gomez", y:14 }, { x:"Ezequiel Acosta", y:11 }, { x:"Greisnell Mejias", y:9 }, { x:"Emanuel Mazueco", y:8 }, { x:"Luciana Bianco", y:6 }],
       "Lucía Vélez": [{ x:"Renata Fedullo", y:9 }, { x:"Pablo Muga", y:5 }, { x:"Nahuel Sanchez", y:4 }, { x:"Malena Aguera", y:1 }],
       "Marcelo Biurra": [{ x:"Ronaldo Arguello", y:21 }, { x:"Veronica Gonzalez", y:16 }, { x:"Camila Almeida", y:11 }, { x:"Aylen Ponce", y:8 }, { x:"Sofia D´antuono", y:8 }, { x:"Micaela Ponce", y:6 }, { x:"Giovanna Solerez", y:3 }],
       "Otros": [{ x:"Gabriela Ferreyra", y:9 }, { x:"Greisnell Mejias", y:8 }, { x:"Ezequiel Acosta", y:5 }, { x:"Douglas Seprum", y:4 }],
@@ -133,7 +137,7 @@ window.ZONALES_FULL = {
       "total": [{ x:"Michelle Alvarez", y:22 }, { x:"Douglas Seprum", y:18 }, { x:"Magali Sandoval", y:17 }, { x:"Emanuel Mazueco", y:15 }, { x:"Greisnell Mejias", y:15 }, { x:"Adriana Alvarez", y:13 }, { x:"Ezequiel Acosta", y:11 }, { x:"Veronica Gonzalez", y:11 }, { x:"Giovanna Solerez", y:10 }, { x:"Pamela Maidana", y:9 }, { x:"Nahuel Sanchez", y:9 }, { x:"Malena Aguera", y:9 }, { x:"Ariana Gomez", y:8 }, { x:"Tamara Migoya", y:6 }, { x:"Camila Almeida", y:6 }, { x:"Renata Fedullo", y:6 }, { x:"Ronaldo Arguello", y:6 }, { x:"Tomas Moreno", y:6 }, { x:"Camila Carranza", y:5 }, { x:"Lujan Brandan", y:5 }, { x:"Marianella Yñiguez", y:5 }, { x:"Melanie Pueblas", y:5 }, { x:"Pablo Muga", y:5 }, { x:"Micaela Ponce", y:4 }, { x:"Camila Fredes", y:3 }, { x:"Agustina Sussi", y:3 }, { x:"Luciana Bianco", y:3 }, { x:"Aylen Ponce", y:3 }, { x:"Franco Pedraza", y:1 }, { x:"Cecilia Montoya", y:1 }],
       "Agustín Sbampato": [{ x:"Michelle Alvarez", y:22 }, { x:"Magali Sandoval", y:16 }, { x:"Adriana Alvarez", y:11 }, { x:"Camila Carranza", y:5 }, { x:"Lujan Brandan", y:5 }, { x:"Franco Pedraza", y:1 }],
       "Gustavo Cabrera": [{ x:"Pamela Maidana", y:9 }, { x:"Tamara Migoya", y:6 }, { x:"Marianella Yñiguez", y:5 }, { x:"Melanie Pueblas", y:5 }, { x:"Camila Fredes", y:3 }, { x:"Agustina Sussi", y:3 }, { x:"Adriana Alvarez", y:2 }, { x:"Camila Almeida", y:2 }, { x:"Cecilia Montoya", y:1 }],
-      "Sebastián Calderón": [{ x:"Douglas Seprum", y:18 }, { x:"Emanuel Mazueco", y:15 }, { x:"Greisnell Mejias", y:15 }, { x:"Ezequiel Acosta", y:11 }, { x:"Ariana Gomez", y:8 }, { x:"Tomas Moreno", y:6 }, { x:"Luciana Bianco", y:3 }],
+      "Ivo Pisaniello": [{ x:"Douglas Seprum", y:18 }, { x:"Emanuel Mazueco", y:15 }, { x:"Greisnell Mejias", y:15 }, { x:"Ezequiel Acosta", y:11 }, { x:"Ariana Gomez", y:8 }, { x:"Tomas Moreno", y:6 }, { x:"Luciana Bianco", y:3 }],
       "Lucía Vélez": [{ x:"Nahuel Sanchez", y:9 }, { x:"Malena Aguera", y:9 }, { x:"Renata Fedullo", y:6 }, { x:"Pablo Muga", y:5 }, { x:"Magali Sandoval", y:1 }],
       "Marcelo Biurra": [{ x:"Veronica Gonzalez", y:11 }, { x:"Giovanna Solerez", y:10 }, { x:"Ronaldo Arguello", y:6 }, { x:"Micaela Ponce", y:4 }, { x:"Camila Almeida", y:4 }, { x:"Aylen Ponce", y:3 }],
     },
@@ -141,7 +145,7 @@ window.ZONALES_FULL = {
       "total": [{ x:"Tomas Moreno", y:23 }, { x:"Ezequiel Acosta", y:18 }, { x:"Greisnell Mejias", y:18 }, { x:"Camila Almeida", y:14 }, { x:"Ronaldo Arguello", y:13 }, { x:"Magali Sandoval", y:8 }, { x:"Pamela Maidana", y:7 }, { x:"Emanuel Mazueco", y:7 }, { x:"Camila Fredes", y:6 }, { x:"Veronica Gonzalez", y:6 }, { x:"Giovanna Solerez", y:6 }, { x:"Michelle Alvarez", y:5 }, { x:"Melanie Pueblas", y:5 }, { x:"Ariana Gomez", y:5 }, { x:"Lujan Brandan", y:4 }, { x:"Tamara Migoya", y:4 }, { x:"Douglas Seprum", y:4 }, { x:"Micaela Ponce", y:4 }, { x:"Adriana Alvarez", y:3 }, { x:"Franco Pedraza", y:3 }, { x:"Marianella Yñiguez", y:3 }, { x:"Aylen Ponce", y:3 }, { x:"Camila Carranza", y:2 }, { x:"Agustina Sussi", y:2 }, { x:"Renata Fedullo", y:2 }, { x:"Malena Aguera", y:2 }, { x:"Nahuel Sanchez", y:2 }, { x:"Pablo Muga", y:2 }, { x:"Cecilia Montoya", y:1 }],
       "Agustín Sbampato": [{ x:"Magali Sandoval", y:8 }, { x:"Michelle Alvarez", y:5 }, { x:"Lujan Brandan", y:4 }, { x:"Adriana Alvarez", y:3 }, { x:"Franco Pedraza", y:3 }, { x:"Camila Carranza", y:2 }],
       "Gustavo Cabrera": [{ x:"Pamela Maidana", y:7 }, { x:"Camila Fredes", y:6 }, { x:"Melanie Pueblas", y:5 }, { x:"Tamara Migoya", y:4 }, { x:"Marianella Yñiguez", y:3 }, { x:"Agustina Sussi", y:2 }, { x:"Cecilia Montoya", y:1 }],
-      "Sebastián Calderón": [{ x:"Tomas Moreno", y:23 }, { x:"Ezequiel Acosta", y:18 }, { x:"Greisnell Mejias", y:18 }, { x:"Emanuel Mazueco", y:7 }, { x:"Ariana Gomez", y:5 }, { x:"Douglas Seprum", y:4 }],
+      "Ivo Pisaniello": [{ x:"Tomas Moreno", y:23 }, { x:"Ezequiel Acosta", y:18 }, { x:"Greisnell Mejias", y:18 }, { x:"Emanuel Mazueco", y:7 }, { x:"Ariana Gomez", y:5 }, { x:"Douglas Seprum", y:4 }],
       "Lucía Vélez": [{ x:"Renata Fedullo", y:2 }, { x:"Malena Aguera", y:2 }, { x:"Nahuel Sanchez", y:2 }, { x:"Pablo Muga", y:2 }],
       "Marcelo Biurra": [{ x:"Camila Almeida", y:14 }, { x:"Ronaldo Arguello", y:13 }, { x:"Veronica Gonzalez", y:6 }, { x:"Giovanna Solerez", y:6 }, { x:"Micaela Ponce", y:4 }, { x:"Aylen Ponce", y:3 }],
     },
@@ -149,7 +153,7 @@ window.ZONALES_FULL = {
       "total": [{ x:"Greisnell Mejias", y:18 }, { x:"Ronaldo Arguello", y:18 }, { x:"Adriana Alvarez", y:16 }, { x:"Tomas Moreno", y:16 }, { x:"Tamara Migoya", y:12 }, { x:"Pamela Maidana", y:11 }, { x:"Ezequiel Acosta", y:10 }, { x:"Camila Almeida", y:9 }, { x:"Cecilia Montoya", y:9 }, { x:"Marianella Yñiguez", y:9 }, { x:"Micaela Ponce", y:9 }, { x:"Veronica Gonzalez", y:9 }, { x:"Ariana Gomez", y:8 }, { x:"Lujan Brandan", y:8 }, { x:"Malena Aguera", y:7 }, { x:"Michelle Alvarez", y:7 }, { x:"Nahuel Sanchez", y:7 }, { x:"Camila Fredes", y:6 }, { x:"Douglas Seprum", y:6 }, { x:"Giovanna Solerez", y:6 }, { x:"Pablo Muga", y:5 }, { x:"Renata Fedullo", y:5 }, { x:"Agustina Sussi", y:4 }, { x:"Melanie Pueblas", y:4 }, { x:"Pamela Jimenez", y:3 }, { x:"Aylen Ponce", y:2 }, { x:"Camila Carranza", y:2 }, { x:"Lesley Dugarte", y:1 }, { x:"Magali Sandoval", y:1 }, { x:"Sofia D´antuono", y:1 }],
       "Agustín Sbampato": [{ x:"Adriana Alvarez", y:16 }, { x:"Lujan Brandan", y:8 }, { x:"Tamara Migoya", y:8 }, { x:"Michelle Alvarez", y:7 }, { x:"Camila Carranza", y:2 }, { x:"Magali Sandoval", y:1 }],
       "Gustavo Cabrera": [{ x:"Pamela Maidana", y:11 }, { x:"Cecilia Montoya", y:9 }, { x:"Marianella Yñiguez", y:9 }, { x:"Camila Fredes", y:6 }, { x:"Melanie Pueblas", y:4 }, { x:"Tamara Migoya", y:4 }, { x:"Pamela Jimenez", y:3 }, { x:"Agustina Sussi", y:2 }],
-      "Sebastián Calderón": [{ x:"Greisnell Mejias", y:18 }, { x:"Tomas Moreno", y:16 }, { x:"Ezequiel Acosta", y:10 }, { x:"Ariana Gomez", y:8 }, { x:"Douglas Seprum", y:6 }, { x:"Lesley Dugarte", y:1 }],
+      "Ivo Pisaniello": [{ x:"Greisnell Mejias", y:18 }, { x:"Tomas Moreno", y:16 }, { x:"Ezequiel Acosta", y:10 }, { x:"Ariana Gomez", y:8 }, { x:"Douglas Seprum", y:6 }, { x:"Lesley Dugarte", y:1 }],
       "Lucía Vélez": [{ x:"Malena Aguera", y:7 }, { x:"Nahuel Sanchez", y:7 }, { x:"Pablo Muga", y:5 }, { x:"Renata Fedullo", y:5 }, { x:"Agustina Sussi", y:2 }],
       "Marcelo Biurra": [{ x:"Ronaldo Arguello", y:18 }, { x:"Camila Almeida", y:9 }, { x:"Micaela Ponce", y:9 }, { x:"Veronica Gonzalez", y:9 }, { x:"Giovanna Solerez", y:6 }, { x:"Aylen Ponce", y:2 }, { x:"Sofia D´antuono", y:1 }],
     },
@@ -319,14 +323,14 @@ window.ROTACION = {
     jul26: [
       { x:'Agustín Sbampato', dotIni:452, dotFin:449, altas:24, bajas:27 },
       { x:'Gustavo Cabrera',  dotIni:422, dotFin:415, altas:26, bajas:33 },
-      { x:'Sebastián Calderón',   dotIni:382, dotFin:413, altas:71, bajas:40 },
+      { x:'Ivo Pisaniello',       dotIni:382, dotFin:413, altas:71, bajas:40 },
       { x:'Lucía Vélez',      dotIni:253, dotFin:247, altas: 7, bajas:13 },
       { x:'Marcelo Biurra',   dotIni:460, dotFin:472, altas:46, bajas:34 },
     ],
     ago26: [
       { x:'Agustín Sbampato', dotIni:449, dotFin:470, altas:42, bajas:21 },
       { x:'Gustavo Cabrera',  dotIni:415, dotFin:436, altas:48, bajas:27 },
-      { x:'Sebastián Calderón',   dotIni:413, dotFin:430, altas:58, bajas:41 },
+      { x:'Ivo Pisaniello',       dotIni:413, dotFin:430, altas:58, bajas:41 },
       { x:'Lucía Vélez',      dotIni:247, dotFin:252, altas:26, bajas:21 },
       { x:'Marcelo Biurra',   dotIni:472, dotFin:498, altas:54, bajas:28 },
     ],
@@ -679,10 +683,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Mayo 2025', data: [{ x:"Marcelo Biurra", y:82 }, { x:"Gustavo Cabrera", y:64 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:139 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Mayo 2025', data: [{ x:"Marcelo Biurra", y:82 }, { x:"Gustavo Cabrera", y:64 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:139 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Mayo 2025', data: [{ x:"Marcelo Biurra", y:1 }, { x:"Gustavo Cabrera", y:6 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:10 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Mayo 2025', data: [{ x:"Marcelo Biurra", y:1 }, { x:"Gustavo Cabrera", y:6 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:10 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     jun25: {
@@ -693,10 +697,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Junio 2025', data: [{ x:"Marcelo Biurra", y:29 }, { x:"Gustavo Cabrera", y:33 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:126 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Junio 2025', data: [{ x:"Marcelo Biurra", y:29 }, { x:"Gustavo Cabrera", y:33 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:126 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Junio 2025', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:1 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:10 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Junio 2025', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:1 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:10 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     jul25: {
@@ -707,10 +711,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Julio 2025', data: [{ x:"Marcelo Biurra", y:49 }, { x:"Gustavo Cabrera", y:68 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:138 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Julio 2025', data: [{ x:"Marcelo Biurra", y:49 }, { x:"Gustavo Cabrera", y:68 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:138 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Julio 2025', data: [{ x:"Marcelo Biurra", y:5 }, { x:"Gustavo Cabrera", y:3 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:7 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Julio 2025', data: [{ x:"Marcelo Biurra", y:5 }, { x:"Gustavo Cabrera", y:3 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:7 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     ago25: {
@@ -721,10 +725,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Agosto 2025', data: [{ x:"Marcelo Biurra", y:57 }, { x:"Gustavo Cabrera", y:55 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:108 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Agosto 2025', data: [{ x:"Marcelo Biurra", y:57 }, { x:"Gustavo Cabrera", y:55 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:108 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Agosto 2025', data: [{ x:"Marcelo Biurra", y:2 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:5 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Agosto 2025', data: [{ x:"Marcelo Biurra", y:2 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:5 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     sep25: {
@@ -735,10 +739,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Septiembre 2025', data: [{ x:"Marcelo Biurra", y:67 }, { x:"Gustavo Cabrera", y:49 }, { x:"Agustín Sbampato", y:4 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:147 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Septiembre 2025', data: [{ x:"Marcelo Biurra", y:67 }, { x:"Gustavo Cabrera", y:49 }, { x:"Agustín Sbampato", y:4 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:147 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Septiembre 2025', data: [{ x:"Marcelo Biurra", y:3 }, { x:"Gustavo Cabrera", y:0 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:8 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Septiembre 2025', data: [{ x:"Marcelo Biurra", y:3 }, { x:"Gustavo Cabrera", y:0 }, { x:"Agustín Sbampato", y:0 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:8 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     oct25: {
@@ -749,10 +753,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Octubre 2025', data: [{ x:"Marcelo Biurra", y:43 }, { x:"Gustavo Cabrera", y:69 }, { x:"Agustín Sbampato", y:22 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:72 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Octubre 2025', data: [{ x:"Marcelo Biurra", y:43 }, { x:"Gustavo Cabrera", y:69 }, { x:"Agustín Sbampato", y:22 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:72 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Octubre 2025', data: [{ x:"Marcelo Biurra", y:5 }, { x:"Gustavo Cabrera", y:5 }, { x:"Agustín Sbampato", y:2 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:5 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Octubre 2025', data: [{ x:"Marcelo Biurra", y:5 }, { x:"Gustavo Cabrera", y:5 }, { x:"Agustín Sbampato", y:2 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:5 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     nov25: {
@@ -763,10 +767,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Noviembre 2025', data: [{ x:"Marcelo Biurra", y:24 }, { x:"Gustavo Cabrera", y:24 }, { x:"Agustín Sbampato", y:30 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:64 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Noviembre 2025', data: [{ x:"Marcelo Biurra", y:24 }, { x:"Gustavo Cabrera", y:24 }, { x:"Agustín Sbampato", y:30 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:64 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Noviembre 2025', data: [{ x:"Marcelo Biurra", y:3 }, { x:"Gustavo Cabrera", y:1 }, { x:"Agustín Sbampato", y:1 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:4 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Noviembre 2025', data: [{ x:"Marcelo Biurra", y:3 }, { x:"Gustavo Cabrera", y:1 }, { x:"Agustín Sbampato", y:1 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:4 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     dic25: {
@@ -777,10 +781,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Diciembre 2025', data: [{ x:"Marcelo Biurra", y:46 }, { x:"Gustavo Cabrera", y:56 }, { x:"Agustín Sbampato", y:78 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:146 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Diciembre 2025', data: [{ x:"Marcelo Biurra", y:46 }, { x:"Gustavo Cabrera", y:56 }, { x:"Agustín Sbampato", y:78 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:146 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Diciembre 2025', data: [{ x:"Marcelo Biurra", y:6 }, { x:"Gustavo Cabrera", y:9 }, { x:"Agustín Sbampato", y:7 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:9 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Diciembre 2025', data: [{ x:"Marcelo Biurra", y:6 }, { x:"Gustavo Cabrera", y:9 }, { x:"Agustín Sbampato", y:7 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:9 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     ene26: {
@@ -791,10 +795,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Enero 2026', data: [{ x:"Marcelo Biurra", y:104 }, { x:"Gustavo Cabrera", y:68 }, { x:"Agustín Sbampato", y:45 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:20 }, { x:"Otros", y:44 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Enero 2026', data: [{ x:"Marcelo Biurra", y:104 }, { x:"Gustavo Cabrera", y:68 }, { x:"Agustín Sbampato", y:45 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:20 }, { x:"Otros", y:44 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Enero 2026', data: [{ x:"Marcelo Biurra", y:8 }, { x:"Gustavo Cabrera", y:4 }, { x:"Agustín Sbampato", y:1 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:2 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Enero 2026', data: [{ x:"Marcelo Biurra", y:8 }, { x:"Gustavo Cabrera", y:4 }, { x:"Agustín Sbampato", y:1 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:2 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     feb26: {
@@ -805,10 +809,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Febrero 2026', data: [{ x:"Marcelo Biurra", y:66 }, { x:"Gustavo Cabrera", y:50 }, { x:"Agustín Sbampato", y:42 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:18 }, { x:"Otros", y:58 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Febrero 2026', data: [{ x:"Marcelo Biurra", y:66 }, { x:"Gustavo Cabrera", y:50 }, { x:"Agustín Sbampato", y:42 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:18 }, { x:"Otros", y:58 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Febrero 2026', data: [{ x:"Marcelo Biurra", y:6 }, { x:"Gustavo Cabrera", y:0 }, { x:"Agustín Sbampato", y:1 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Febrero 2026', data: [{ x:"Marcelo Biurra", y:6 }, { x:"Gustavo Cabrera", y:0 }, { x:"Agustín Sbampato", y:1 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     mar26: {
@@ -819,10 +823,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Marzo 2026', data: [{ x:"Marcelo Biurra", y:80 }, { x:"Gustavo Cabrera", y:48 }, { x:"Agustín Sbampato", y:74 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:43 }, { x:"Otros", y:107 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Marzo 2026', data: [{ x:"Marcelo Biurra", y:80 }, { x:"Gustavo Cabrera", y:48 }, { x:"Agustín Sbampato", y:74 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:43 }, { x:"Otros", y:107 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Marzo 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:2 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:3 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Marzo 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:2 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:3 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     abr26: {
@@ -833,10 +837,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Abril 2026', data: [{ x:"Marcelo Biurra", y:75 }, { x:"Gustavo Cabrera", y:46 }, { x:"Agustín Sbampato", y:78 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:29 }, { x:"Otros", y:76 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Abril 2026', data: [{ x:"Marcelo Biurra", y:75 }, { x:"Gustavo Cabrera", y:46 }, { x:"Agustín Sbampato", y:78 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:29 }, { x:"Otros", y:76 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Abril 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:3 }, { x:"Sebastián Calderón", y:0 }, { x:"Lucía Vélez", y:1 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Abril 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:3 }, { x:"Ivo Pisaniello", y:0 }, { x:"Lucía Vélez", y:1 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     may26: {
@@ -847,10 +851,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Mayo 2026', data: [{ x:"Marcelo Biurra", y:73 }, { x:"Gustavo Cabrera", y:50 }, { x:"Agustín Sbampato", y:59 }, { x:"Sebastián Calderón", y:69 }, { x:"Lucía Vélez", y:19 }, { x:"Otros", y:26 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Mayo 2026', data: [{ x:"Marcelo Biurra", y:73 }, { x:"Gustavo Cabrera", y:50 }, { x:"Agustín Sbampato", y:59 }, { x:"Ivo Pisaniello", y:69 }, { x:"Lucía Vélez", y:19 }, { x:"Otros", y:26 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Mayo 2026', data: [{ x:"Marcelo Biurra", y:4 }, { x:"Gustavo Cabrera", y:3 }, { x:"Agustín Sbampato", y:3 }, { x:"Sebastián Calderón", y:5 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Mayo 2026', data: [{ x:"Marcelo Biurra", y:4 }, { x:"Gustavo Cabrera", y:3 }, { x:"Agustín Sbampato", y:3 }, { x:"Ivo Pisaniello", y:5 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     jun26: {
@@ -861,10 +865,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Junio 2026', data: [{ x:"Marcelo Biurra", y:38 }, { x:"Gustavo Cabrera", y:36 }, { x:"Agustín Sbampato", y:60 }, { x:"Sebastián Calderón", y:76 }, { x:"Lucía Vélez", y:30 }, { x:"Otros", y:0 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Junio 2026', data: [{ x:"Marcelo Biurra", y:38 }, { x:"Gustavo Cabrera", y:36 }, { x:"Agustín Sbampato", y:60 }, { x:"Ivo Pisaniello", y:76 }, { x:"Lucía Vélez", y:30 }, { x:"Otros", y:0 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Junio 2026', data: [{ x:"Marcelo Biurra", y:3 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:1 }, { x:"Sebastián Calderón", y:3 }, { x:"Lucía Vélez", y:1 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Junio 2026', data: [{ x:"Marcelo Biurra", y:3 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:1 }, { x:"Ivo Pisaniello", y:3 }, { x:"Lucía Vélez", y:1 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     jul26: {
@@ -875,10 +879,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Julio 2026', data: [{ x:"Marcelo Biurra", y:46 }, { x:"Gustavo Cabrera", y:28 }, { x:"Agustín Sbampato", y:25 }, { x:"Sebastián Calderón", y:75 }, { x:"Lucía Vélez", y:8 }, { x:"Otros", y:0 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Julio 2026', data: [{ x:"Marcelo Biurra", y:46 }, { x:"Gustavo Cabrera", y:28 }, { x:"Agustín Sbampato", y:25 }, { x:"Ivo Pisaniello", y:75 }, { x:"Lucía Vélez", y:8 }, { x:"Otros", y:0 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Julio 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:2 }, { x:"Sebastián Calderón", y:5 }, { x:"Lucía Vélez", y:1 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Julio 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:2 }, { x:"Agustín Sbampato", y:2 }, { x:"Ivo Pisaniello", y:5 }, { x:"Lucía Vélez", y:1 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     ago26: {
@@ -889,10 +893,10 @@ window.SECTOR_DATA = {
       ],
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
-        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Agosto 2026', data: [{ x:"Marcelo Biurra", y:54 }, { x:"Gustavo Cabrera", y:48 }, { x:"Agustín Sbampato", y:42 }, { x:"Sebastián Calderón", y:59 }, { x:"Lucía Vélez", y:26 }, { x:"Otros", y:0 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Agosto 2026', data: [{ x:"Marcelo Biurra", y:54 }, { x:"Gustavo Cabrera", y:48 }, { x:"Agustín Sbampato", y:42 }, { x:"Ivo Pisaniello", y:59 }, { x:"Lucía Vélez", y:26 }, { x:"Otros", y:0 }], matchKind:'gerencia-mes' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
-        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Agosto 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:0 }, { x:"Agustín Sbampato", y:2 }, { x:"Sebastián Calderón", y:3 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
+        { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Agosto 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:0 }, { x:"Agustín Sbampato", y:2 }, { x:"Ivo Pisaniello", y:3 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
       ],
     },
     sep26: {
@@ -904,7 +908,7 @@ window.SECTOR_DATA = {
       charts: [
         { type:'line', title:'Altas por mes', sub:'May 2025 – Sep 2026 · total del período', data: [{ x:"May 25", y:285 }, { x:"Jun 25", y:188 }, { x:"Jul 25", y:255 }, { x:"Ago 25", y:220 }, { x:"Sep 25", y:267 }, { x:"Oct 25", y:206 }, { x:"Nov 25", y:142 }, { x:"Dic 25", y:326 }, { x:"Ene 26", y:281 }, { x:"Feb 26", y:234 }, { x:"Mar 26", y:352 }, { x:"Abr 26", y:304 }, { x:"May 26", y:296 }, { x:"Jun 26", y:240 }, { x:"Jul 26", y:182 }, { x:"Ago 26", y:229 }, { x:"Sep 26", y:144 }], wide:true, full:true },
         { type:'bar',  title:'Altas por gerencia — mes activo', sub:'Cantidad de altas · Septiembre 2026', data: [{ x:"Marcelo Biurra", y:22 }, { x:"Gustavo Cabrera", y:27 }, { x:"Agustín Sbampato", y:29 }, { x:"Sebastián Calderón", y:28 }, { x:"Lucía Vélez", y:38 }, { x:"Otros", y:0 }], matchKind:'gerencia-mes' },
-        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Sebastián Calderón", value:307 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
+        { type:'donut', title:'Distribución de altas por gerencia', sub:'Acumulado del período completo · "Otros" = regionales que ya no est\u00e1n activos', center:"4.151", data: [{ label:"Marcelo Biurra", value:955 }, { label:"Gustavo Cabrera", value:819 }, { label:"Agustín Sbampato", value:588 }, { label:"Ivo Pisaniello", value:279 }, { label:"Sebastián Calderón", value:28 }, { label:"Lucía Vélez", value:231 }, { label:"Otros", value:1251 }], matchKind:'gerencia-total' },
         { type:'hbar', title:'Top 5 zonales con más altas', sub:'', data: [], matchKind:'top5-zonales' },
         { type:'bar', title:'No presentes por gerencia — mes activo', sub:'Cantidad de no presentes · Septiembre 2026', data: [{ x:"Marcelo Biurra", y:0 }, { x:"Gustavo Cabrera", y:0 }, { x:"Agustín Sbampato", y:0 }, { x:"Sebastián Calderón", y:2 }, { x:"Lucía Vélez", y:0 }, { x:"Otros", y:0 }], matchKind:'no-presentes-gerencia' },
       ],

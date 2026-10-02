@@ -302,8 +302,39 @@ function rotacionStats(rows, matchLabel) {
 const SERIE_COLORES = ['#3B66A8', '#B97C33', '#00918E', '#7A5BB0', '#6B8E2F'];
 const COLOR_OTROS = '#8B94A3';
 function colorGerencia(sectorId, label) {
-  const idx = (window.GERENCIAS[sectorId] || []).findIndex(g => g.matchLabel === label);
-  return idx >= 0 ? SERIE_COLORES[idx % SERIE_COLORES.length] : COLOR_OTROS;
+  const list = window.GERENCIAS[sectorId] || [];
+  let g = list.find(x => x.matchLabel === label);
+  if (!g) return COLOR_OTROS;
+  // Quien reemplaza a otra persona en la misma regional hereda su color.
+  for (let i = 0; i < list.length && g.reemplaza; i++) g = list.find(x => x.key === g.reemplaza) || g;
+  const idx = list.filter(x => !x.reemplaza).indexOf(g);
+  return SERIE_COLORES[Math.max(idx, 0) % SERIE_COLORES.length];
+}
+
+// Una regional puede cambiar de persona: "desde" / "hasta" (clave de mes) marcan el período.
+function gerenciaActivaEn(g, monthIdx) {
+  const idx = k => window.MONTHS.findIndex(m => m.key === k);
+  return (!g.desde || monthIdx >= idx(g.desde)) && (!g.hasta || monthIdx <= idx(g.hasta));
+}
+// Si la persona elegida no estaba a cargo en ese mes, se pasa a quien tenía la misma
+// regional (sucesor o antecesor vía "reemplaza"); si no hay, vuelve al total.
+function resolverGerencia(list, key, monthIdx) {
+  if (key === 'total') return 'total';
+  const g = list.find(x => x.key === key);
+  if (!g) return 'total';
+  if (gerenciaActivaEn(g, monthIdx)) return key;
+  const vistos = new Set([key]);
+  const cola = [g];
+  while (cola.length) {
+    const cur = cola.shift();
+    const vecinos = list.filter(x => x.reemplaza === cur.key || x.key === cur.reemplaza);
+    for (const v of vecinos) {
+      if (vistos.has(v.key)) continue;
+      if (gerenciaActivaEn(v, monthIdx)) return v.key;
+      vistos.add(v.key); cola.push(v);
+    }
+  }
+  return 'total';
 }
 const nombreCorto = label => (label === 'Otros' ? 'Otros' : label.split(' ')[0]);
 const MES_LARGO = { ENE:'Enero', FEB:'Febrero', MAR:'Marzo', ABR:'Abril', MAY:'Mayo', JUN:'Junio', JUL:'Julio', AGO:'Agosto', SEP:'Septiembre', OCT:'Octubre', NOV:'Noviembre', DIC:'Diciembre' };
@@ -603,16 +634,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const sectorData = window.SECTOR_DATA[sector.id];
   const gerencias = window.GERENCIAS[sector.id] || [];
   const totalEntry = { key: 'total', isTotal: true, name: `Total ${sector.name}`, role: 'Todas las gerencias', photo: sector.logo };
-  const pickerItems = gerencias.length > 0 ? [totalEntry, ...gerencias] : [];
   const [selectedGerenciaKey, setSelectedGerenciaKey] = useState('total');
-  const selectedGerencia = pickerItems.find(g => g.key === selectedGerenciaKey) || totalEntry;
-  // Click en una porción / barra: elige esa gerencia (o vuelve al total si ya estaba elegida).
-  function selectByLabel(label) {
-    const g = gerencias.find(x => x.matchLabel === label);
-    if (g) setSelectedGerenciaKey(k => (k === g.key ? 'total' : g.key));
-  }
-  const isTotalSelected = selectedGerencia.isTotal;
-  const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
 
   // ── Comparación de varios meses (ej. Mayo 2025 vs Mayo 2026) ──
   const [compareMode, setCompareMode] = useState(false);
@@ -639,6 +661,19 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
     ? sortedCompareIdxs[sortedCompareIdxs.length - 1]
     : monthIdx;
   const activeMonth = window.MONTHS[effectiveMonthIdx];
+
+  // Gerencias a cargo en el mes activo (ej. Ivo Pisaniello hasta Ago 2026, Sebastián Calderón desde Sep 2026).
+  const gerenciasMes = gerencias.filter(g => gerenciaActivaEn(g, effectiveMonthIdx));
+  const pickerItems = gerenciasMes.length > 0 ? [totalEntry, ...gerenciasMes] : [];
+  const resolvedKey = resolverGerencia(gerencias, selectedGerenciaKey, effectiveMonthIdx);
+  const selectedGerencia = pickerItems.find(g => g.key === resolvedKey) || totalEntry;
+  // Click en una porción / barra: elige esa gerencia (o vuelve al total si ya estaba elegida).
+  function selectByLabel(label) {
+    const g = gerencias.find(x => x.matchLabel === label);
+    if (g) setSelectedGerenciaKey(g.key === resolvedKey ? 'total' : g.key);
+  }
+  const isTotalSelected = selectedGerencia.isTotal;
+  const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
 
   // Busca datos del mes activo; si no existe, toma el último mes disponible
   const monthKeys = Object.keys(sectorData);
@@ -694,7 +729,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
       {pickerItems.length > 0 && (
         <>
           <div className="section-label">Gerencias — elegí una para ver sus gráficos</div>
-          <GerenciaPicker items={pickerItems} selectedKey={selectedGerenciaKey} onSelect={setSelectedGerenciaKey} />
+          <GerenciaPicker items={pickerItems} selectedKey={resolvedKey} onSelect={setSelectedGerenciaKey} />
         </>
       )}
 
