@@ -50,7 +50,7 @@ function LineChart({ data, activeIndex, activeIndices, wide }) {
   // las etiquetas del eje X no se amontonen.
   const W = wide ? Math.max(900, data.length * 65) : 560;
   const H = wide ? 260 : 220;
-  const padL = 44, padR = 14, padT = 16, padB = 26;
+  const padL = 44, padR = 26, padT = 16, padB = 26; // padR: que la última etiqueta del eje X ("Sep 26") no se corte
   const innerW = W - padL - padR;
   const innerH = H - padT - padB;
 
