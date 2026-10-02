@@ -351,9 +351,12 @@ function altasNetasMes(sectorData, monthKey, matchLabel) {
   if (altas == null) return null;
   return altas - (sumOrPick(chartByKind(md.charts, 'no-presentes-gerencia'), matchLabel, 'y') || 0);
 }
-// Altas acumuladas netas de no presentes, sumando todos los meses cargados.
+// Las "Altas acumuladas" cuentan desde este mes hasta el último cargado.
+const INICIO_ACUMULADO = 'ene26';
+// Altas acumuladas netas de no presentes, desde INICIO_ACUMULADO hasta el último mes cargado.
 function altasAcumuladasNetas(sectorData, matchLabel) {
-  return window.MONTHS.reduce((a, m) => a + (altasNetasMes(sectorData, m.key, matchLabel) || 0), 0);
+  const desde = window.MONTHS.findIndex(m => m.key === INICIO_ACUMULADO);
+  return window.MONTHS.slice(desde).reduce((a, m) => a + (altasNetasMes(sectorData, m.key, matchLabel) || 0), 0);
 }
 
 // Construye el set de estadísticas (para el Total del sector si matchLabel es
@@ -563,10 +566,10 @@ function mesLabelFor(m) {
   return `${m.short.charAt(0)}${m.short.slice(1).toLowerCase()} ${m.year}`;
 }
 // Texto de contexto para "Altas acumuladas": cuántos meses se están sumando y qué rango
-// (desde el primer mes hasta "last", el último mes con datos cargados).
+// (desde INICIO_ACUMULADO hasta "last", el último mes con datos cargados).
 function periodoAcumuladoTexto(last) {
-  const first = window.MONTHS[0];
-  return `${mesLabelFor(first)} – ${mesLabelFor(last)} · ${window.MONTHS.indexOf(last) + 1} meses`;
+  const desde = window.MONTHS.findIndex(m => m.key === INICIO_ACUMULADO);
+  return `${mesLabelFor(window.MONTHS[desde])} – ${mesLabelFor(last)} · ${window.MONTHS.indexOf(last) - desde + 1} meses`;
 }
 
 // Gráficos que ya no se muestran. Sus datos se mantienen porque alimentan las
