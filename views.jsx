@@ -682,7 +682,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           const lineData = isLineFiltering ? monthlySeriesFor(sectorData, selectedGerencia.matchLabel) : c.data;
           const titleSuffix = (filtering || isLineFiltering) ? ` — ${selectedGerencia.name}` : '';
           const lineSub = isLineFiltering
-            ? `May 2025 – Jul 2026 · altas de ${selectedGerencia.name} por mes`
+            ? `${mesLabelFor(window.MONTHS[0])} – ${mesLabelFor(lastAltasMonth)} · altas de ${selectedGerencia.name} por mes`
             : c.sub;
           return (
             <div key={i} className={'chart-card' + (c.full ? ' chart-card--wide' : '')}>
