@@ -304,6 +304,12 @@ window.BAJAS_MENSUAL = {
   sep26: 290,
 };
 
+// ─── INGRESOS POR APERTURAS — por marca y por mes ───
+// Fuente: referencia "EXTREMAS - YTD" (Jul / Ago 2026). Pendiente: Sabores y Sep 2026.
+window.APERTURAS = {
+  extremas: { jul26: 47, ago26: 44 },
+};
+
 // ─── ROTACIÓN POR REGIONAL — por marca y por mes ───
 // Fuente: tablas "ROTACIÓN SABORES" / "ROTACIÓN EXTREMAS" (Jul–Sep 2026).
 // "x" debe coincidir con el matchLabel de window.GERENCIAS. El % de rotación se
