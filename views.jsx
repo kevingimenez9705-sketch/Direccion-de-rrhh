@@ -784,6 +784,9 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const gerencias = window.GERENCIAS[sector.id] || [];
   const totalEntry = { key: 'total', isTotal: true, name: `Total ${sector.name}`, role: 'Todas las gerencias', photo: sector.logo };
   const [selectedGerenciaKey, setSelectedGerenciaKey] = useState('total');
+  // Hacia dónde se movió la selección en el selector (1 = a la derecha): la tarjeta de la
+  // gerencia entra deslizándose desde ese lado.
+  const [selDir, setSelDir] = useState(1);
 
   // ── Comparación de varios meses (ej. Mayo 2025 vs Mayo 2026) ──
   const [compareMode, setCompareMode] = useState(false);
@@ -816,24 +819,26 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const pickerItems = gerenciasMes.length > 0 ? [totalEntry, ...gerenciasMes] : [];
   const resolvedKey = resolverGerencia(gerencias, selectedGerenciaKey, effectiveMonthIdx);
   const selectedGerencia = pickerItems.find(g => g.key === resolvedKey) || totalEntry;
+  function elegirGerencia(key) {
+    const desde = pickerItems.findIndex(g => g.key === resolvedKey);
+    const hacia = pickerItems.findIndex(g => g.key === key);
+    if (desde >= 0 && hacia >= 0 && hacia !== desde) setSelDir(hacia > desde ? 1 : -1);
+    setSelectedGerenciaKey(key);
+  }
   // Click en una porción / barra: elige esa gerencia (o vuelve al total si ya estaba elegida).
   function selectByLabel(label) {
     const g = gerencias.find(x => x.matchLabel === label);
-    if (g) setSelectedGerenciaKey(g.key === resolvedKey ? 'total' : g.key);
+    if (g) elegirGerencia(g.key === resolvedKey ? 'total' : g.key);
   }
   const isTotalSelected = selectedGerencia.isTotal;
   const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
 
-  // Cambios de regional: se muestran en el mes del relevo, en el anterior, o si se eligió
-  // a alguna de las dos personas.
-  const relevos = isComparing ? [] : relevosDe(sector.id).filter(r => {
-    const iDesde = idxMes(r.entrante.desde);
-    return effectiveMonthIdx === iDesde || effectiveMonthIdx === iDesde - 1
-      || resolvedKey === r.saliente.key || resolvedKey === r.entrante.key;
-  });
+  // Cambio de regional: la tarjeta se ve solo con quien asumió la regional elegido
+  // (ej. Sebastián Calderón); al elegirlo, la posta viaja desde quien la tenía.
+  const relevos = isComparing ? [] : relevosDe(sector.id).filter(r => resolvedKey === r.entrante.key);
   function verRelevo(key, idx) {
     if (compareMode) { setCompareMode(false); setCompareMonthIdxs([]); }
-    setSelectedGerenciaKey(key);
+    elegirGerencia(key);
     onMonthChange(idx);
   }
 
@@ -984,7 +989,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
       {pickerItems.length > 0 && (
         <>
           <div className="section-label">Gerencias — elegí una para ver sus gráficos</div>
-          <GerenciaPicker items={pickerItems} gerencias={gerencias} selectedKey={resolvedKey} onSelect={setSelectedGerenciaKey} />
+          <GerenciaPicker items={pickerItems} gerencias={gerencias} selectedKey={resolvedKey} onSelect={elegirGerencia} />
         </>
       )}
 
@@ -994,13 +999,16 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
 
       {pickerItems.length > 0 && (
         <div className={'gerencia-card' + (isTotalSelected ? ' is-total' : '')}>
-          <img className={'gerencia-card-photo' + (isTotalSelected ? ' is-logo' : '')} src={encodeURI(selectedGerencia.photo)} alt={selectedGerencia.name} />
-          <div className="gerencia-card-body">
+          {/* Al cambiar de gerencia: brillo que cruza la tarjeta, la foto aparece con un giro
+              y el nombre entra desde el lado hacia el que se movió la selección. */}
+          <span key={'s' + resolvedKey} className={'gc-shine ' + (selDir > 0 ? 'from-left' : 'from-right')} aria-hidden="true" />
+          <img key={'f' + resolvedKey} className={'gerencia-card-photo gc-photo-in' + (isTotalSelected ? ' is-logo' : '')} src={encodeURI(selectedGerencia.photo)} alt={selectedGerencia.name} />
+          <div key={'b' + resolvedKey} className={'gerencia-card-body gc-body-in ' + (selDir > 0 ? 'from-right' : 'from-left')}>
             <div className="gerencia-card-name">{selectedGerencia.name}</div>
             <div className="gerencia-card-role">{selectedGerencia.role}</div>
           </div>
           {!isTotalSelected && (
-            <button className="gerencia-card-close" onClick={() => setSelectedGerenciaKey('total')} aria-label="Volver al total">×</button>
+            <button className="gerencia-card-close" onClick={() => elegirGerencia('total')} aria-label="Volver al total">×</button>
           )}
         </div>
       )}
@@ -1048,7 +1056,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
             { label: `Altas — ${mesLabel}`, value: hasAltasMes ? (fmtInt(altasNetas) ?? '0') : 'S/D', delta: hasAltasMes ? altasNetasDelta : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
             { label: `Bajas — ${mesLabel}`, value: rotMes ? fmtInt(rotMes.bajas) : 'S/D', delta: !rotMes ? sinRotacion : rotPrevMes ? deltaInfo(rotMes.bajas, rotPrevMes.bajas, true) : { dir: 'neutral', text: 'Sin dato de mes ant.' } },
             { label: `Rotación — ${mesLabel}`, value: rotMes ? fmtPct(rotMes.rot) : 'S/D', delta: !rotMes ? sinRotacion : rotDelta(rotMes.rot, rotPrevMes?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${fmtInt(rotMes.dotIni)} → ${fmtInt(rotMes.dotFin)}` } },
-          ].map((k, i) => <KpiCard key={i} kpi={k} />)}
+          ].map((k, i) => <KpiCard key={i} kpi={k} flashKey={resolvedKey} index={i} />)}
         </div>
       )}
 
@@ -1095,19 +1103,23 @@ function useCountUp(text) {
   return fmtInt(Number(ent)) + (dec ? ',' + dec : '') + text.slice(m[0].length);
 }
 
-function KpiCard({ kpi }) {
+// flashKey: al cambiar (ej. otra gerencia) un brillo cruza la tarjeta y la variación
+// reaparece; index escalona el efecto entre tarjetas.
+function KpiCard({ kpi, flashKey, index = 0 }) {
   const dir = kpi.delta?.dir;
   const trend = kpi.delta?.trend || dir;
   const shown = useCountUp(kpi.value);
   return (
     <div className="kpi">
+      {flashKey != null && <span key={'s' + flashKey} className="kpi-shine" style={{ animationDelay: `${index * 80}ms` }} aria-hidden="true" />}
       <div className="kpi-head">
         <div className="kpi-label">{kpi.label}</div>
         <div className="kpi-ico"><window.Icon name="chart" size={14} /></div>
       </div>
       <div className={'kpi-value ' + (kpi.valueClass || '')} aria-label={kpi.value}>{shown}</div>
       {kpi.delta && (
-        <div className={'kpi-delta ' + (dir === 'up' ? 'up' : dir === 'down' ? 'down' : '')}>
+        <div key={'d' + flashKey} className={'kpi-delta ' + (dir === 'up' ? 'up' : dir === 'down' ? 'down' : '') + (flashKey != null ? ' kpi-delta-in' : '')}
+          style={flashKey != null ? { animationDelay: `${200 + index * 80}ms` } : undefined}>
           {/* El color dice si es buena o mala noticia; la flecha, si el número subió o bajó
               (ej. rotación que baja: verde con ▼). */}
           <span className="kpi-delta-arrow">{trend === 'up' ? '▲' : trend === 'down' ? '▼' : '•'}</span>

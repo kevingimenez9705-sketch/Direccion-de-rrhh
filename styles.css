@@ -961,6 +961,39 @@ button { font-family: inherit; cursor: pointer; }
 }
 .gerencia-card-close:hover { background: var(--border); color: var(--text); }
 
+/* ── Cambio de gerencia: brillo que cruza la tarjeta, foto con giro, nombre desde el costado ── */
+.gerencia-card-photo, .gerencia-card-body { position: relative; z-index: 1; }
+.gerencia-card-close { z-index: 2; }
+.gc-shine {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 25%, var(--accent-soft, var(--blue-50)) 50%, transparent 75%);
+  animation: gc-shine-r 900ms cubic-bezier(.3,.6,.3,1) forwards;
+}
+.gc-shine.from-right { animation-name: gc-shine-l; }
+.gc-photo-in { animation: gc-photo-pop 560ms cubic-bezier(.2,.9,.3,1.25) both; }
+.gc-body-in { animation: gc-body-r 480ms cubic-bezier(.2,.8,.2,1) 80ms both; }
+.gc-body-in.from-left { animation-name: gc-body-l; }
+@keyframes gc-shine-r { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@keyframes gc-shine-l { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+@keyframes gc-photo-pop { from { opacity: 0; transform: scale(0.55) rotate(-14deg); } to { opacity: 1; transform: none; } }
+@keyframes gc-body-r { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes gc-body-l { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+/* la gerencia recién elegida "rebota" en el selector */
+.gerencia-btn.active .gerencia-btn-photo { animation: gb-pop 420ms cubic-bezier(.2,.9,.3,1.3); }
+@keyframes gb-pop { 0% { transform: scale(0.88); } 100% { transform: none; } }
+/* tarjetas de KPI: brillo escalonado y la variación reaparece */
+.kpi-shine {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, var(--accent-soft, var(--blue-50)) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: gc-shine-r 850ms cubic-bezier(.3,.6,.3,1) both;
+}
+.kpi-head, .kpi-value, .kpi-delta { position: relative; }
+.kpi-delta-in { animation: kpi-delta-in 380ms cubic-bezier(.2,.9,.3,1.2) both; }
+@keyframes kpi-delta-in { from { opacity: 0; transform: translateY(6px) scale(0.92); } to { opacity: 1; transform: none; } }
+
 /* ── Cambio de regional en el selector: la foto gira de quien se va a quien asume ── */
 .gerencia-btn-photo { position: relative; perspective: 420px; }
 .gerencia-btn-photo img.relevo-out {
@@ -1648,6 +1681,8 @@ button { font-family: inherit; cursor: pointer; }
   }
   .viz-draw { stroke-dasharray: none; }
   .gerencia-btn.is-relevo, .gerencia-btn-photo img, .relevo-text, .relevo, .relevo-line { animation: none !important; }
+  .gerencia-btn.active .gerencia-btn-photo, .gc-photo-in, .gc-body-in, .kpi-delta-in { animation: none !important; }
+  .gc-shine, .kpi-shine { display: none; }
   .gerencia-btn-photo img.relevo-out { display: none; }
   .relevo-node, .relevo-photo, .relevo-baton { transition: none !important; }
 }
