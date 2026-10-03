@@ -58,6 +58,25 @@
   }
   const intentar = p => p.catch(e => { console.warn(e); return null; });
 
+  // PptxGenJS escribe las categorías de los gráficos como "multinivel" (multiLvlStrRef) y
+  // Google Slides no las lee: muestra 1, 2, 3… en vez de nombres o meses. Se reescriben como
+  // lista simple (strRef), el formato que usa PowerPoint, y que leen ambos.
+  async function categoriasSimples(blob) {
+    const JSZip = window.JSZip; // viene incluido en pptxgen.bundle.js
+    if (!JSZip) return blob;
+    const zip = await JSZip.loadAsync(blob);
+    const charts = Object.keys(zip.files).filter(n => /^ppt\/charts\/chart\d+\.xml$/.test(n));
+    for (const n of charts) {
+      const xml = await zip.file(n).async('string');
+      const simple = xml.replace(
+        /<c:multiLvlStrRef>\s*(<c:f>[^<]*<\/c:f>)\s*<c:multiLvlStrCache>\s*(<c:ptCount val="\d+"\/>)\s*<c:lvl>((?:(?!<c:lvl>)[\s\S])*?)<\/c:lvl>\s*<\/c:multiLvlStrCache>\s*<\/c:multiLvlStrRef>/g,
+        '<c:strRef>$1<c:strCache>$2$3</c:strCache></c:strRef>'
+      );
+      if (simple !== xml) zip.file(n, simple);
+    }
+    return zip.generateAsync({ type: 'blob', compression: 'DEFLATE', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+  }
+
   // ── Tema "Editorial" (mismos colores que el panel) ──
   const C = {
     navy: '2B3A4A', steel: '3F6189', slate: '3D5A62', text: '22303C', text2: '475763', text3: '7A8691',
@@ -409,8 +428,11 @@
               sl.addText('Sin altas registradas para este mes.', { x, y: 2.0, w, h: 0.4, fontFace: F_TXT, fontSize: 12, color: C.text3, margin: 0 });
               return;
             }
-            sl.addChart(pptx.ChartType.bar, [{ name: 'Altas', labels: top.map(d => d.x), values: top.map(d => d.y) }], {
-              x, y: 1.9, w, h: 4.9, ...ejes, barDir: 'bar', catAxisOrientation: 'maxMin', barGapWidthPct: 45,
+            // En barras horizontales la primera categoría va abajo: se invierten los datos para que
+            // el que más altas tiene quede arriba (Google Slides ignora catAxisOrientation).
+            const orden = [...top].reverse();
+            sl.addChart(pptx.ChartType.bar, [{ name: 'Altas', labels: orden.map(d => d.x), values: orden.map(d => d.y) }], {
+              x, y: 1.9, w, h: 4.9, ...ejes, barDir: 'bar', barGapWidthPct: 45,
               chartColors: [acento], showValue: true, dataLabelPosition: 'outEnd', dataLabelFontSize: 11, dataLabelFontBold: true,
               valAxisHidden: true, valGridLine: { style: 'none' }, catAxisLabelFontSize: 11, catAxisLineShow: false,
             });
@@ -541,8 +563,9 @@
                 sl.addText('Sin altas registradas para este mes.', { x, y: 2.0, w, h: 0.4, fontFace: F_TXT, fontSize: 12, color: C.text3, margin: 0 });
                 return;
               }
-              sl.addChart(pptx.ChartType.bar, [{ name: 'Altas', labels: top.map(z => z.x), values: top.map(z => z.y) }], {
-                x, y: 1.9, w, h: 4.9, ...ejes, barDir: 'bar', catAxisOrientation: 'maxMin', barGapWidthPct: 45,
+              const orden = [...top].reverse(); // el de más altas arriba (ver top 5 de la marca)
+              sl.addChart(pptx.ChartType.bar, [{ name: 'Altas', labels: orden.map(z => z.x), values: orden.map(z => z.y) }], {
+                x, y: 1.9, w, h: 4.9, ...ejes, barDir: 'bar', barGapWidthPct: 45,
                 chartColors: [hex(K.colorGerencia(s.id, g.matchLabel))], showValue: true, dataLabelPosition: 'outEnd', dataLabelFontSize: 11, dataLabelFontBold: true,
                 valAxisHidden: true, valGridLine: { style: 'none' }, catAxisLabelFontSize: 11, catAxisLineShow: false,
               });
@@ -555,7 +578,7 @@
       // va sin tildes: con caracteres no ASCII algunos navegadores lo guardan como "download".
       const sinTildes = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const nombre = sinTildes(marca ? `Informe ${marca.name} por regional - ${mesTxt}.pptx` : `Informe Equipo de Seleccion - ${mesTxt}.pptx`);
-      const blob = await pptx.write({ outputType: 'blob' });
+      const blob = await categoriasSimples(await pptx.write({ outputType: 'blob' }));
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
