@@ -143,15 +143,17 @@
       // Tarjeta de KPI: etiqueta, valor grande y variación (verde = buena noticia, rojo = mala;
       // la flecha indica si el número subió o bajó).
       function kpi(slide, x, y, w, h, label, value, delta, acento) {
+        const angosta = w < 2.6; // fila de 5 tarjetas
         slide.addShape(pptx.ShapeType.rect, { x, y, w, h, fill: { color: C.white }, line: { color: C.border, width: 1 } });
         slide.addShape(pptx.ShapeType.rect, { x, y: y + h - 0.06, w, h: 0.06, fill: { color: acento }, line: { color: acento, width: 0 } });
-        slide.addText(label.toUpperCase(), { x: x + 0.1, y: y + 0.14, w: w - 0.2, h: 0.3, align: 'center', fontFace: F_TXT, fontSize: 10, bold: true, color: C.text3, charSpacing: 1, margin: 0 });
-        slide.addText(value ?? 'S/D', { x: x + 0.1, y: y + 0.44, w: w - 0.2, h: 0.62, align: 'center', valign: 'middle', fontFace: F_TXT, fontSize: 30, bold: true, color: C.text, margin: 0 });
+        slide.addText(label.toUpperCase(), { x: x + 0.1, y: y + 0.14, w: w - 0.2, h: 0.3, align: 'center', fontFace: F_TXT, fontSize: angosta ? 9 : 10, bold: true, color: C.text3, charSpacing: 1, margin: 0 });
+        slide.addText(value ?? 'S/D', { x: x + 0.1, y: y + 0.44, w: w - 0.2, h: 0.6, align: 'center', valign: 'middle', fontFace: F_TXT, fontSize: angosta ? 28 : 30, bold: true, color: C.text, margin: 0 });
         if (delta) {
           const tono = delta.dir === 'up' ? [C.good, C.goodBg] : delta.dir === 'down' ? [C.bad, C.badBg] : [C.text2, C.sandSoft];
           const sentido = delta.trend || delta.dir; // la flecha sigue al número, el color a la noticia
           const flecha = sentido === 'up' ? '▲ ' : sentido === 'down' ? '▼ ' : '';
-          slide.addText(flecha + delta.text, { x: x + 0.15, y: y + 1.12, w: w - 0.3, h: 0.28, align: 'center', valign: 'middle', fontFace: F_TXT, fontSize: 9.5, color: tono[0], fill: { color: tono[1] }, rectRadius: 0.14, shape: pptx.ShapeType.roundRect, margin: 0 });
+          // hasta 2 líneas: con tarjetas angostas textos como "vs. Ago (Ivo P.) (11,74%)" no entran en una
+          slide.addText(flecha + delta.text, { x: x + 0.12, y: y + 1.06, w: w - 0.24, h: 0.36, align: 'center', valign: 'middle', fontFace: F_TXT, fontSize: angosta ? 8.5 : 9.5, color: tono[0], fill: { color: tono[1] }, rectRadius: 0.12, shape: pptx.ShapeType.roundRect, margin: 0 });
         }
       }
       function filaKpis(slide, y, items, acento) {
@@ -170,6 +172,22 @@
           ...(sub ? [{ text: sub, options: { fontFace: F_TXT, fontSize: 9.5, color: C.text3 } }] : []),
         ], { x, y, w, h: sub ? 0.5 : 0.3, margin: 0, valign: 'top' });
       }
+      // Altas por aperturas (locales "Aper") de una marca o gerencia en el mes del informe,
+      // con el % sobre las altas brutas del mes (mismo cálculo que la tarjeta del panel).
+      function tarjetaAperturas(sectores, bucket = 'total') {
+        const apers = sectores.map(x => K.aperturasMes(x.id, M.key, bucket)).filter(Boolean);
+        const a = apers.length === 0 ? null : {
+          n: apers.reduce((t, x) => t + x.n, 0),
+          locales: apers.flatMap(x => x.locales),
+          fuente: apers.some(x => x.locales.length > 0) ? 'locales' : apers.some(x => x.fuente === 'informe') ? 'informe' : 'locales',
+        };
+        const brutas = sectores.reduce((t, x) => {
+          const md = window.SECTOR_DATA[x.id]?.[M.key];
+          return t + (md ? K.sumOrPick(K.chartByKind(md.charts, 'gerencia-mes'), bucket === 'total' ? null : bucket, 'y') || 0 : 0);
+        }, 0);
+        return { label: `Aperturas — ${mesTxt}`, value: a ? K.fmtInt(a.n) : null, delta: K.aperturaDelta(a, brutas) };
+      }
+
       // Serie "Altas por mes" de una marca, del primer mes cargado hasta el mes del informe.
       function serieAltas(s) {
         const sd = window.SECTOR_DATA[s.id];
@@ -216,6 +234,7 @@
           { label: 'Altas acumuladas', value: K.fmtInt(acum), delta: { dir: 'neutral', text: rangoAcum } },
           { label: `Altas — ${mesTxt}`, value: K.fmtInt(netas), delta: K.deltaInfo(netas, netasPrev, false) },
           { label: `Bajas — ${mesTxt}`, value: K.fmtInt(bajas), delta: K.deltaInfo(bajas, bajasPrev, true) },
+          tarjetaAperturas(unidades),
           { label: `Rotación — ${mesTxt}`, value: rot ? K.fmtPct(rot.rot) : null, delta: rot ? (K.rotDelta(rot.rot, rotPrev?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${K.fmtInt(rot.dotIni)} → ${K.fmtInt(rot.dotFin)}` }) : { dir: 'neutral', text: 'Sin datos de rotación' } },
         ], C.steel);
         const series = unidades.map(serieAltas);
@@ -248,6 +267,7 @@
             { label: 'Altas acumuladas', value: K.fmtInt(altasAcum(s)), delta: { dir: 'neutral', text: rangoAcum } },
             { label: `Altas — ${mesTxt}`, value: md ? K.fmtInt(netas) : null, delta: md ? K.deltaInfo(netas, netasPrev, false) : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
             { label: `Bajas — ${mesTxt}`, value: rot ? K.fmtInt(rot.bajas) : null, delta: rot ? (rotPrev ? K.deltaInfo(rot.bajas, rotPrev.bajas, true) : { dir: 'neutral', text: 'Sin dato de mes ant.' }) : { dir: 'neutral', text: 'Sin datos de rotación' } },
+            tarjetaAperturas([s]),
             { label: `Rotación — ${mesTxt}`, value: rot ? K.fmtPct(rot.rot) : null, delta: rot ? (K.rotDelta(rot.rot, rotPrev?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${K.fmtInt(rot.dotIni)} → ${K.fmtInt(rot.dotFin)}` }) : { dir: 'neutral', text: 'Sin datos de rotación' } },
           ], acento);
           const serie = serieAltas(s);
@@ -335,7 +355,7 @@
             sl.addText(`Bajas ${K.fmtInt(bajas)}`, { x: tx + wa, y: y + 0.35, w: tw - wa, h: 0.5, fill: { color: 'E6DFD3' }, color: '3D4A52', bold: true, fontFace: F_TXT, fontSize: 13, align: 'center', valign: 'middle', margin: 0 });
             y += 1.0;
           }
-          const aperturas = [M, P].filter(Boolean).map(m => ({ m, n: window.APERTURAS?.[s.id]?.[m.key] })).filter(a => a.n != null);
+          const aperturas = [M, P].filter(Boolean).map(m => ({ m, n: K.aperturasMes(s.id, m.key)?.n })).filter(a => a.n > 0);
           if (aperturas.length > 0) {
             sl.addText(aperturas.map(a => `Ingresos por aperturas ${K.mesLabelFor(a.m)}: ${a.n}`).join('   ·   '), { x: tx, y, w: tw, h: 0.3, fontFace: F_TXT, fontSize: 11, color: C.text2, margin: 0 });
           }
@@ -439,6 +459,38 @@
           });
         }
 
+        // 3e'. Aperturas: altas por mes en locales "Aper" + detalle por local del mes
+        const mesesLoc = window.MONTHS.slice(0, monthIdx + 1).filter(m => window.LOCALES_FULL?.[s.id]?.[m.key]);
+        const serieAp = mesesLoc.map(m => ({ m, a: K.aperturasMes(s.id, m.key) }));
+        if (serieAp.some(p => p.a.n > 0)) {
+          const sl = nueva();
+          const aM = K.aperturasMes(s.id, M.key);
+          const brutasM = md ? K.sumOrPick(K.chartByKind(md.charts, 'gerencia-mes'), null, 'y') : null;
+          encabezado(sl, `Aperturas · ${K.MES_LARGO[M.short]}`, `${s.name} · altas en locales cargados como "Aper"${aM && aM.n > 0 && brutasM ? ` · ${mesTxt}: ${K.fmtInt(aM.n)} altas (${Math.round(aM.n / brutasM * 100)}% del total)` : ''}`, lg);
+          const informe = serieAp.filter(p => p.a.fuente === 'informe' && p.a.n > 0).map(p => K.mesLabelFor(p.m));
+          tituloGrafico(sl, X0, 1.5, 6.6, 'Altas por aperturas por mes', `${K.mesLabelFor(mesesLoc[0])} – ${mesTxt}${informe.length ? ` · ${informe.join(', ')}: total del informe YTD` : ''}`);
+          sl.addChart(pptx.ChartType.bar, [{ name: 'Aperturas', labels: serieAp.map(p => K.mesShortXY(p.m)), values: serieAp.map(p => p.a.n) }], {
+            x: X0, y: 2.05, w: 6.6, h: 4.85, ...ejes, barDir: 'col', barGapWidthPct: 40, chartColors: [acento],
+            showValue: true, dataLabelPosition: 'outEnd', dataLabelFormatCode: '#,##0;-#,##0;', // sin "0" en los meses vacíos
+            valAxisHidden: true, valGridLine: { style: 'none' }, catAxisLabelFontSize: 9, catAxisLabelRotate: -45,
+          });
+          const xr = X0 + 7.0, wr = CW - 7.0;
+          tituloGrafico(sl, xr, 1.5, wr, `Aperturas de ${mesTxt}`);
+          if (aM && aM.locales.length > 0) {
+            const orden = [...aM.locales].reverse(); // el de más altas arriba (ver top 5)
+            sl.addChart(pptx.ChartType.bar, [{ name: 'Altas', labels: orden.map(z => z.x), values: orden.map(z => z.y) }], {
+              x: xr, y: 1.9, w: wr, h: Math.min(4.9, 0.75 + 0.62 * orden.length), ...ejes, barDir: 'bar', barGapWidthPct: 45,
+              chartColors: [acento], showValue: true, dataLabelPosition: 'outEnd', dataLabelFontSize: 11, dataLabelFontBold: true,
+              valAxisHidden: true, valGridLine: { style: 'none' }, catAxisLabelFontSize: 11, catAxisLineShow: false,
+            });
+          } else {
+            const txt = !aM ? 'Sin datos de altas cargados para este mes.'
+              : aM.n > 0 ? `${K.fmtInt(aM.n)} altas por aperturas según el informe YTD (sin detalle por local).`
+              : 'Sin aperturas en el mes.';
+            sl.addText(txt, { x: xr, y: 2.0, w: wr, h: 0.5, fontFace: F_TXT, fontSize: 12, italic: true, color: C.text3, margin: 0 });
+          }
+        }
+
         // 3f. Por regional (solo en el informe de una marca)
         if (marca) await seccionRegionales(s, { sd, acento, lg, md, rows, prevRows, rot, rotPrev });
       }
@@ -482,7 +534,7 @@
             chartColors: [acento, 'C9B79C'], showValue: true, dataLabelPosition: 'outEnd', showLegend: true, legendPos: 't',
             valAxisHidden: true, valGridLine: { style: 'none' },
           });
-          const head = ['Regional', `Altas ${mesTxt}`, `Altas ${M.year}`, `Bajas ${mesTxt}`, `Rotación ${mesTxt}`, P ? `Rotación ${K.mesLabelFor(P)}` : null, P ? 'Var. pp' : null].filter(Boolean);
+          const head = ['Regional', `Altas ${mesTxt}`, `Altas ${M.year}`, `Aperturas ${mesTxt}`, `Bajas ${mesTxt}`, `Rotación ${mesTxt}`, P ? `Rotación ${K.mesLabelFor(P)}` : null, P ? 'Var. pp' : null].filter(Boolean);
           const celda = (t, o = {}) => ({ text: String(t ?? 'S/D'), options: { align: 'right', ...o } });
           const varPp = (a, b) => {
             if (a == null || b == null) return celda('—', { color: C.text3 });
@@ -497,7 +549,7 @@
               if (marcaNota) notas.push(`* ${K.mesLabelFor(P)}: regional a cargo de ${d.pm.name}.`);
               return [
                 { text: d.g.name + marcaNota, options: { align: 'left' } },
-                celda(K.fmtInt(d.netas)), celda(K.fmtInt(d.acum)), celda(d.r ? K.fmtInt(d.r.bajas) : null),
+                celda(K.fmtInt(d.netas)), celda(K.fmtInt(d.acum)), celda(K.fmtInt(K.aperturasMes(s.id, M.key, d.g.matchLabel)?.n)), celda(d.r ? K.fmtInt(d.r.bajas) : null),
                 celda(d.r ? K.fmtPct(d.r.rot) : null, { bold: true }),
                 ...(P ? [celda(d.rp ? K.fmtPct(d.rp.rot) : '—', { color: C.text2 }), varPp(d.r?.rot, d.rp?.rot)] : []),
               ];
@@ -505,6 +557,7 @@
             [
               { text: `Total ${s.name}`, options: { align: 'left', bold: true } },
               celda(K.fmtInt(md ? K.altasNetasMes(sd, M.key, null) : null), { bold: true }), celda(K.fmtInt(altasAcum(s)), { bold: true }),
+              celda(K.fmtInt(K.aperturasMes(s.id, M.key)?.n), { bold: true }),
               celda(rot ? K.fmtInt(rot.bajas) : null, { bold: true }), celda(rot ? K.fmtPct(rot.rot) : null, { bold: true }),
               ...(P ? [celda(rotPrev ? K.fmtPct(rotPrev.rot) : '—', { bold: true, color: C.text2 }), varPp(rot?.rot, rotPrev?.rot)] : []),
             ].map(c => ({ ...c, options: { ...c.options, fill: { color: C.sandSoft } } })),
@@ -530,6 +583,7 @@
               { label: 'Altas acumuladas', value: K.fmtInt(d.acum), delta: { dir: 'neutral', text: rangoAcum } },
               { label: `Altas — ${mesTxt}`, value: md ? K.fmtInt(d.netas ?? 0) : null, delta: md ? K.deltaInfo(d.netas ?? 0, d.netasPrev, false, d.ref) : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
               { label: `Bajas — ${mesTxt}`, value: d.r ? K.fmtInt(d.r.bajas) : null, delta: d.r ? K.deltaInfo(d.r.bajas, d.rp ? d.rp.bajas : null, true, d.ref) : sinRot },
+              tarjetaAperturas([s], g.matchLabel),
               { label: `Rotación — ${mesTxt}`, value: d.r ? K.fmtPct(d.r.rot) : null, delta: d.r ? (K.rotDelta(d.r.rot, d.rp?.rot, d.ref) || { dir: 'neutral', text: `Dotación ${K.fmtInt(d.r.dotIni)} → ${K.fmtInt(d.r.dotFin)}` }) : sinRot },
             ], acento);
             // Serie de la regional: cada mes suma a quien estaba a cargo (ej. Ivo hasta Ago, Sebastián desde Sep).

@@ -157,6 +157,18 @@ function PanelEjecutivo({ onOpen }) {
   });
   const totalNetasDelta = deltaInfo(totalNetas, prevMonth ? totalNetasPrev : null, false);
 
+  // Altas por aperturas (ambas marcas) del mes activo y qué parte de las altas son.
+  const apers = unidades.map(s => aperturasMes(s.id, latestMonth.key)).filter(Boolean);
+  const totalAper = apers.length === 0 ? null : {
+    n: apers.reduce((a, x) => a + x.n, 0),
+    locales: apers.flatMap(x => x.locales),
+    fuente: apers.some(x => x.locales.length > 0) ? 'locales' : apers.some(x => x.fuente === 'informe') ? 'informe' : 'locales',
+  };
+  const totalAltasBrutas = unidades.reduce((a, s) => {
+    const md = window.SECTOR_DATA[s.id]?.[latestMonth.key];
+    return a + (md ? sumOrPick(chartByKind(md.charts, 'gerencia-mes'), null, 'y') || 0 : 0);
+  }, 0);
+
   // Bajas (empresa total, ambas marcas) del mes activo.
   const totalBajasMes = window.BAJAS_MENSUAL[latestMonth.key] ?? null;
   const totalBajasMesPrev = prevMonth ? (window.BAJAS_MENSUAL[prevMonth.key] ?? null) : null;
@@ -190,6 +202,7 @@ function PanelEjecutivo({ onOpen }) {
             <KpiCard kpi={{ label: 'Altas acumuladas', value: fmtInt(totalAcumNetas), delta: { dir: 'neutral', text: periodoAcumuladoTexto(latestMonth) } }} />
             <KpiCard kpi={{ label: `Altas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalNetas), delta: totalNetasDelta }} />
             <KpiCard kpi={{ label: `Bajas — ${mesLabelFor(latestMonth)}`, value: fmtInt(totalBajasMes) ?? 'S/D', delta: bajasDelta }} />
+            <KpiCard kpi={{ label: `Altas por aperturas — ${mesLabelFor(latestMonth)}`, value: totalAper ? fmtInt(totalAper.n) : 'S/D', delta: aperturaDelta(totalAper, totalAltasBrutas) }} />
             {rotTotal && <KpiCard kpi={{ label: `Rotación — ${mesLabelFor(rotMonth)}`, value: fmtPct(rotTotal.rot), delta: rotDelta(rotTotal.rot, rotTotalPrev?.rot, rotPrevMonth && mesLabelFor(rotPrevMonth)) || { dir: 'neutral', text: `Dotación ${fmtInt(rotTotal.dotIni)} → ${fmtInt(rotTotal.dotFin)}` } }} />}
           </div>
         </>
@@ -645,6 +658,45 @@ function computeTop5(source, sectorId, monthKeys, bucketKey) {
     .slice(0, 5);
 }
 
+// ============ Altas por aperturas ============
+// Se cuentan las altas de los locales cargados con el prefijo "Aper" (ej. "Aper Parana").
+// Si un mes no tiene locales "Aper" pero sí el total del informe YTD (window.APERTURAS),
+// se usa ese total — solo para la marca completa, sin detalle por local.
+// bucket: 'total' o el matchLabel de una gerencia. null = mes sin locales cargados.
+const ES_APERTURA = /^aper/i;
+function aperturasMes(sectorId, monthKey, bucket = 'total') {
+  const porLocal = window.LOCALES_FULL?.[sectorId]?.[monthKey];
+  if (!porLocal) return null;
+  const locales = (porLocal[bucket] || []).filter(d => ES_APERTURA.test(d.x)).sort((a, b) => b.y - a.y);
+  if (locales.length > 0) return { n: locales.reduce((a, d) => a + d.y, 0), locales, fuente: 'locales' };
+  const informe = bucket === 'total' ? window.APERTURAS?.[sectorId]?.[monthKey] : null;
+  if (informe != null) return { n: informe, locales: [], fuente: 'informe' };
+  return { n: 0, locales: [], fuente: 'locales' };
+}
+// Suma de varios meses (comparación): total y detalle por local.
+function aperturasSuma(sectorId, monthKeys, bucket = 'total') {
+  const porLocal = {};
+  let n = 0, hay = false, informe = false;
+  monthKeys.forEach(k => {
+    const a = aperturasMes(sectorId, k, bucket);
+    if (!a) return;
+    hay = true; n += a.n;
+    if (a.fuente === 'informe') informe = true;
+    a.locales.forEach(d => { porLocal[d.x] = (porLocal[d.x] || 0) + d.y; });
+  });
+  if (!hay) return null;
+  const locales = Object.entries(porLocal).map(([x, y]) => ({ x, y })).sort((a, b) => b.y - a.y);
+  return { n, locales, fuente: informe && locales.length === 0 ? 'informe' : 'locales' };
+}
+// Texto de la tarjeta: cuántas aperturas y qué parte de las altas (brutas) del mes son.
+function aperturaDelta(a, altasMes) {
+  if (!a) return { dir: 'neutral', text: 'Sin datos de altas cargados' };
+  if (a.n === 0) return { dir: 'neutral', text: 'Sin aperturas en el mes' };
+  const pct = altasMes ? ` · ${Math.round(a.n / altasMes * 100)}% de las altas` : '';
+  if (a.fuente === 'informe') return { dir: 'neutral', text: `Total del informe YTD${pct}` };
+  return { dir: 'neutral', text: `${a.locales.length} ${a.locales.length === 1 ? 'apertura' : 'aperturas'}${pct}` };
+}
+
 const MES_SHORT_CAP = { ENE:'Ene', FEB:'Feb', MAR:'Mar', ABR:'Abr', MAY:'May', JUN:'Jun', JUL:'Jul', AGO:'Ago', SEP:'Sep', OCT:'Oct', NOV:'Nov', DIC:'Dic' };
 function mesShortXY(m) {
   return `${MES_SHORT_CAP[m.short]} ${String(m.year).slice(2)}`;
@@ -696,8 +748,8 @@ function YtdPanel({ sector, sectorData, monthIdx, matchLabel, selectedName, onSe
   const bajas = rot ? rot.bajas : null;
   const hayPill = presentes != null && bajas != null && presentes + bajas > 0;
   const prev = window.MONTHS[monthIdx - 1];
-  const aperturas = matchLabel ? [] : [active, prev].filter(Boolean)
-    .map(m => ({ m, n: window.APERTURAS?.[sector.id]?.[m.key] })).filter(a => a.n != null);
+  const aperturas = [active, prev].filter(Boolean)
+    .map(m => ({ m, n: aperturasMes(sector.id, m.key, matchLabel ?? 'total')?.n })).filter(a => a.n > 0);
 
   return (
     <div className="chart-card viz-panel">
@@ -864,6 +916,13 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const rotPrevMes = prevMonth ? rotacionStats(window.ROTACION?.[sector.id]?.[prevMonth.key], matchLabel) : null;
   const sinRotacion = { dir: 'neutral', text: 'Sin datos de rotación para este mes' };
 
+  // Altas por aperturas (locales "Aper") del mes y su serie mensual, de la marca o de la gerencia elegida.
+  const bucketAper = isTotalSelected ? 'total' : selectedGerencia.matchLabel;
+  const aperMes = aperturasMes(sector.id, activeMonth.key, bucketAper);
+  const mesesLocales = window.MONTHS.filter(m => window.LOCALES_FULL?.[sector.id]?.[m.key]);
+  const serieAper = mesesLocales.map(m => ({ x: mesShortXY(m), y: aperturasMes(sector.id, m.key, bucketAper).n }));
+  const marcaTieneAper = mesesLocales.some(m => aperturasMes(sector.id, m.key).n > 0);
+
   const visibleCharts = data.charts.filter(c => !CHARTS_OCULTOS.includes(c.matchKind));
 
   // Datos por columna cuando se está comparando
@@ -873,7 +932,8 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
     const s = mData ? buildStat(sectorData, m.key, null, matchLabel) : { altasMes: null, noPresentes: null };
     const netas = s.altasMes != null && s.noPresentes != null ? s.altasMes - s.noPresentes : null;
     const rot = rotacionStats(window.ROTACION?.[sector.id]?.[m.key], matchLabel);
-    return { idx, month: m, hasData: !!mData, ...s, netas, rot };
+    const aper = aperturasMes(sector.id, m.key, matchLabel ?? 'total');
+    return { idx, month: m, hasData: !!mData, ...s, netas, rot, aper };
   }) : [];
 
   // ── Tarjetas de gráficos ──
@@ -894,6 +954,52 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           {top.length > 0
             ? <window.HBarChart data={top} />
             : <div className="chart-empty">{!isComparing && !hasAltasMes ? 'Sin datos de altas cargados para' : 'Sin altas registradas para'} {sub.toLowerCase()}{filtering ? ` en ${selectedGerencia.name}` : ''}.</div>}
+        </div>
+      </div>
+    );
+  }
+
+  // Aperturas: altas por mes en locales "Aper" + detalle por local del mes (o de los meses elegidos).
+  function renderAperturas() {
+    const quien = isTotalSelected ? '' : ` — ${selectedGerencia.name}`;
+    const keys = isComparing ? sortedCompareIdxs.map(idx => window.MONTHS[idx].key) : [activeMonth.key];
+    const a = aperturasSuma(sector.id, keys, bucketAper);
+    const cuando = isComparing ? `Acumulado de ${sortedCompareIdxs.length} meses elegidos` : mesLabel;
+    const altasRef = isComparing
+      ? keys.reduce((t, k) => t + (sectorData[k] ? sumOrPick(chartByKind(sectorData[k].charts, 'gerencia-mes'), matchLabel, 'y') || 0 : 0), 0)
+      : stat.altasMes;
+    const hayAlgo = serieAper.some(p => p.y > 0);
+    const mesesInforme = mesesLocales.filter(m => { const x = aperturasMes(sector.id, m.key, bucketAper); return x.fuente === 'informe' && x.n > 0; });
+    return (
+      <div className="chart-grid">
+        <div className="chart-card">
+          <div className="chart-head">
+            <div className="chart-title">Altas por aperturas por mes{quien}</div>
+            <div className="chart-sub">
+              Locales cargados como "Aper" · {mesLabelFor(mesesLocales[0])} – {mesLabelFor(mesesLocales[mesesLocales.length - 1])}
+              {mesesInforme.length > 0 ? ` · ${mesesInforme.map(mesLabelFor).join(', ')}: total del informe YTD` : ''}
+            </div>
+          </div>
+          <div className="chart-body">
+            {hayAlgo
+              ? <window.BarChart data={serieAper} activeLabel={isComparing ? undefined : mesShortXY(activeMonth)} hideZero />
+              : <div className="chart-empty">Sin altas por aperturas{quien ? ` en ${selectedGerencia.name}` : ''} en el período.</div>}
+          </div>
+        </div>
+        <div className="chart-card">
+          <div className="chart-head">
+            <div className="chart-title">Aperturas{quien}</div>
+            <div className="chart-sub">{cuando}{a && a.n > 0 ? ` · ${fmtInt(a.n)} altas${altasRef ? ` (${Math.round(a.n / altasRef * 100)}% del total)` : ''}` : ''}</div>
+          </div>
+          <div className="chart-body">
+            {a && a.locales.length > 0
+              ? <window.HBarChart data={a.locales} />
+              : <div className="chart-empty">
+                  {!a ? `Sin datos de altas cargados para ${cuando.toLowerCase()}.`
+                    : a.n > 0 ? `${fmtInt(a.n)} altas por aperturas según el informe YTD (sin detalle por local).`
+                    : `Sin aperturas en ${cuando.toLowerCase()}${quien ? ` para ${selectedGerencia.name}` : ''}.`}
+                </div>}
+          </div>
         </div>
       </div>
     );
@@ -957,6 +1063,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         {renderTop5(window.LOCALES_FULL, 'Top 5 locales con más altas')}
       </div>
     ) },
+    marcaTieneAper && { key: 'aper', label: 'Aperturas', render: renderAperturas },
     !isComparing && hasRot && { key: 'rot', label: 'Rotación', render: () => (
       <div className="chart-grid one">
         <RotacionPanel sector={sector} monthIdx={effectiveMonthIdx} matchLabel={matchLabel} selectedName={selectedGerencia.name} onSelect={selectByLabel} />
@@ -1038,6 +1145,10 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                   {bDelta && <div className={'compare-col-delta ' + bDelta.dir}>{bDelta.text}</div>}
                 </div>
                 <div className="compare-col-metric">
+                  <div className="compare-col-metric-label">Altas por aperturas</div>
+                  <div className="compare-col-metric-value">{cs.aper ? fmtInt(cs.aper.n) : 'S/D'}</div>
+                </div>
+                <div className="compare-col-metric">
                   <div className="compare-col-metric-label">Rotación</div>
                   <div className="compare-col-metric-value">{cs.rot ? fmtPct(cs.rot.rot) : 'S/D'}</div>
                   {rDelta && <div className={'compare-col-delta ' + rDelta.dir}>{rDelta.text}</div>}
@@ -1055,6 +1166,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
             { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(altasAcumuladasNetas(sectorData, matchLabel)), delta: { dir: 'neutral', text: periodoAcumuladoTexto(lastAltasMonth) } },
             { label: `Altas — ${mesLabel}`, value: hasAltasMes ? (fmtInt(altasNetas) ?? '0') : 'S/D', delta: hasAltasMes ? altasNetasDelta : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
             { label: `Bajas — ${mesLabel}`, value: rotMes ? fmtInt(rotMes.bajas) : 'S/D', delta: !rotMes ? sinRotacion : rotPrevMes ? deltaInfo(rotMes.bajas, rotPrevMes.bajas, true) : { dir: 'neutral', text: 'Sin dato de mes ant.' } },
+            { label: `Altas por aperturas — ${mesLabel}`, value: aperMes ? fmtInt(aperMes.n) : 'S/D', delta: aperturaDelta(aperMes, stat.altasMes) },
             { label: `Rotación — ${mesLabel}`, value: rotMes ? fmtPct(rotMes.rot) : 'S/D', delta: !rotMes ? sinRotacion : rotDelta(rotMes.rot, rotPrevMes?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${fmtInt(rotMes.dotIni)} → ${fmtInt(rotMes.dotFin)}` } },
           ].map((k, i) => <KpiCard key={i} kpi={k} flashKey={resolvedKey} index={i} />)}
         </div>
@@ -1295,7 +1407,7 @@ window.DetailAccordion = DetailAccordion;
 // Cálculos que reusa la exportación a PowerPoint (exportar.jsx): así el archivo muestra
 // exactamente los mismos números que la pantalla.
 window.RRHH_CALC = {
-  rotacionStats, colorGerencia, relevosDe, idxMes, gerenciaActivaEn, nombreCorto, chartByKind, sumOrPick,
+  rotacionStats, colorGerencia, relevosDe, idxMes, gerenciaActivaEn, aperturasMes, aperturaDelta, nombreCorto, chartByKind, sumOrPick,
   altasNetasMes, computeTop5, mesLabelFor, mesShortXY, fmtInt, fmtPct, deltaInfo, rotDelta,
   MES_LARGO, MES_SHORT_CAP,
 };
