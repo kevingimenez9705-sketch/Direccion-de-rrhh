@@ -331,12 +331,13 @@ function fmtPct(n) {
 }
 // Variación de rotación en puntos porcentuales (sobre los valores ya redondeados
 // que se muestran). Subir la rotación es mala noticia → "down"/rojo.
+// dir = color (buena / mala noticia); trend = hacia dónde se movió el número (la flecha).
 function rotDelta(cur, prev, refLabel) {
   if (cur == null || prev == null) return null;
   const r2 = n => Math.round(n * 100) / 100;
   const diff = r2(r2(cur) - r2(prev));
   if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. ${refLabel} (${fmtPct(prev)})` };
-  return { dir: diff > 0 ? 'down' : 'up', text: `${diff > 0 ? '+' : '−'}${Math.abs(diff).toFixed(2).replace('.', ',')} pp vs. ${refLabel} (${fmtPct(prev)})` };
+  return { dir: diff > 0 ? 'down' : 'up', trend: diff > 0 ? 'up' : 'down', text: `${diff > 0 ? '+' : '−'}${Math.abs(diff).toFixed(2).replace('.', ',')} pp vs. ${refLabel} (${fmtPct(prev)})` };
 }
 // Índice del último mes de window.MONTHS que cumple la condición (-1 si ninguno).
 function ultimoIdxCon(pred) {
@@ -399,7 +400,7 @@ function deltaInfo(cur, prev, invert, refLabel) {
   if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. ${ref} (${fmtInt(prev)})` };
   const isMore = diff > 0;
   const dir = invert ? (isMore ? 'down' : 'up') : (isMore ? 'up' : 'down');
-  return { dir, text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. ${ref} (${fmtInt(prev)})` };
+  return { dir, trend: isMore ? 'up' : 'down', text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. ${ref} (${fmtInt(prev)})` };
 }
 
 function GerenciaPicker({ items, gerencias, selectedKey, onSelect }) {
@@ -1096,6 +1097,7 @@ function useCountUp(text) {
 
 function KpiCard({ kpi }) {
   const dir = kpi.delta?.dir;
+  const trend = kpi.delta?.trend || dir;
   const shown = useCountUp(kpi.value);
   return (
     <div className="kpi">
@@ -1106,7 +1108,9 @@ function KpiCard({ kpi }) {
       <div className={'kpi-value ' + (kpi.valueClass || '')} aria-label={kpi.value}>{shown}</div>
       {kpi.delta && (
         <div className={'kpi-delta ' + (dir === 'up' ? 'up' : dir === 'down' ? 'down' : '')}>
-          <span className="kpi-delta-arrow">{dir === 'up' ? '▲' : dir === 'down' ? '▼' : '•'}</span>
+          {/* El color dice si es buena o mala noticia; la flecha, si el número subió o bajó
+              (ej. rotación que baja: verde con ▼). */}
+          <span className="kpi-delta-arrow">{trend === 'up' ? '▲' : trend === 'down' ? '▼' : '•'}</span>
           <span>{kpi.delta.text}</span>
         </div>
       )}

@@ -116,7 +116,8 @@
         slide.addShape(pptx.ShapeType.line, { x: X0, y: 1.25, w: CW, h: 0, line: { color: C.border, width: 1 } });
       }
 
-      // Tarjeta de KPI: etiqueta, valor grande y variación (verde = buena noticia, rojo = mala).
+      // Tarjeta de KPI: etiqueta, valor grande y variación (verde = buena noticia, rojo = mala;
+      // la flecha indica si el número subió o bajó).
       function kpi(slide, x, y, w, h, label, value, delta, acento) {
         slide.addShape(pptx.ShapeType.rect, { x, y, w, h, fill: { color: C.white }, line: { color: C.border, width: 1 } });
         slide.addShape(pptx.ShapeType.rect, { x, y: y + h - 0.06, w, h: 0.06, fill: { color: acento }, line: { color: acento, width: 0 } });
@@ -124,7 +125,8 @@
         slide.addText(value ?? 'S/D', { x: x + 0.1, y: y + 0.44, w: w - 0.2, h: 0.62, align: 'center', valign: 'middle', fontFace: F_TXT, fontSize: 30, bold: true, color: C.text, margin: 0 });
         if (delta) {
           const tono = delta.dir === 'up' ? [C.good, C.goodBg] : delta.dir === 'down' ? [C.bad, C.badBg] : [C.text2, C.sandSoft];
-          const flecha = delta.dir === 'up' ? '▲ ' : delta.dir === 'down' ? '▼ ' : '';
+          const sentido = delta.trend || delta.dir; // la flecha sigue al número, el color a la noticia
+          const flecha = sentido === 'up' ? '▲ ' : sentido === 'down' ? '▼ ' : '';
           slide.addText(flecha + delta.text, { x: x + 0.15, y: y + 1.12, w: w - 0.3, h: 0.28, align: 'center', valign: 'middle', fontFace: F_TXT, fontSize: 9.5, color: tono[0], fill: { color: tono[1] }, rectRadius: 0.14, shape: pptx.ShapeType.roundRect, margin: 0 });
         }
       }
