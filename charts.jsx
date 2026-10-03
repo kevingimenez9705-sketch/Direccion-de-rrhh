@@ -215,7 +215,8 @@ function LineChart({ data, activeIndex, activeIndices, wide, seriesLabel = '' })
 }
 
 // ============ Vertical bar chart ============
-function BarChart({ data, activeLabel, dimOthers, valueFormat }) {
+// hideZero: no escribe el valor sobre las barras en 0 (series con muchos meses vacíos).
+function BarChart({ data, activeLabel, dimOthers, valueFormat, hideZero }) {
   const t = chartTheme();
   // Rota etiquetas 45° cuando hay muchas barras, o cuando los nombres son largos
   // (ej. "Agustín Sbampato") y se pisan aunque haya pocas barras.
@@ -275,7 +276,7 @@ function BarChart({ data, activeLabel, dimOthers, valueFormat }) {
               fill={isActive ? 'url(#barFillActive)' : 'url(#barFill)'}
               className="viz-grow-y" style={{ animationDelay: `${i * 60}ms` }}
             />
-            {Number.isFinite(d.y) && (
+            {Number.isFinite(d.y) && !(hideZero && d.y === 0) && (
               <text
                 x={x + barW / 2} y={y - 5}
                 fontSize={rotate ? 9 : 10.5}
