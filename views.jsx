@@ -275,11 +275,10 @@ const SERIE_COLORES = ['#3B66A8', '#B97C33', '#00918E', '#7A5BB0', '#6B8E2F'];
 const COLOR_OTROS = '#8B94A3';
 function colorGerencia(sectorId, label) {
   const list = window.GERENCIAS[sectorId] || [];
-  let g = list.find(x => x.matchLabel === label);
+  const g = list.find(x => x.matchLabel === label);
   if (!g) return COLOR_OTROS;
   // Quien reemplaza a otra persona en la misma regional hereda su color.
-  for (let i = 0; i < list.length && g.reemplaza; i++) g = list.find(x => x.key === g.reemplaza) || g;
-  const idx = list.filter(x => !x.reemplaza).indexOf(g);
+  const idx = list.filter(x => !x.reemplaza).indexOf(raizRegional(list, g));
   return SERIE_COLORES[Math.max(idx, 0) % SERIE_COLORES.length];
 }
 
@@ -308,6 +307,22 @@ function resolverGerencia(list, key, monthIdx) {
   }
   return 'total';
 }
+// Primera persona de una regional (siguiendo "reemplaza" hacia atrás). Identifica a la
+// regional en sí, más allá de quién esté a cargo: color, lugar en el selector, etc.
+function raizRegional(list, g) {
+  let cur = g;
+  for (let i = 0; i < list.length && cur.reemplaza; i++) cur = list.find(x => x.key === cur.reemplaza) || cur;
+  return cur;
+}
+// Regionales que cambiaron de persona: [{ saliente, entrante }] (entrante = quien tiene "reemplaza").
+function relevosDe(sectorId) {
+  const list = window.GERENCIAS[sectorId] || [];
+  return list
+    .filter(g => g.reemplaza && g.desde)
+    .map(g => ({ saliente: list.find(x => x.key === g.reemplaza), entrante: g }))
+    .filter(r => r.saliente);
+}
+const idxMes = key => window.MONTHS.findIndex(m => m.key === key);
 const nombreCorto = label => (label === 'Otros' ? 'Otros' : label.split(' ')[0]);
 const MES_LARGO = { ENE:'Enero', FEB:'Febrero', MAR:'Marzo', ABR:'Abril', MAY:'Mayo', JUN:'Junio', JUL:'Julio', AGO:'Agosto', SEP:'Septiembre', OCT:'Octubre', NOV:'Noviembre', DIC:'Diciembre' };
 
@@ -316,12 +331,13 @@ function fmtPct(n) {
 }
 // Variación de rotación en puntos porcentuales (sobre los valores ya redondeados
 // que se muestran). Subir la rotación es mala noticia → "down"/rojo.
+// dir = color (buena / mala noticia); trend = hacia dónde se movió el número (la flecha).
 function rotDelta(cur, prev, refLabel) {
   if (cur == null || prev == null) return null;
   const r2 = n => Math.round(n * 100) / 100;
   const diff = r2(r2(cur) - r2(prev));
   if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. ${refLabel} (${fmtPct(prev)})` };
-  return { dir: diff > 0 ? 'down' : 'up', text: `${diff > 0 ? '+' : '−'}${Math.abs(diff).toFixed(2).replace('.', ',')} pp vs. ${refLabel} (${fmtPct(prev)})` };
+  return { dir: diff > 0 ? 'down' : 'up', trend: diff > 0 ? 'up' : 'down', text: `${diff > 0 ? '+' : '−'}${Math.abs(diff).toFixed(2).replace('.', ',')} pp vs. ${refLabel} (${fmtPct(prev)})` };
 }
 // Índice del último mes de window.MONTHS que cumple la condición (-1 si ninguno).
 function ultimoIdxCon(pred) {
@@ -384,24 +400,105 @@ function deltaInfo(cur, prev, invert, refLabel) {
   if (diff === 0) return { dir: 'neutral', text: `Sin cambios vs. ${ref} (${fmtInt(prev)})` };
   const isMore = diff > 0;
   const dir = invert ? (isMore ? 'down' : 'up') : (isMore ? 'up' : 'down');
-  return { dir, text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. ${ref} (${fmtInt(prev)})` };
+  return { dir, trend: isMore ? 'up' : 'down', text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. ${ref} (${fmtInt(prev)})` };
 }
 
-function GerenciaPicker({ items, selectedKey, onSelect }) {
+function GerenciaPicker({ items, gerencias, selectedKey, onSelect }) {
   return (
     <div className="gerencia-picker">
       {items.map(g => (
-        <button
-          key={g.key}
-          className={'gerencia-btn' + (selectedKey === g.key ? ' active' : '') + (g.isTotal ? ' is-total' : '')}
-          onClick={() => onSelect(g.key)}
-        >
-          <span className={'gerencia-btn-photo' + (g.isTotal ? ' is-logo' : '')}>
-            <img src={encodeURI(g.photo)} alt={g.name} />
-          </span>
-          <span className="gerencia-btn-name">{g.name}</span>
-        </button>
+        <GerenciaPickerBtn
+          key={g.isTotal ? g.key : raizRegional(gerencias, g).key}
+          g={g}
+          active={selectedKey === g.key}
+          onSelect={onSelect}
+        />
       ))}
+    </div>
+  );
+}
+
+// La key del botón es la regional, no la persona: al pasar a un mes en que la regional
+// cambió de manos, el mismo botón gira la foto de quien se va a quien asume.
+function GerenciaPickerBtn({ g, active, onSelect }) {
+  const prevRef = useRef(g);
+  const [saliente, setSaliente] = useState(null);
+  // useLayoutEffect: la foto vieja tiene que estar antes del primer pintado, si no parpadea.
+  React.useLayoutEffect(() => {
+    const prev = prevRef.current;
+    prevRef.current = g;
+    if (prev.key === g.key) return;
+    setSaliente(prev);
+    const t = setTimeout(() => setSaliente(null), 1200);
+    return () => clearTimeout(t);
+  }, [g.key]);
+  const periodo = g.desde ? `Desde ${mesLabelFor(window.MONTHS[idxMes(g.desde)])}`
+    : g.hasta ? `Hasta ${mesLabelFor(window.MONTHS[idxMes(g.hasta)])}` : null;
+  return (
+    <button
+      className={'gerencia-btn' + (active ? ' active' : '') + (g.isTotal ? ' is-total' : '') + (saliente ? ' is-relevo' : '')}
+      onClick={() => onSelect(g.key)}
+    >
+      <span className={'gerencia-btn-photo' + (g.isTotal ? ' is-logo' : '')}>
+        {saliente && <img key={saliente.key} className="relevo-out" src={encodeURI(saliente.photo)} alt="" />}
+        <img key={g.key} className={saliente ? 'relevo-in' : ''} src={encodeURI(g.photo)} alt={g.name} />
+      </span>
+      <span key={g.key} className={'gerencia-btn-name' + (saliente ? ' relevo-text' : '')}>{g.name}</span>
+      {periodo && <span key={'p' + g.key} className={'gerencia-btn-chip' + (g.desde ? ' is-desde' : '') + (saliente ? ' relevo-text' : '')}>{periodo}</span>}
+    </button>
+  );
+}
+
+// ============ Relevo de regional ============
+// Cuando una regional cambia de persona (ej. Ivo Pisaniello → Sebastián Calderón desde
+// Sep 2026) muestra el pase: quién la tenía, quién asume, desde cuándo y con qué números.
+// La "posta" viaja hacia quien está a cargo en el mes elegido; tocar a cada uno lleva a
+// su mes (el último de quien se va, el primero de quien asume).
+function RelevoBanner({ sector, sectorData, relevo, monthIdx, onVer }) {
+  const { saliente: a, entrante: b } = relevo;
+  const iDesde = idxMes(b.desde);
+  const iHasta = a.hasta ? idxMes(a.hasta) : iDesde - 1;
+  const mHasta = window.MONTHS[iHasta], mDesde = window.MONTHS[iDesde];
+  const destino = monthIdx >= iDesde ? 1 : 0;
+  // Arranca en quien se va y se desliza después de montarse, así se ve el pase.
+  const [pos, setPos] = useState(0);
+  useEffect(() => {
+    const t = setTimeout(() => setPos(destino), 180);
+    return () => clearTimeout(t);
+  }, [destino]);
+
+  const rot = (m, g) => rotacionStats(window.ROTACION?.[sector.id]?.[m.key], g.matchLabel);
+  const rotA = rot(mHasta, a), rotB = rot(mDesde, b);
+  const nodo = (g, m, r, lado, on) => (
+    <button className={'relevo-node relevo-node--' + lado + (on ? ' is-on' : '')}
+      onClick={() => onVer(g.key, lado === 'a' ? iHasta : iDesde)}
+      title={`Ver ${g.name} en ${mesLabelFor(m)}`}>
+      <img className="relevo-photo" src={encodeURI(g.photo)} alt="" />
+      <span className="relevo-info">
+        <span className="relevo-tag">{lado === 'a' ? 'Hasta' : 'Desde'} {mesLabelFor(m)}</span>
+        <span className="relevo-name">{g.name}</span>
+        <span className="relevo-stats">
+          Altas acum. <strong>{fmtInt(altasAcumuladasNetas(sectorData, g.matchLabel))}</strong>
+          {r && <> · Rot. {MES_SHORT_CAP[m.short]} <strong>{fmtPct(r.rot)}</strong></>}
+        </span>
+      </span>
+    </button>
+  );
+
+  return (
+    <div className="relevo" role="group" aria-label={`Cambio de regional: ${b.name} reemplaza a ${a.name} desde ${mesLabelFor(mDesde)}`}>
+      {nodo(a, mHasta, rotA, 'a', pos === 0)}
+      <div className="relevo-mid">
+        <div className="relevo-title">Cambio de regional</div>
+        <div className="relevo-track" aria-hidden="true">
+          <span className="relevo-line" />
+          <span className="relevo-baton" style={{ left: `${pos * 100}%` }} />
+        </div>
+        <div className="relevo-when">
+          {mesLabelFor(mDesde)}{rotB ? <> · recibe <strong>{fmtInt(rotB.dotIni)}</strong> personas</> : null}
+        </div>
+      </div>
+      {nodo(b, mDesde, rotB, 'b', pos === 1)}
     </div>
   );
 }
@@ -727,6 +824,19 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const isTotalSelected = selectedGerencia.isTotal;
   const matchLabel = isTotalSelected ? null : selectedGerencia.matchLabel;
 
+  // Cambios de regional: se muestran en el mes del relevo, en el anterior, o si se eligió
+  // a alguna de las dos personas.
+  const relevos = isComparing ? [] : relevosDe(sector.id).filter(r => {
+    const iDesde = idxMes(r.entrante.desde);
+    return effectiveMonthIdx === iDesde || effectiveMonthIdx === iDesde - 1
+      || resolvedKey === r.saliente.key || resolvedKey === r.entrante.key;
+  });
+  function verRelevo(key, idx) {
+    if (compareMode) { setCompareMode(false); setCompareMonthIdxs([]); }
+    setSelectedGerenciaKey(key);
+    onMonthChange(idx);
+  }
+
   // Busca datos del mes activo; si no existe, toma el último mes disponible
   const monthKeys = Object.keys(sectorData);
   const data = sectorData[activeMonth.key] || sectorData[monthKeys[monthKeys.length - 1]];
@@ -874,9 +984,13 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
       {pickerItems.length > 0 && (
         <>
           <div className="section-label">Gerencias — elegí una para ver sus gráficos</div>
-          <GerenciaPicker items={pickerItems} selectedKey={resolvedKey} onSelect={setSelectedGerenciaKey} />
+          <GerenciaPicker items={pickerItems} gerencias={gerencias} selectedKey={resolvedKey} onSelect={setSelectedGerenciaKey} />
         </>
       )}
+
+      {relevos.map(r => (
+        <RelevoBanner key={r.entrante.key} sector={sector} sectorData={sectorData} relevo={r} monthIdx={effectiveMonthIdx} onVer={verRelevo} />
+      ))}
 
       {pickerItems.length > 0 && (
         <div className={'gerencia-card' + (isTotalSelected ? ' is-total' : '')}>
@@ -983,6 +1097,7 @@ function useCountUp(text) {
 
 function KpiCard({ kpi }) {
   const dir = kpi.delta?.dir;
+  const trend = kpi.delta?.trend || dir;
   const shown = useCountUp(kpi.value);
   return (
     <div className="kpi">
@@ -993,7 +1108,9 @@ function KpiCard({ kpi }) {
       <div className={'kpi-value ' + (kpi.valueClass || '')} aria-label={kpi.value}>{shown}</div>
       {kpi.delta && (
         <div className={'kpi-delta ' + (dir === 'up' ? 'up' : dir === 'down' ? 'down' : '')}>
-          <span className="kpi-delta-arrow">{dir === 'up' ? '▲' : dir === 'down' ? '▼' : '•'}</span>
+          {/* El color dice si es buena o mala noticia; la flecha, si el número subió o bajó
+              (ej. rotación que baja: verde con ▼). */}
+          <span className="kpi-delta-arrow">{trend === 'up' ? '▲' : trend === 'down' ? '▼' : '•'}</span>
           <span>{kpi.delta.text}</span>
         </div>
       )}
@@ -1162,3 +1279,11 @@ function DetailComparativo({ detail, activeMonth }) {
 }
 
 window.DetailAccordion = DetailAccordion;
+
+// Cálculos que reusa la exportación a PowerPoint (exportar.jsx): así el archivo muestra
+// exactamente los mismos números que la pantalla.
+window.RRHH_CALC = {
+  rotacionStats, colorGerencia, relevosDe, idxMes, nombreCorto, chartByKind, sumOrPick,
+  altasNetasMes, computeTop5, mesLabelFor, mesShortXY, fmtInt, fmtPct, deltaInfo, rotDelta,
+  MES_LARGO, MES_SHORT_CAP,
+};
