@@ -25,6 +25,7 @@ const Icon = ({ name, size = 18, stroke = 1.7 }) => {
     case 'arrow-left': return <svg {...common}><path d="M19 12H5M11 5l-7 7 7 7"/></svg>;
     case 'arrow-up':   return <svg {...common}><path d="M12 19V5M5 12l7-7 7 7"/></svg>;
     case 'download':   return <svg {...common}><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>;
+    case 'chevron-d':  return <svg {...common}><path d="M6 9l6 6 6-6"/></svg>;
     case 'chevron-r':  return <svg {...common}><path d="M9 6l6 6-6 6"/></svg>;
     case 'sidebar-collapse': return <svg {...common}><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M16 9l-2.5 3 2.5 3"/></svg>;
     case 'sidebar-expand':   return <svg {...common}><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="M13.5 9l2.5 3-2.5 3"/></svg>;

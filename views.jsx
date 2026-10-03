@@ -1295,7 +1295,7 @@ window.DetailAccordion = DetailAccordion;
 // Cálculos que reusa la exportación a PowerPoint (exportar.jsx): así el archivo muestra
 // exactamente los mismos números que la pantalla.
 window.RRHH_CALC = {
-  rotacionStats, colorGerencia, relevosDe, idxMes, nombreCorto, chartByKind, sumOrPick,
+  rotacionStats, colorGerencia, relevosDe, idxMes, gerenciaActivaEn, nombreCorto, chartByKind, sumOrPick,
   altasNetasMes, computeTop5, mesLabelFor, mesShortXY, fmtInt, fmtPct, deltaInfo, rotDelta,
   MES_LARGO, MES_SHORT_CAP,
 };

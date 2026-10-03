@@ -287,6 +287,39 @@ button { font-family: inherit; cursor: pointer; }
 .btn-export.is-busy svg { animation: btn-spin 0.9s linear infinite; }
 .btn-export.is-error { background: var(--red); border-color: var(--red); }
 @keyframes btn-spin { to { transform: rotate(360deg); } }
+.export-menu { position: relative; }
+.export-pop {
+  position: absolute; right: 0; top: calc(100% + 6px);
+  z-index: 60;
+  width: min(290px, calc(100vw - 32px));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 6px;
+  animation: viz-rise 180ms ease-out both;
+}
+.export-pop-head {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-3);
+  padding: 6px 10px 4px;
+}
+.export-opt {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  border: none; background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  text-align: left; color: var(--text);
+}
+.export-opt:hover, .export-opt:focus-visible { background: var(--muted); outline: none; }
+.export-opt img {
+  width: 34px; height: 34px; object-fit: contain; flex-shrink: 0;
+  background: #FFFFFF; border: 1px solid var(--border); border-radius: 8px; padding: 3px;
+}
+.export-opt-text { display: flex; flex-direction: column; min-width: 0; }
+.export-opt-text strong { font-size: 13px; font-weight: 600; }
+.export-opt-text small { font-size: 11.5px; color: var(--text-3); }
 
 /* ============ Panel Ejecutivo (landing) ============ */
 .panel-hero {
