@@ -152,7 +152,7 @@
           const tono = delta.dir === 'up' ? [C.good, C.goodBg] : delta.dir === 'down' ? [C.bad, C.badBg] : [C.text2, C.sandSoft];
           const sentido = delta.trend || delta.dir; // la flecha sigue al número, el color a la noticia
           const flecha = sentido === 'up' ? '▲ ' : sentido === 'down' ? '▼ ' : '';
-          // hasta 2 líneas: con tarjetas angostas textos como "vs. Ago (Ivo P.) (11,74%)" no entran en una
+          // hasta 2 líneas: con tarjetas angostas textos como "vs. Jul (Ivo P.) (11,74%)" no entran en una
           slide.addText(flecha + delta.text, { x: x + 0.12, y: y + 1.06, w: w - 0.24, h: 0.36, align: 'center', valign: 'middle', fontFace: F_TXT, fontSize: angosta ? 8.5 : 9.5, color: tono[0], fill: { color: tono[1] }, rectRadius: 0.12, shape: pptx.ShapeType.roundRect, margin: 0 });
         }
       }
@@ -232,7 +232,7 @@
         const rotPrev = K.rotacionStats(unidades.flatMap(s => rotRows(s, P) || []), null);
         filaKpis(sl, 1.5, [
           { label: 'Altas acumuladas', value: K.fmtInt(acum), delta: { dir: 'neutral', text: rangoAcum } },
-          { label: `Altas — ${mesTxt}`, value: K.fmtInt(netas), delta: K.deltaInfo(netas, netasPrev, false) },
+          { label: `Altas — ${mesTxt}`, value: K.fmtInt(netas), delta: K.deltaInfo(netas, netasPrev, true) },
           { label: `Bajas — ${mesTxt}`, value: K.fmtInt(bajas), delta: K.deltaInfo(bajas, bajasPrev, true) },
           tarjetaAperturas(unidades),
           { label: `Rotación — ${mesTxt}`, value: rot ? K.fmtPct(rot.rot) : null, delta: rot ? (K.rotDelta(rot.rot, rotPrev?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${K.fmtInt(rot.dotIni)} → ${K.fmtInt(rot.dotFin)}` }) : { dir: 'neutral', text: 'Sin datos de rotación' } },
@@ -265,7 +265,7 @@
           const netasPrev = P ? K.altasNetasMes(sd, P.key, null) : null;
           filaKpis(sl, 1.5, [
             { label: 'Altas acumuladas', value: K.fmtInt(altasAcum(s)), delta: { dir: 'neutral', text: rangoAcum } },
-            { label: `Altas — ${mesTxt}`, value: md ? K.fmtInt(netas) : null, delta: md ? K.deltaInfo(netas, netasPrev, false) : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
+            { label: `Altas — ${mesTxt}`, value: md ? K.fmtInt(netas) : null, delta: md ? K.deltaInfo(netas, netasPrev, true) : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
             { label: `Bajas — ${mesTxt}`, value: rot ? K.fmtInt(rot.bajas) : null, delta: rot ? (rotPrev ? K.deltaInfo(rot.bajas, rotPrev.bajas, true) : { dir: 'neutral', text: 'Sin dato de mes ant.' }) : { dir: 'neutral', text: 'Sin datos de rotación' } },
             tarjetaAperturas([s]),
             { label: `Rotación — ${mesTxt}`, value: rot ? K.fmtPct(rot.rot) : null, delta: rot ? (K.rotDelta(rot.rot, rotPrev?.rot, 'mes ant.') || { dir: 'neutral', text: `Dotación ${K.fmtInt(rot.dotIni)} → ${K.fmtInt(rot.dotFin)}` }) : { dir: 'neutral', text: 'Sin datos de rotación' } },
@@ -510,7 +510,7 @@
         const corto = g => { const w = g.name.split(' '); return `${w[0]} ${w[w.length - 1][0]}.`; };
         const fotos = await Promise.all(activas.map(g => intentar(fotoCuadrada(g.photo))));
         const datos = activas.map((g, i) => {
-          // El mes anterior se compara contra quien tenía la regional (ej. Sebastián vs. Ivo en Ago).
+          // El mes anterior se compara contra quien tenía la regional (ej. Sebastián vs. Ivo en Jul).
           const pm = P ? aCargo(g, monthIdx - 1) : null;
           const ref = pm && pm !== g ? `${K.MES_SHORT_CAP[P.short]} (${corto(pm)})` : 'mes ant.';
           const netas = md ? K.altasNetasMes(sd, M.key, g.matchLabel) : null;
@@ -581,12 +581,12 @@
             const sinRot = { dir: 'neutral', text: 'Sin datos de rotación' };
             filaKpis(sl, 1.5, [
               { label: 'Altas acumuladas', value: K.fmtInt(d.acum), delta: { dir: 'neutral', text: rangoAcum } },
-              { label: `Altas — ${mesTxt}`, value: md ? K.fmtInt(d.netas ?? 0) : null, delta: md ? K.deltaInfo(d.netas ?? 0, d.netasPrev, false, d.ref) : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
+              { label: `Altas — ${mesTxt}`, value: md ? K.fmtInt(d.netas ?? 0) : null, delta: md ? K.deltaInfo(d.netas ?? 0, d.netasPrev, true, d.ref) : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
               { label: `Bajas — ${mesTxt}`, value: d.r ? K.fmtInt(d.r.bajas) : null, delta: d.r ? K.deltaInfo(d.r.bajas, d.rp ? d.rp.bajas : null, true, d.ref) : sinRot },
               tarjetaAperturas([s], g.matchLabel),
               { label: `Rotación — ${mesTxt}`, value: d.r ? K.fmtPct(d.r.rot) : null, delta: d.r ? (K.rotDelta(d.r.rot, d.rp?.rot, d.ref) || { dir: 'neutral', text: `Dotación ${K.fmtInt(d.r.dotIni)} → ${K.fmtInt(d.r.dotFin)}` }) : sinRot },
             ], acento);
-            // Serie de la regional: cada mes suma a quien estaba a cargo (ej. Ivo hasta Ago, Sebastián desde Sep).
+            // Serie de la regional: cada mes suma a quien estaba a cargo (ej. Ivo hasta Jul, Sebastián desde Ago).
             const todos = window.MONTHS.slice(0, monthIdx + 1).map((m, i) => ({ m, i })).filter(({ m }) => sd[m.key])
               .map(({ m, i }) => ({ m, v: K.sumOrPick(K.chartByKind(sd[m.key].charts, 'gerencia-mes'), aCargo(g, i).matchLabel, 'y') || 0 }));
             // Arranca en el primer mes con altas (antes la regional figuraba en "Otros").

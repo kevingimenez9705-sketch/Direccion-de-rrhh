@@ -155,7 +155,7 @@ function PanelEjecutivo({ onOpen }) {
     totalNetas += altasNetasMes(sectorData, latestMonth.key, null) || 0;
     if (prevMonth) totalNetasPrev += altasNetasMes(sectorData, prevMonth.key, null) || 0;
   });
-  const totalNetasDelta = deltaInfo(totalNetas, prevMonth ? totalNetasPrev : null, false);
+  const totalNetasDelta = deltaInfo(totalNetas, prevMonth ? totalNetasPrev : null, true);
 
   // Altas por aperturas (ambas marcas) del mes activo y qué parte de las altas son.
   const apers = unidades.map(s => aperturasMes(s.id, latestMonth.key)).filter(Boolean);
@@ -464,7 +464,7 @@ function GerenciaPickerBtn({ g, active, onSelect }) {
 
 // ============ Relevo de regional ============
 // Cuando una regional cambia de persona (ej. Ivo Pisaniello → Sebastián Calderón desde
-// Sep 2026) muestra el pase: quién la tenía, quién asume, desde cuándo y con qué números.
+// Ago 2026) muestra el pase: quién la tenía, quién asume, desde cuándo y con qué números.
 // La "posta" viaja hacia quien está a cargo en el mes elegido; tocar a cada uno lleva a
 // su mes (el último de quien se va, el primero de quien asume).
 function RelevoBanner({ sector, sectorData, relevo, monthIdx, onVer }) {
@@ -866,7 +866,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
     : monthIdx;
   const activeMonth = window.MONTHS[effectiveMonthIdx];
 
-  // Gerencias a cargo en el mes activo (ej. Ivo Pisaniello hasta Ago 2026, Sebastián Calderón desde Sep 2026).
+  // Gerencias a cargo en el mes activo (ej. Ivo Pisaniello hasta Jul 2026, Sebastián Calderón desde Ago 2026).
   const gerenciasMes = gerencias.filter(g => gerenciaActivaEn(g, effectiveMonthIdx));
   const pickerItems = gerenciasMes.length > 0 ? [totalEntry, ...gerenciasMes] : [];
   const resolvedKey = resolverGerencia(gerencias, selectedGerenciaKey, effectiveMonthIdx);
@@ -909,7 +909,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   // "Altas" = ingresos del mes netos de los no presentes (la gente que efectivamente entró).
   const altasNetas = (stat.altasMes != null && stat.noPresentes != null) ? stat.altasMes - stat.noPresentes : null;
   const altasNetasPrev = (stat.altasMesPrev != null && stat.noPresentesPrev != null) ? stat.altasMesPrev - stat.noPresentesPrev : null;
-  const altasNetasDelta = deltaInfo(altasNetas, altasNetasPrev, false);
+  const altasNetasDelta = deltaInfo(altasNetas, altasNetasPrev, true);
 
   // Bajas y rotación del mes (tablas de rotación; solo meses cargados en window.ROTACION).
   const rotMes = rotacionStats(window.ROTACION?.[sector.id]?.[activeMonth.key], matchLabel);
@@ -1125,7 +1125,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
           {compareStats.map((cs, i) => {
             const prev = i > 0 ? compareStats[i - 1] : null;
             const prevLabel = prev ? mesLabelFor(prev.month) : null;
-            const aDelta = prev ? deltaInfo(cs.netas, prev.netas, false, prevLabel) : null;
+            const aDelta = prev ? deltaInfo(cs.netas, prev.netas, true, prevLabel) : null;
             const bDelta = prev && cs.rot && prev.rot ? deltaInfo(cs.rot.bajas, prev.rot.bajas, true, prevLabel) : null;
             const rDelta = prev && cs.rot && prev.rot ? rotDelta(cs.rot.rot, prev.rot.rot, prevLabel) : null;
             return (
