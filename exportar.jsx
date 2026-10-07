@@ -2,6 +2,7 @@
 // (editables en PowerPoint / Google Slides), para mandarlo como archivo en vez de compartir
 // el link del panel. Usa los mismos cálculos que la pantalla (window.RRHH_CALC, en views.jsx).
 // PptxGenJS (~460 KB) se carga recién al primer clic, desde unpkg con SRI como React.
+// También arma el HTML interactivo de una sola marca (exportarHtml, más abajo).
 (function () {
   const PPTX_SRC = 'https://unpkg.com/pptxgenjs@4.0.1/dist/pptxgen.bundle.js';
   const PPTX_SRI = 'sha384-qb0Xhi7LLYpvW1HCK6oMrmDLSY9sy7vwm6ZlV6KjtrlL9yg30+YN4neTwnmX+Kp8';
@@ -57,6 +58,21 @@
     return { data: l.data, x: x + (w - iw) / 2, y: y + (h - ih) / 2, w: iw, h: ih };
   }
   const intentar = p => p.catch(e => { console.warn(e); return null; });
+
+  // Descarga un archivo con nombre sin tildes: con caracteres no ASCII algunos navegadores
+  // lo guardan como "download".
+  const sinTildes = t => t.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  function descargar(blob, nombre) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = sinTildes(nombre);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    return a.download;
+  }
 
   // PptxGenJS escribe las categorías de los gráficos como "multinivel" (multiLvlStrRef) y
   // Google Slides no las lee: muestra 1, 2, 3… en vez de nombres o meses. Se reescriben como
@@ -628,32 +644,120 @@
         }
       }
 
-      // Descarga propia en vez de writeFile(): PptxGenJS libera el archivo a los 100 ms. El nombre
-      // va sin tildes: con caracteres no ASCII algunos navegadores lo guardan como "download".
-      const sinTildes = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      const nombre = sinTildes(marca ? `Informe ${marca.name} por regional - ${mesTxt}.pptx` : `Informe Equipo de Seleccion - ${mesTxt}.pptx`);
+      // Descarga propia en vez de writeFile(): PptxGenJS libera el archivo a los 100 ms.
+      const nombre = marca ? `Informe ${marca.name} por regional - ${mesTxt}.pptx` : `Informe Equipo de Seleccion - ${mesTxt}.pptx`;
       const blob = await categoriasSimples(await pptx.write({ outputType: 'blob' }));
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = nombre;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 60000);
-      return nombre;
+      return descargar(blob, nombre);
     });
   }
 
-  // ── Botón de la barra superior: menú con el informe general y uno por marca (por regional) ──
-  function ExportPptButton({ monthIdx }) {
+  // \u2500\u2500 HTML interactivo de una sola marca \u2500\u2500
+  // Un .html aut\u00f3nomo con la vista de la marca (meses, comparaci\u00f3n, gerencias, gr\u00e1ficos) para
+  // mandarlo como archivo. Los datos van filtrados a esa marca: la otra no viaja en el archivo.
+  // Se compilan las mismas fuentes que carga index.html, con las opciones que Babel usa para
+  // los <script type="text/babel">, m\u00e1s la app de informe-marca.jsx. React va adentro
+  // (verificado con SRI) para que abra sin internet; si no se puede bajar, queda enlazado a unpkg.
+  const FUENTES_HTML = ['charts.jsx', 'sidebar.jsx', 'views.jsx', 'informe-marca.jsx'];
+  const REACT_HTML = [
+    { src: 'https://unpkg.com/react@18.3.1/umd/react.production.min.js', sri: 'sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z' },
+    { src: 'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js', sri: 'sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1' },
+  ];
+  const FUENTES_GOOGLE = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Marcellus&family=Open+Sans:wght@400;500;600;700;800&display=swap';
+
+  async function leerTexto(url, opciones) {
+    const r = await fetch(url, opciones);
+    if (!r.ok) throw new Error(`No se pudo leer ${url} (${r.status})`);
+    return r.text();
+  }
+  // Un "</script" dentro del c\u00f3digo cerrar\u00eda la etiqueta antes de tiempo.
+  const scriptInline = code => `<script>${code.replace(/<\/script/gi, '<\\/script')}</script>`;
+  // Sin comentarios: algunos citan datos de ejemplo (nombres de gerentes) de la otra marca.
+  const compilar = (src, filename) => window.Babel.transform(src, {
+    filename,
+    comments: false,
+    presets: ['react', 'env'],
+    plugins: ['transform-class-properties', 'transform-object-rest-spread', 'transform-flow-strip-types'],
+  }).code;
+
+  async function exportarHtml(monthIdx, marcaId) {
+    const marca = window.SECTORS.find(s => s.group === 'UNIDADES' && s.id === marcaId);
+    if (!marca) throw new Error('Marca desconocida: ' + marcaId);
+    const id = marca.id;
+    const mesTxt = window.RRHH_CALC.mesLabelFor(window.MONTHS[monthIdx]);
+
+    // Solo lo de esta marca, como copia para no tocar los datos del panel.
+    const solo = obj => JSON.parse(JSON.stringify(obj?.[id] != null ? { [id]: obj[id] } : {}));
+    const datos = {
+      MONTHS: window.MONTHS,
+      ACCENTS: window.ACCENTS,
+      SECTORS: [{ ...marca }],
+      GERENCIAS: solo(window.GERENCIAS),
+      ZONALES_FULL: solo(window.ZONALES_FULL),
+      LOCALES_FULL: solo(window.LOCALES_FULL),
+      APERTURAS: solo(window.APERTURAS),
+      ROTACION: solo(window.ROTACION),
+      SECTOR_DATA: solo(window.SECTOR_DATA),
+      BAJAS_MENSUAL: {}, // es de la empresa total (ambas marcas): no va
+    };
+
+    // Logo y fotos adentro del archivo, achicados (mismos recortes que en el PPT).
+    const gerencias = datos.GERENCIAS[id] || [];
+    const [logoMarca, ...fotos] = await Promise.all([
+      intentar(logo(marca.logo)),
+      ...gerencias.map(g => intentar(fotoCuadrada(g.photo, 240))),
+    ]);
+    if (logoMarca) datos.SECTORS[0].logo = logoMarca.data;
+    gerencias.forEach((g, i) => { if (fotos[i]) g.photo = fotos[i]; });
+
+    const [css, ...fuentes] = await Promise.all(['styles.css', ...FUENTES_HTML].map(f => leerTexto(f)));
+    const libs = await Promise.all(REACT_HTML.map(l => leerTexto(l.src, { integrity: l.sri }).then(
+      scriptInline,
+      () => `<script src="${l.src}" integrity="${l.sri}" crossorigin="anonymous"></script>`,
+    )));
+
+    // JSON como JS: "<" escapado para que ning\u00fan texto cierre el <script>.
+    const json = v => JSON.stringify(v).replace(/</g, '\\u003c');
+    const generado = new Date().toLocaleDateString('es-AR');
+    const datosJs = Object.entries(datos).map(([k, v]) => `window.${k} = ${json(v)};`).join('\n')
+      + `\nwindow.INFORME_MARCA = ${json({ marcaId: id, monthIdx, generado })};`;
+
+    const html = `<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${marca.name} \u00b7 Equipo de Selecci\u00f3n</title>
+<link rel="stylesheet" href="${FUENTES_GOOGLE}" />
+<style>
+${css}
+</style>
+</head>
+<body>
+<div id="root"></div>
+${libs.join('\n')}
+${scriptInline(datosJs)}
+${fuentes.map((src, i) => scriptInline(compilar(src, FUENTES_HTML[i]))).join('\n')}
+</body>
+</html>
+`;
+    return descargar(new Blob([html], { type: 'text/html;charset=utf-8' }), `Informe ${marca.name} - ${mesTxt}.html`);
+  }
+
+  // ── Botón de la barra superior: PowerPoint (general o por marca, con detalle por regional)
+  // y HTML interactivo de una sola marca ──
+  function ExportButton({ monthIdx }) {
     const [abierto, setAbierto] = React.useState(false);
     const [estado, setEstado] = React.useState('idle'); // idle | busy | error
     const ref = React.useRef(null);
     const mes = window.RRHH_CALC.mesLabelFor(window.MONTHS[monthIdx]);
-    const opciones = [
-      { id: 'general', titulo: 'Informe general', sub: 'Ambas marcas · totales', logo: 'assets/logo-equipo-seleccion.png' },
-      ...window.SECTORS.filter(s => s.group === 'UNIDADES').map(s => ({ id: s.id, titulo: s.name, sub: 'Detalle por regional', logo: s.logo })),
+    const marcas = window.SECTORS.filter(s => s.group === 'UNIDADES');
+    const grupos = [
+      { formato: 'ppt', titulo: `PowerPoint · ${mes}`, opciones: [
+        { id: 'general', titulo: 'Informe general', sub: 'Ambas marcas · totales', logo: 'assets/logo-equipo-seleccion.png' },
+        ...marcas.map(s => ({ id: s.id, titulo: s.name, sub: 'Detalle por regional', logo: s.logo })),
+      ] },
+      { formato: 'html', titulo: 'HTML interactivo · una marca', opciones:
+        marcas.map(s => ({ id: s.id, titulo: s.name, sub: 'Solo esta marca · se abre en el navegador', logo: s.logo })) },
     ];
     React.useEffect(() => {
       if (!abierto) return;
@@ -663,11 +767,11 @@
       document.addEventListener('keydown', esc);
       return () => { document.removeEventListener('pointerdown', fuera); document.removeEventListener('keydown', esc); };
     }, [abierto]);
-    async function generar(id) {
+    async function generar(formato, id) {
       setAbierto(false);
       setEstado('busy');
       try {
-        await exportarPpt(monthIdx, id);
+        await (formato === 'html' ? exportarHtml(monthIdx, id) : exportarPpt(monthIdx, id));
         setEstado('idle');
       } catch (e) {
         console.error(e);
@@ -684,23 +788,27 @@
           disabled={busy}
           aria-haspopup="menu"
           aria-expanded={abierto}
-          title={`Descargar el informe de ${mes} en PowerPoint (gráficos editables)`}
+          title={`Descargar el informe de ${mes}: PowerPoint (gráficos editables) o HTML interactivo de una marca`}
         >
           <window.Icon name={busy ? 'refresh' : 'download'} size={15} />
-          <span>{busy ? 'Generando…' : estado === 'error' ? 'No se pudo generar' : 'Descargar PPT'}</span>
+          <span>{busy ? 'Generando…' : estado === 'error' ? 'No se pudo generar' : 'Descargar'}</span>
           {!busy && <window.Icon name="chevron-d" size={14} />}
         </button>
         {abierto && (
           <div className="export-pop" role="menu" aria-label={`Informes de ${mes}`}>
-            <div className="export-pop-head">PowerPoint · {mes}</div>
-            {opciones.map(o => (
-              <button key={o.id} role="menuitem" className="export-opt" onClick={() => generar(o.id)}>
-                <img src={encodeURI(o.logo)} alt="" />
-                <span className="export-opt-text">
-                  <strong>{o.titulo}</strong>
-                  <small>{o.sub}</small>
-                </span>
-              </button>
+            {grupos.map(g => (
+              <React.Fragment key={g.formato}>
+                <div className="export-pop-head">{g.titulo}</div>
+                {g.opciones.map(o => (
+                  <button key={o.id} role="menuitem" className="export-opt" onClick={() => generar(g.formato, o.id)}>
+                    <img src={encodeURI(o.logo)} alt="" />
+                    <span className="export-opt-text">
+                      <strong>{o.titulo}</strong>
+                      <small>{o.sub}</small>
+                    </span>
+                  </button>
+                ))}
+              </React.Fragment>
             ))}
           </div>
         )}
@@ -709,5 +817,6 @@
   }
 
   window.exportarPpt = exportarPpt;
-  window.ExportPptButton = ExportPptButton;
+  window.exportarHtml = exportarHtml;
+  window.ExportButton = ExportButton;
 })();

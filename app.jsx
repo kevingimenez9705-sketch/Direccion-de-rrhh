@@ -56,7 +56,7 @@ function App() {
             </div>
           </div>
           <div className="topbar-actions">
-            <window.ExportPptButton monthIdx={monthIdx} />
+            <window.ExportButton monthIdx={monthIdx} />
             <button className="btn btn-ghost">{activeMonth.short.charAt(0) + activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</button>
           </div>
         </div>
