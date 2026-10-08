@@ -199,7 +199,10 @@
   // ─── CONFIGURACIÓN ───────────────────────────────────────────
   const USUARIO = "Admin";
   const CLAVE   = "rrhh2026";
-  const DESTINO = "index.html";  // ← página principal
+  // Página principal; si se llegó desde un link (ej. un informe), se vuelve ahí.
+  // Solo páginas de este sitio ("informe.html?..."), nunca otra dirección.
+  const VOLVER  = new URLSearchParams(window.location.search).get("volver") || "";
+  const DESTINO = /^[\w-]+\.html(\?[^#]*)?$/.test(VOLVER) ? VOLVER : "index.html";
   // ─────────────────────────────────────────────────────────────
 
   function login() {

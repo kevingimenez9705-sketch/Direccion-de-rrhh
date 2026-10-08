@@ -2,7 +2,8 @@
 // (editables en PowerPoint / Google Slides), para mandarlo como archivo en vez de compartir
 // el link del panel. Usa los mismos cálculos que la pantalla (window.RRHH_CALC, en views.jsx).
 // PptxGenJS (~460 KB) se carga recién al primer clic, desde unpkg con SRI como React.
-// También arma el HTML interactivo de una sola marca (exportarHtml, más abajo).
+// El PPT se baja desde la página del informe (informe.html); el menú de la barra superior
+// abre esa página y arma el HTML interactivo de una sola marca (exportarHtml, más abajo).
 (function () {
   const PPTX_SRC = 'https://unpkg.com/pptxgenjs@4.0.1/dist/pptxgen.bundle.js';
   const PPTX_SRI = 'sha384-qb0Xhi7LLYpvW1HCK6oMrmDLSY9sy7vwm6ZlV6KjtrlL9yg30+YN4neTwnmX+Kp8';
@@ -743,20 +744,21 @@ ${fuentes.map((src, i) => scriptInline(compilar(src, FUENTES_HTML[i]))).join('\n
     return descargar(new Blob([html], { type: 'text/html;charset=utf-8' }), `Informe ${marca.name} - ${mesTxt}.html`);
   }
 
-  // ── Botón de la barra superior: PowerPoint (general o por marca, con detalle por regional)
-  // y HTML interactivo de una sola marca ──
+  // ── Botón de la barra superior: ver el informe como página (informe.html, general o por
+  // marca con detalle por regional) y descargar el HTML interactivo de una sola marca ──
   function ExportButton({ monthIdx }) {
     const [abierto, setAbierto] = React.useState(false);
     const [estado, setEstado] = React.useState('idle'); // idle | busy | error
     const ref = React.useRef(null);
     const mes = window.RRHH_CALC.mesLabelFor(window.MONTHS[monthIdx]);
     const marcas = window.SECTORS.filter(s => s.group === 'UNIDADES');
+    const urlInforme = alcance => `informe.html?${new URLSearchParams({ mes: window.MONTHS[monthIdx].key, alcance })}`;
     const grupos = [
-      { formato: 'ppt', titulo: `PowerPoint · ${mes}`, opciones: [
+      { formato: 'ver', titulo: `Ver informe · ${mes}`, opciones: [
         { id: 'general', titulo: 'Informe general', sub: 'Ambas marcas · totales', logo: 'assets/logo-equipo-seleccion.png' },
         ...marcas.map(s => ({ id: s.id, titulo: s.name, sub: 'Detalle por regional', logo: s.logo })),
       ] },
-      { formato: 'html', titulo: 'HTML interactivo · una marca', opciones:
+      { formato: 'html', titulo: 'Descargar HTML interactivo · una marca', opciones:
         marcas.map(s => ({ id: s.id, titulo: s.name, sub: 'Solo esta marca · se abre en el navegador', logo: s.logo })) },
     ];
     React.useEffect(() => {
@@ -767,11 +769,11 @@ ${fuentes.map((src, i) => scriptInline(compilar(src, FUENTES_HTML[i]))).join('\n
       document.addEventListener('keydown', esc);
       return () => { document.removeEventListener('pointerdown', fuera); document.removeEventListener('keydown', esc); };
     }, [abierto]);
-    async function generar(formato, id) {
+    async function generar(id) {
       setAbierto(false);
       setEstado('busy');
       try {
-        await (formato === 'html' ? exportarHtml(monthIdx, id) : exportarPpt(monthIdx, id));
+        await exportarHtml(monthIdx, id);
         setEstado('idle');
       } catch (e) {
         console.error(e);
@@ -788,10 +790,10 @@ ${fuentes.map((src, i) => scriptInline(compilar(src, FUENTES_HTML[i]))).join('\n
           disabled={busy}
           aria-haspopup="menu"
           aria-expanded={abierto}
-          title={`Descargar el informe de ${mes}: PowerPoint (gráficos editables) o HTML interactivo de una marca`}
+          title={`Informe de ${mes}: verlo como página o descargar el HTML interactivo de una marca`}
         >
-          <window.Icon name={busy ? 'refresh' : 'download'} size={15} />
-          <span>{busy ? 'Generando…' : estado === 'error' ? 'No se pudo generar' : 'Descargar'}</span>
+          <window.Icon name={busy ? 'refresh' : 'eye'} size={15} />
+          <span>{busy ? 'Generando…' : estado === 'error' ? 'No se pudo generar' : 'Ver informe'}</span>
           {!busy && <window.Icon name="chevron-d" size={14} />}
         </button>
         {abierto && (
@@ -799,15 +801,22 @@ ${fuentes.map((src, i) => scriptInline(compilar(src, FUENTES_HTML[i]))).join('\n
             {grupos.map(g => (
               <React.Fragment key={g.formato}>
                 <div className="export-pop-head">{g.titulo}</div>
-                {g.opciones.map(o => (
-                  <button key={o.id} role="menuitem" className="export-opt" onClick={() => generar(g.formato, o.id)}>
-                    <img src={encodeURI(o.logo)} alt="" />
-                    <span className="export-opt-text">
-                      <strong>{o.titulo}</strong>
-                      <small>{o.sub}</small>
-                    </span>
-                  </button>
-                ))}
+                {g.opciones.map(o => {
+                  const contenido = (
+                    <>
+                      <img src={encodeURI(o.logo)} alt="" />
+                      <span className="export-opt-text">
+                        <strong>{o.titulo}</strong>
+                        <small>{o.sub}</small>
+                      </span>
+                    </>
+                  );
+                  // rel="opener": la pestaña nueva hereda la sesión (sessionStorage) y no pide login.
+                  // El menú se cierra después del clic: un link que ya no está en la página no abre.
+                  return g.formato === 'ver'
+                    ? <a key={o.id} role="menuitem" className="export-opt" href={urlInforme(o.id)} target="_blank" rel="opener" onClick={() => setTimeout(() => setAbierto(false))}>{contenido}</a>
+                    : <button key={o.id} role="menuitem" className="export-opt" onClick={() => generar(o.id)}>{contenido}</button>;
+                })}
               </React.Fragment>
             ))}
           </div>
