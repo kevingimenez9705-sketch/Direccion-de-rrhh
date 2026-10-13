@@ -592,7 +592,7 @@ window.ROTACION = {
 };
 
 // ─── FÁBRICAS (Recursos Humanos Soft) — ingresos por área y por mes ───
-// Fuente: "Resultados AGO - Fábrica" (Gerencia Soft), Ene–Ago 2026. Por área: exp = ingresos
+// Fuente: "Resultados AGO / SEP - Fábrica" (Gerencia Soft), Ene–Sep 2026. Por área: exp = ingresos
 // por expansión, rot = ingresos por rotación (reemplazos). Las áreas van en el orden de la torta
 // y de las barras apiladas de la referencia; color = paleta fija de las gerencias de las marcas.
 window.FABRICAS = {
@@ -612,8 +612,9 @@ window.FABRICAS = {
     jun26: { logistica:{ exp: 1, rot:16 }, calidad:{ exp:0, rot:4 }, mantenimiento:{ exp:6, rot:4 }, fabricas:{ exp:2, rot:1 }, admin:{ exp:0, rot:0 } },
     jul26: { logistica:{ exp: 0, rot: 7 }, calidad:{ exp:0, rot:5 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:8, rot:4 }, admin:{ exp:0, rot:0 } },
     ago26: { logistica:{ exp: 1, rot:31 }, calidad:{ exp:0, rot:1 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:0, rot:1 }, admin:{ exp:1, rot:0 } },
+    sep26: { logistica:{ exp: 0, rot:17 }, calidad:{ exp:0, rot:4 }, mantenimiento:{ exp:0, rot:3 }, fabricas:{ exp:4, rot:3 }, admin:{ exp:1, rot:2 } },
   },
-  // Encuesta de ausentismo en plantas productivas (anónima, por QR) — del mismo informe.
+  // Encuesta de ausentismo en plantas productivas (anónima, por QR) — del informe de agosto.
   encuesta: {
     titulo: 'Encuesta de ausentismo — Plantas productivas',
     afiche: 'assets/fabricas/encuesta-ausentismo.png',
@@ -656,7 +657,7 @@ window.SECTORS = [
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Altas May 2025–Sep 2026', tags:['1.804 altas en 2026','84 no presentes en 2026'] },
   // Fábricas: grupo propio (no entra en el resumen "ambas marcas" ni en los informes de las
   // marcas); se abre con su propia vista (fabricas.jsx) a partir de window.FABRICAS.
-  { id:'fabricas',        group:'FÁBRICAS', name:'Fábricas',         sub:'Recursos Humanos Soft · plantas productivas',    accent:'navy',   iconKey:'factory',   logo:'assets/fabricas/fabricas.png',   headerSub:'Recursos Humanos Soft · Ingresos Ene–Ago 2026', tags:(() => {
+  { id:'fabricas',        group:'FÁBRICAS', name:'Fábricas',         sub:'Recursos Humanos Soft · plantas productivas',    accent:'navy',   iconKey:'factory',   logo:'assets/fabricas/fabricas.png',   headerSub:'Recursos Humanos Soft · Ingresos Ene–Sep 2026', tags:(() => {
     let exp = 0, rot = 0;
     Object.values(window.FABRICAS.ingresos).forEach(m => Object.values(m).forEach(a => { exp += a.exp; rot += a.rot; }));
     return [`${exp + rot} ingresos en 2026`, `${rot} por rotación · ${exp} por expansión`];
