@@ -595,13 +595,18 @@ window.ROTACION = {
 // Fuente: "Resultados AGO / SEP - Fábrica" (Gerencia Soft), Ene–Sep 2026. Por área: exp = ingresos
 // por expansión, rot = ingresos por rotación (reemplazos). Las áreas van en el orden de la torta
 // y de las barras apiladas de la referencia; color = paleta fija de las gerencias de las marcas.
+// gerente = quien conduce el área (foto en el selector y en la tarjeta, como en Sabores / Extremas).
 window.FABRICAS = {
   areas: [
-    { key:'logistica',     name:'Logística',     short:'Logística', icon:'truck',       color:'#3B66A8' },
-    { key:'calidad',       name:'Calidad',       short:'Calidad',   icon:'badge-check', color:'#B97C33' },
-    { key:'mantenimiento', name:'Mantenimiento', short:'MTTO',      icon:'wrench',      color:'#00918E' },
+    { key:'logistica',     name:'Logística',     short:'Logística', icon:'truck',       color:'#3B66A8',
+      gerente:{ name:'Fernando Giacosa', role:'Gerente de Logística',      photo:'assets/gerencias/fabricas/giacosa.jpg' } },
+    { key:'calidad',       name:'Calidad',       short:'Calidad',   icon:'badge-check', color:'#B97C33',
+      gerente:{ name:'Cecilia Ibañez',   role:'Gerente de Calidad',        photo:'assets/gerencias/fabricas/ibanez.jpg' } },
+    { key:'mantenimiento', name:'Mantenimiento', short:'MTTO',      icon:'wrench',      color:'#00918E',
+      gerente:{ name:'Matias Marsili',   role:'Gerente de Mantenimiento',  photo:'assets/gerencias/fabricas/marsili.jpg' } },
     { key:'fabricas',      name:'Fábricas',      short:'Fábricas',  icon:'factory',     color:'#7A5BB0' },
-    { key:'admin',         name:'Admin',         short:'Admin',     icon:'briefcase',   color:'#6B8E2F' },
+    { key:'admin',         name:'Admin',         short:'Admin',     icon:'briefcase',   color:'#6B8E2F',
+      gerente:{ name:'Natalia Blanco',   role:'Gerente de Administración', photo:'assets/gerencias/fabricas/blanco.jpg' } },
   ],
   ingresos: {
     ene26: { logistica:{ exp:19, rot: 5 }, calidad:{ exp:2, rot:8 }, mantenimiento:{ exp:1, rot:4 }, fabricas:{ exp:0, rot:0 }, admin:{ exp:0, rot:2 } },
