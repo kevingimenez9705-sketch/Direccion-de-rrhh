@@ -619,25 +619,6 @@ window.FABRICAS = {
     ago26: { logistica:{ exp: 1, rot:31 }, calidad:{ exp:0, rot:1 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:0, rot:1 }, admin:{ exp:1, rot:0 } },
     sep26: { logistica:{ exp: 0, rot:17 }, calidad:{ exp:0, rot:4 }, mantenimiento:{ exp:0, rot:3 }, fabricas:{ exp:4, rot:3 }, admin:{ exp:1, rot:2 } },
   },
-  // Encuesta de ausentismo en plantas productivas (anónima, por QR) — del informe de agosto.
-  encuesta: {
-    titulo: 'Encuesta de ausentismo — Plantas productivas',
-    afiche: 'assets/fabricas/encuesta-ausentismo.png',
-    turnos: ['Mañana', 'Tarde', 'Noche', 'Rotativo'],
-    preguntas: [
-      '¿Habitualmente en tus turnos asignados, el equipo está completo?',
-      '¿Si las ausencias de tus compañeros durante la semana son reiteradas, influye en que vos quieras ausentarte?',
-      '¿Las condiciones de seguridad e higiene en la planta ayudan a que nos elijas para venir a trabajar?',
-      '¿El viaje hasta la planta (distancia, transporte, costos) es acorde para llegar a tu puesto de trabajo?',
-      'Si tuviste ausencias, ¿cuál fue el motivo principal?',
-      '¿Podés gozar de los francos que te corresponden?',
-      '¿Tenés 12 horas de descanso entre turno y turno?',
-      'En tus descansos, ¿contás con el equipamiento necesario / suficiente (microondas, pava eléctrica, cubiertos, etc.) para tus comidas?',
-      'Si tu respuesta anterior fue "No", ¿qué estaría faltando?',
-      '¿El ambiente de trabajo en tu equipo hace que quieras venir todos los días?',
-      '¿Qué podemos hacer entre todos para mejorar las ausencias?',
-    ],
-  },
 };
 
 const acc = {

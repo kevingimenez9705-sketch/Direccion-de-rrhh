@@ -1853,23 +1853,8 @@ a.export-opt, a.back-btn { text-decoration: none; }
   text-align: center; font-size: 11.5px; font-weight: 600; color: var(--text-2);
   text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
 }
-.fab-encuesta {
-  display: grid;
-  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
-  gap: 26px;
-  align-items: start;
-  margin-top: 6px;
-}
-.fab-encuesta-afiche { width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; }
-.fab-encuesta-preguntas {
-  margin: 0; padding-left: 24px;
-  display: flex; flex-direction: column; gap: 10px;
-  font-size: 14px; line-height: 1.45; color: var(--text);
-}
-.fab-encuesta-preguntas li::marker { color: var(--accent-color, var(--steel)); font-weight: 700; }
 .inf-tabla th.fab-th-on { background: var(--steel); }
 .inf-tabla tr.fab-tr-on td { background: var(--accent-soft, var(--sand-soft)); font-weight: 600; }
 @media (max-width: 980px) {
-  .fab-dual, .fab-encuesta { grid-template-columns: 1fr; }
-  .fab-encuesta-afiche { max-width: 300px; margin: 0 auto; }
+  .fab-dual { grid-template-columns: 1fr; }
 }
