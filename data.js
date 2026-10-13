@@ -591,6 +591,49 @@ window.ROTACION = {
   },
 };
 
+// ─── FÁBRICAS (Recursos Humanos Soft) — ingresos por área y por mes ───
+// Fuente: "Resultados AGO - Fábrica" (Gerencia Soft), Ene–Ago 2026. Por área: exp = ingresos
+// por expansión, rot = ingresos por rotación (reemplazos). Las áreas van en el orden de la torta
+// y de las barras apiladas de la referencia; color = paleta fija de las gerencias de las marcas.
+window.FABRICAS = {
+  areas: [
+    { key:'logistica',     name:'Logística',     short:'Logística', icon:'truck',       color:'#3B66A8' },
+    { key:'calidad',       name:'Calidad',       short:'Calidad',   icon:'badge-check', color:'#B97C33' },
+    { key:'mantenimiento', name:'Mantenimiento', short:'MTTO',      icon:'wrench',      color:'#00918E' },
+    { key:'fabricas',      name:'Fábricas',      short:'Fábricas',  icon:'factory',     color:'#7A5BB0' },
+    { key:'admin',         name:'Admin',         short:'Admin',     icon:'briefcase',   color:'#6B8E2F' },
+  ],
+  ingresos: {
+    ene26: { logistica:{ exp:19, rot: 5 }, calidad:{ exp:2, rot:8 }, mantenimiento:{ exp:1, rot:4 }, fabricas:{ exp:0, rot:0 }, admin:{ exp:0, rot:2 } },
+    feb26: { logistica:{ exp: 0, rot: 2 }, calidad:{ exp:0, rot:1 }, mantenimiento:{ exp:0, rot:2 }, fabricas:{ exp:2, rot:0 }, admin:{ exp:0, rot:2 } },
+    mar26: { logistica:{ exp: 2, rot:13 }, calidad:{ exp:2, rot:1 }, mantenimiento:{ exp:0, rot:2 }, fabricas:{ exp:3, rot:5 }, admin:{ exp:1, rot:1 } },
+    abr26: { logistica:{ exp: 1, rot: 6 }, calidad:{ exp:0, rot:3 }, mantenimiento:{ exp:0, rot:2 }, fabricas:{ exp:0, rot:5 }, admin:{ exp:1, rot:2 } },
+    may26: { logistica:{ exp: 0, rot:10 }, calidad:{ exp:1, rot:2 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:1, rot:3 }, admin:{ exp:0, rot:0 } },
+    jun26: { logistica:{ exp: 1, rot:16 }, calidad:{ exp:0, rot:4 }, mantenimiento:{ exp:6, rot:4 }, fabricas:{ exp:2, rot:1 }, admin:{ exp:0, rot:0 } },
+    jul26: { logistica:{ exp: 0, rot: 7 }, calidad:{ exp:0, rot:5 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:8, rot:4 }, admin:{ exp:0, rot:0 } },
+    ago26: { logistica:{ exp: 1, rot:31 }, calidad:{ exp:0, rot:1 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:0, rot:1 }, admin:{ exp:1, rot:0 } },
+  },
+  // Encuesta de ausentismo en plantas productivas (anónima, por QR) — del mismo informe.
+  encuesta: {
+    titulo: 'Encuesta de ausentismo — Plantas productivas',
+    afiche: 'assets/fabricas/encuesta-ausentismo.png',
+    turnos: ['Mañana', 'Tarde', 'Noche', 'Rotativo'],
+    preguntas: [
+      '¿Habitualmente en tus turnos asignados, el equipo está completo?',
+      '¿Si las ausencias de tus compañeros durante la semana son reiteradas, influye en que vos quieras ausentarte?',
+      '¿Las condiciones de seguridad e higiene en la planta ayudan a que nos elijas para venir a trabajar?',
+      '¿El viaje hasta la planta (distancia, transporte, costos) es acorde para llegar a tu puesto de trabajo?',
+      'Si tuviste ausencias, ¿cuál fue el motivo principal?',
+      '¿Podés gozar de los francos que te corresponden?',
+      '¿Tenés 12 horas de descanso entre turno y turno?',
+      'En tus descansos, ¿contás con el equipamiento necesario / suficiente (microondas, pava eléctrica, cubiertos, etc.) para tus comidas?',
+      'Si tu respuesta anterior fue "No", ¿qué estaría faltando?',
+      '¿El ambiente de trabajo en tu equipo hace que quieras venir todos los días?',
+      '¿Qué podemos hacer entre todos para mejorar las ausencias?',
+    ],
+  },
+};
+
 const acc = {
   // Sabores = azul acero, Extremas = pizarra (tema "Editorial" de los informes)
   blue:   { '--accent': 'linear-gradient(90deg,#3F6189,#3F6189)', '--accent-color': '#3F6189', '--accent-soft': '#E8EDF4', '--accent-glow': 'rgba(63,97,137,0.22)' },
@@ -599,6 +642,8 @@ const acc = {
   amber:  { '--accent': 'linear-gradient(90deg,#8A6A38,#A4855A)', '--accent-color': '#5E4622', '--accent-soft': '#EFEAE0', '--accent-glow': 'rgba(94,70,34,0.26)' },
   green:  { '--accent': 'linear-gradient(90deg,#2C6E51,#3F8A6A)', '--accent-color': '#1B4A36', '--accent-soft': '#E2ECE7', '--accent-glow': 'rgba(27,74,54,0.26)' },
   red:    { '--accent': 'linear-gradient(90deg,#8C3D36,#A85850)', '--accent-color': '#5E2B26', '--accent-soft': '#EFE3E1', '--accent-glow': 'rgba(94,43,38,0.26)' },
+  // Fábricas = azul marino (portada del informe de Recursos Humanos Soft)
+  navy:   { '--accent': 'linear-gradient(90deg,#24395A,#24395A)', '--accent-color': '#24395A', '--accent-soft': '#E6EAF0', '--accent-glow': 'rgba(36,57,90,0.24)' },
 };
 window.ACCENTS = acc;
 
@@ -609,6 +654,13 @@ window.ACCENTS = acc;
 window.SECTORS = [
   { id:'sabores',         group:'UNIDADES', name:'Sabores Express',  sub:'Cadena de locales gastronómicos',                 accent:'blue',   iconKey:'utensils',  logo:'assets/sabores.png',             headerSub:'Cadena de locales gastronómicos · Altas May 2025–Sep 2026',    tags:['2.185 altas en 2026','77 no presentes en 2026'] },
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Altas May 2025–Sep 2026', tags:['1.804 altas en 2026','84 no presentes en 2026'] },
+  // Fábricas: grupo propio (no entra en el resumen "ambas marcas" ni en los informes de las
+  // marcas); se abre con su propia vista (fabricas.jsx) a partir de window.FABRICAS.
+  { id:'fabricas',        group:'FÁBRICAS', name:'Fábricas',         sub:'Recursos Humanos Soft · plantas productivas',    accent:'navy',   iconKey:'factory',   logo:'assets/fabricas/fabricas.png',   headerSub:'Recursos Humanos Soft · Ingresos Ene–Ago 2026', tags:(() => {
+    let exp = 0, rot = 0;
+    Object.values(window.FABRICAS.ingresos).forEach(m => Object.values(m).forEach(a => { exp += a.exp; rot += a.rot; }));
+    return [`${exp + rot} ingresos en 2026`, `${rot} por rotación · ${exp} por expansión`];
+  })() },
 ];
 
 // ─── TENDENCIAS AUSENTISMO ───

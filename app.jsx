@@ -23,7 +23,8 @@ function App() {
   }, [view, monthIdx]);
 
   const sector = view !== '__panel' ? window.SECTORS.find(s => s.id === view) : null;
-  const activeMonth = window.MONTHS[monthIdx];
+  // Fábricas solo tiene algunos meses cargados: la barra superior muestra el que se ve.
+  const activeMonth = window.MONTHS[sector && sector.id === 'fabricas' ? window.fabricasMesValido(monthIdx) : monthIdx];
 
   return (
     <div className="app no-sidebar">
@@ -63,6 +64,8 @@ function App() {
 
         {view === '__panel' ? (
           <window.PanelEjecutivo onOpen={(id) => setView(id)} />
+        ) : sector.id === 'fabricas' ? (
+          <window.FabricaView key={view} sector={sector} monthIdx={monthIdx} onMonthChange={setMonthIdx} />
         ) : (
           <window.SectorView key={view} sector={sector} monthIdx={monthIdx} onMonthChange={setMonthIdx} />
         )}

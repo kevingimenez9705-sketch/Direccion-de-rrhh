@@ -13,6 +13,8 @@ const Icon = ({ name, size = 18, stroke = 1.7 }) => {
     case 'truck':      return <svg {...common}><path d="M3 7h11v9H3zM14 11h4l3 3v2h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>;
     case 'briefcase':  return <svg {...common}><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>;
     case 'factory':    return <svg {...common}><path d="M3 21V10l5 3V10l5 3V6l8 5v10z"/><path d="M7 17h2M12 17h2M17 17h2"/></svg>;
+    case 'wrench':     return <svg {...common}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg>;
+    case 'badge-check':return <svg {...common}><path d="M3.9 8.6a4 4 0 0 1 4.7-4.7 4 4 0 0 1 6.8 0 4 4 0 0 1 4.7 4.7 4 4 0 0 1 0 6.8 4 4 0 0 1-4.7 4.7 4 4 0 0 1-6.8 0 4 4 0 0 1-4.7-4.7 4 4 0 0 1 0-6.8z"/><path d="m9 12 2 2 4-4"/></svg>;
     case 'gavel':      return <svg {...common}><path d="M13 5l6 6M10 8l3-3 6 6-3 3zM3 21l7-7M5 19l4 1-1-4"/></svg>;
     case 'search':     return <svg {...common}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>;
     case 'alert':      return <svg {...common}><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18.5v.5"/></svg>;
