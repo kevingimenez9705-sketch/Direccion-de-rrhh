@@ -1834,3 +1834,42 @@ a.export-opt, a.back-btn { text-decoration: none; }
   .gerencia-btn-photo img.relevo-out { display: none; }
   .relevo-node, .relevo-photo, .relevo-baton { transition: none !important; }
 }
+
+/* ============ Fábricas (Recursos Humanos Soft) ============ */
+.fab-area-ico svg { display: block; }
+.fab-area-card-ico { display: grid; place-items: center; }
+.fab-people {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-size: 13px; color: var(--text-2); margin-bottom: 6px;
+}
+.fab-people strong { color: var(--text); font-size: 15px; }
+.fab-dual {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 18px;
+  align-items: center;
+}
+.fab-chart-cap {
+  text-align: center; font-size: 11.5px; font-weight: 600; color: var(--text-2);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+}
+.fab-encuesta {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 26px;
+  align-items: start;
+  margin-top: 6px;
+}
+.fab-encuesta-afiche { width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; }
+.fab-encuesta-preguntas {
+  margin: 0; padding-left: 24px;
+  display: flex; flex-direction: column; gap: 10px;
+  font-size: 14px; line-height: 1.45; color: var(--text);
+}
+.fab-encuesta-preguntas li::marker { color: var(--accent-color, var(--steel)); font-weight: 700; }
+.inf-tabla th.fab-th-on { background: var(--steel); }
+.inf-tabla tr.fab-tr-on td { background: var(--accent-soft, var(--sand-soft)); font-weight: 600; }
+@media (max-width: 980px) {
+  .fab-dual, .fab-encuesta { grid-template-columns: 1fr; }
+  .fab-encuesta-afiche { max-width: 300px; margin: 0 auto; }
+}

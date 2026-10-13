@@ -698,4 +698,117 @@ function RotacionBars({ rows, activeLabel, onSelect, mesLabel, prevLabel, fmtPct
   );
 }
 
-Object.assign(window, { LineChart, BarChart, HBarChart, DonutChart, GroupedBarChart, PieChart, RotacionBars, PeopleRow, TrendArrow });
+// ============ Barras apiladas (Fábricas: ingresos por área / expansión vs. rotación) ============
+// data: [{ x, parts: { [serie.key]: n } }]; series: [{ key, label, color }] de abajo hacia arriba.
+// Total arriba de cada barra y el valor de cada tramo adentro cuando entra. highlightKey atenúa
+// las demás series; activeXs marca los meses elegidos con una banda de fondo. Click en un
+// tramo: onSelect(serie.key).
+// Texto adentro de un tramo: blanco o tinta oscura, el que más contraste tenga con el color.
+function inkOn(hex) {
+  const lin = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const n = parseInt(hex.slice(1), 16);
+  const L = 0.2126 * lin(n >> 16 & 255) + 0.7152 * lin(n >> 8 & 255) + 0.0722 * lin(n & 255);
+  return 1.05 / (L + 0.05) >= (L + 0.05) / 0.06 ? '#FFFFFF' : '#14202B';
+}
+function StackedBarChart({ data, series, highlightKey, activeXs = [], onSelect, valueLabel = 'ingresos' }) {
+  const t = chartTheme();
+  const { wrapRef, tip, show, hide } = useChartTip();
+  const [hi, setHi] = React.useState(null);
+  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, '');
+  const surface = t.tooltipBg === '#0A0E17' ? '#121722' : '#FFFFFF';
+  const W = 560, H = 270, padL = 8, padR = 8, padT = 26, padB = 28;
+  const innerW = W - padL - padR, innerH = H - padT - padB, base = padT + innerH;
+  const totals = data.map(d => series.reduce((a, s) => a + (d.parts[s.key] || 0), 0));
+  const max = niceMax(Math.max(1, ...totals));
+  const k = innerH / max;
+  const gap = data.length > 10 ? 8 : 16;
+  const barW = (innerW - gap * (data.length - 1)) / data.length;
+
+  return (
+    <div className="viz-wrap" ref={wrapRef}>
+      <svg key={dataKey(data)} viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', maxHeight: 300, overflow: 'visible' }}>
+        {[0.25, 0.5, 0.75, 1].map(f => (
+          <line key={f} x1={padL} x2={W - padR} y1={base - f * innerH} y2={base - f * innerH} stroke={t.grid} />
+        ))}
+        <line x1={padL} x2={W - padR} y1={base} y2={base} stroke={t.axis} strokeOpacity="0.5" />
+        {data.map((d, i) => {
+          const x = padL + i * (barW + gap);
+          const total = totals[i];
+          const isActive = activeXs.includes(d.x);
+          const tipContent = {
+            title: d.x,
+            rows: [
+              ...series.slice().reverse().filter(s => d.parts[s.key] > 0).map(s => ({ value: fmtMiles(d.parts[s.key]), label: s.label, color: s.color })),
+              { value: fmtMiles(total), label: `${valueLabel} en total` },
+            ],
+          };
+          let acc = 0;
+          return (
+            <g key={d.x} tabIndex={0} className="viz-mark"
+              onPointerMove={e => { setHi(i); show(e, tipContent); }}
+              onPointerLeave={() => { setHi(null); hide(); }}
+              onFocus={e => { setHi(i); show(e, tipContent); }}
+              onBlur={() => { setHi(null); hide(); }}
+            >
+              {/* banda del mes elegido + área de hover más grande que la barra */}
+              <rect x={x - gap / 2} y={padT - 22} width={barW + gap} height={innerH + 22} rx="6"
+                fill={isActive ? t.grid : 'transparent'} opacity={isActive ? 0.75 : 1} />
+              <clipPath id={`stk${uid}${i}`}>
+                <rect x={x} y={base - total * k} width={barW} height={total * k + 6} rx="4" />
+              </clipPath>
+              <g className="viz-grow-y" style={{ animationDelay: `${i * 60}ms` }}>
+                <g clipPath={`url(#stk${uid}${i})`}>
+                  {series.map(s => {
+                    const v = d.parts[s.key] || 0;
+                    if (v <= 0) return null;
+                    const y = base - (acc + v) * k, h = v * k;
+                    acc += v;
+                    const dim = highlightKey != null && s.key !== highlightKey;
+                    return (
+                      <rect key={s.key} x={x} y={y} width={barW} height={h} fill={s.color}
+                        stroke={surface} strokeWidth="2" opacity={dim ? 0.28 : 1}
+                        style={{ cursor: onSelect ? 'pointer' : 'default', transition: 'opacity 200ms ease', filter: hi === i ? 'brightness(1.08)' : 'none' }}
+                        onClick={() => onSelect && onSelect(s.key)} />
+                    );
+                  })}
+                </g>
+              </g>
+              <g className="viz-fade" style={{ animationDelay: `${400 + i * 60}ms` }} pointerEvents="none">
+                {(() => {
+                  let acc2 = 0;
+                  return series.map(s => {
+                    const v = d.parts[s.key] || 0;
+                    const y = base - (acc2 + v / 2) * k;
+                    acc2 += v;
+                    const dim = highlightKey != null && s.key !== highlightKey;
+                    return v > 0 && v * k >= 17 && !dim
+                      ? <text key={s.key} x={x + barW / 2} y={y + 4} textAnchor="middle" fontSize="11.5" fontWeight="700" fill={inkOn(s.color)}>{v}</text>
+                      : null;
+                  });
+                })()}
+                {/* con una serie destacada: su valor y, más tenue, el total del mes */}
+                <text x={x + barW / 2} y={base - total * k - 7} textAnchor="middle" fontSize="12" fontWeight="700" fill={t.ink}>
+                  {highlightKey != null
+                    ? <>{d.parts[highlightKey] || 0}<tspan fill={t.inkSub} fontWeight="400" fontSize="10.5"> / {total}</tspan></>
+                    : total}
+                </text>
+              </g>
+              <text x={x + barW / 2} y={base + 18} textAnchor="middle" fontSize="11.5" fill={isActive ? t.ink : t.axis} fontWeight={isActive || hi === i ? 700 : 400}>{d.x}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <div className="chart-legend">
+        {series.map(s => (
+          <span key={s.key} className="chart-legend-item" style={{ opacity: highlightKey != null && s.key !== highlightKey ? 0.45 : 1 }}>
+            <span className="chart-legend-swatch" style={{ background: s.color }}></span>
+            {s.label}
+          </span>
+        ))}
+      </div>
+      <ChartTip tip={tip} />
+    </div>
+  );
+}
+
+Object.assign(window, { LineChart, BarChart, HBarChart, DonutChart, GroupedBarChart, PieChart, RotacionBars, PeopleRow, TrendArrow, StackedBarChart });

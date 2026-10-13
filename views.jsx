@@ -136,6 +136,8 @@ function WelcomeWeatherCard() {
 function PanelEjecutivo({ onOpen }) {
   const unidades = window.SECTORS.filter(s => s.group === 'UNIDADES');
   const gestion  = window.SECTORS.filter(s => s.group === 'GESTIÓN');
+  // Fábricas va con las marcas en la grilla, pero no suma en el resumen de "ambas marcas".
+  const fabricas = window.SECTORS.filter(s => s.group === 'FÁBRICAS');
   // Último mes con altas cargadas: los meses más nuevos pueden tener solo rotación.
   const altasIdx = ultimoIdxCon(m => unidades.some(s => window.SECTOR_DATA[s.id]?.[m.key]));
   const latestMonth = window.MONTHS[altasIdx];
@@ -212,7 +214,7 @@ function PanelEjecutivo({ onOpen }) {
 
       <div className="section-label">Unidades</div>
       <div className="sector-grid">
-        {unidades.map(s => <SectorButton key={s.id} sector={s} onOpen={onOpen} />)}
+        {[...unidades, ...fabricas].map(s => <SectorButton key={s.id} sector={s} onOpen={onOpen} />)}
       </div>
 
       {gestion.length > 0 && (
@@ -1185,6 +1187,7 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   );
 }
 window.SectorView = SectorView;
+window.ChartDeck = ChartDeck;
 
 // Anima el primer número del valor (formato es-AR: "4.151", "9,79%", "5 (2.2%)").
 // Con "reducir movimiento" activado muestra el valor final directo.
@@ -1409,5 +1412,5 @@ window.DetailAccordion = DetailAccordion;
 window.RRHH_CALC = {
   rotacionStats, colorGerencia, relevosDe, idxMes, gerenciaActivaEn, aperturasMes, aperturaDelta, nombreCorto, chartByKind, sumOrPick,
   altasNetasMes, computeTop5, mesLabelFor, mesShortXY, fmtInt, fmtPct, deltaInfo, rotDelta,
-  MES_LARGO, MES_SHORT_CAP,
+  MES_LARGO, MES_SHORT_CAP, COMPARE_COLORS, MAX_COMPARE_MONTHS,
 };
