@@ -85,7 +85,8 @@
     );
   }
 
-  // ── Selector de áreas (mismo estilo que el de gerencias, con ícono en vez de foto) ──
+  // ── Selector de áreas (mismo estilo que el de gerencias: foto del gerente y el área abajo;
+  //    las áreas sin gerente cargado muestran su ícono) ──
   function AreaPicker({ items, selectedKey, onSelect }) {
     return (
       <div className="gerencia-picker">
@@ -93,10 +94,13 @@
           <button key={a.key}
             className={'gerencia-btn' + (selectedKey === a.key ? ' active' : '') + (a.isTotal ? ' is-total' : '')}
             onClick={() => onSelect(a.key)}>
-            <span className="gerencia-btn-photo is-logo fab-area-ico" style={a.isTotal ? undefined : { color: a.color }}>
-              {a.isTotal ? <img src={encodeURI(a.photo)} alt="" /> : <window.Icon name={a.icon} size={40} stroke={1.6} />}
-            </span>
-            <span className="gerencia-btn-name">{a.name}</span>
+            {a.gerente
+              ? <span className="gerencia-btn-photo"><img src={encodeURI(a.gerente.photo)} alt={a.gerente.name} /></span>
+              : <span className="gerencia-btn-photo is-logo fab-area-ico" style={a.isTotal ? undefined : { color: a.color }}>
+                  {a.isTotal ? <img src={encodeURI(a.photo)} alt="" /> : <window.Icon name={a.icon} size={40} stroke={1.6} />}
+                </span>}
+            <span className="gerencia-btn-name">{a.gerente ? a.gerente.name : a.name}</span>
+            {a.gerente && <span className="gerencia-btn-chip">{a.name}</span>}
           </button>
         ))}
       </div>
@@ -336,12 +340,14 @@
 
         <div className={'gerencia-card' + (area ? '' : ' is-total')}>
           <span key={'s' + selKey} className={'gc-shine ' + (selDir > 0 ? 'from-left' : 'from-right')} aria-hidden="true" />
-          {area
+          {area && area.gerente
+            ? <img key={'f' + selKey} className="gerencia-card-photo gc-photo-in" src={encodeURI(area.gerente.photo)} alt={area.gerente.name} />
+            : area
             ? <span key={'f' + selKey} className="gerencia-card-photo is-logo gc-photo-in fab-area-card-ico" style={{ color: area.color }}><window.Icon name={area.icon} size={34} stroke={1.6} /></span>
             : <img key={'f' + selKey} className="gerencia-card-photo is-logo gc-photo-in" src={encodeURI(sector.logo)} alt={sector.name} />}
           <div key={'b' + selKey} className={'gerencia-card-body gc-body-in ' + (selDir > 0 ? 'from-right' : 'from-left')}>
-            <div className="gerencia-card-name">{area ? area.name : totalEntry.name}</div>
-            <div className="gerencia-card-role">{area ? 'Área · Fábricas' : totalEntry.role}</div>
+            <div className="gerencia-card-name">{area ? (area.gerente ? area.gerente.name : area.name) : totalEntry.name}</div>
+            <div className="gerencia-card-role">{area ? (area.gerente ? `${area.gerente.role} · Fábricas` : 'Área · Fábricas') : totalEntry.role}</div>
           </div>
           {area && <button className="gerencia-card-close" onClick={() => elegirArea('total')} aria-label="Volver a todas las áreas">×</button>}
         </div>
