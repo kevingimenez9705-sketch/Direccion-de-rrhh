@@ -222,23 +222,6 @@
     );
   }
 
-  // ── Encuesta de ausentismo (plantas productivas) ──
-  function EncuestaPanel() {
-    const e = F.encuesta;
-    return (
-      <div className="chart-card chart-card--wide viz-panel">
-        <div className="viz-title">Encuesta de ausentismo</div>
-        <div className="viz-panel-sub">Plantas productivas · anónima · turnos {e.turnos.join(', ').replace(/, ([^,]*)$/, ' o $1')}</div>
-        <div className="fab-encuesta">
-          <img className="fab-encuesta-afiche" src={encodeURI(e.afiche)} alt="Afiche de la encuesta de ausentismo con el código QR para completarla" />
-          <ol className="fab-encuesta-preguntas">
-            {e.preguntas.map((p, i) => <li key={i}>{p}</li>)}
-          </ol>
-        </div>
-      </div>
-    );
-  }
-
   function FabricaView({ sector, monthIdx, onMonthChange }) {
     const accent = window.ACCENTS[sector.accent] || window.ACCENTS.blue;
     const [areaKey, setAreaKey] = useState(null); // null = todas las áreas
@@ -310,9 +293,6 @@
       ) },
       { key: 'tabla', label: 'Tabla por área', render: () => (
         <div className="chart-grid one"><TablaAreas monthIdx={mesIdx} areaKey={areaKey} /></div>
-      ) },
-      { key: 'encuesta', label: 'Encuesta de ausentismo', render: () => (
-        <div className="chart-grid one"><EncuestaPanel /></div>
       ) },
     ];
 
