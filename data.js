@@ -648,6 +648,8 @@ window.SECTORS = [
     Object.values(window.FABRICAS.ingresos).forEach(m => Object.values(m).forEach(a => { exp += a.exp; rot += a.rot; }));
     return [`${exp + rot} ingresos en 2026`, `${rot} por rotación · ${exp} por expansión`];
   })() },
+  // Oficina digital: agentes de IA (n8n). Se abre con su propia vista (oficina.jsx), que lee Supabase.
+  { id:'oficina',         group:'OFICINA',  name:'Oficina digital',  sub:'Agentes de IA del equipo',                       accent:'navy',   iconKey:'bot', cta:'Ver agentes', tags:['6 agentes en n8n','Tareas y actividad al día'] },
 ];
 
 // ─── TENDENCIAS AUSENTISMO ───

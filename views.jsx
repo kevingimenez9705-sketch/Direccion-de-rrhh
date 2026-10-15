@@ -138,6 +138,7 @@ function PanelEjecutivo({ onOpen }) {
   const gestion  = window.SECTORS.filter(s => s.group === 'GESTIÓN');
   // Fábricas va con las marcas en la grilla, pero no suma en el resumen de "ambas marcas".
   const fabricas = window.SECTORS.filter(s => s.group === 'FÁBRICAS');
+  const oficina  = window.SECTORS.filter(s => s.group === 'OFICINA');
   // Último mes con altas cargadas: los meses más nuevos pueden tener solo rotación.
   const altasIdx = ultimoIdxCon(m => unidades.some(s => window.SECTOR_DATA[s.id]?.[m.key]));
   const latestMonth = window.MONTHS[altasIdx];
@@ -225,6 +226,15 @@ function PanelEjecutivo({ onOpen }) {
           </div>
         </>
       )}
+
+      {oficina.length > 0 && (
+        <>
+          <div className="section-label">Oficina digital</div>
+          <div className="sector-grid">
+            {oficina.map(s => <SectorButton key={s.id} sector={s} onOpen={onOpen} />)}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -260,7 +270,7 @@ function SectorButton({ sector, onOpen }) {
           </div>
         )}
         <div className="sector-btn-cta">
-          <span>Ver indicadores</span>
+          <span>{sector.cta || 'Ver indicadores'}</span>
           <window.Icon name="arrow-right" size={16} />
         </div>
       </div>

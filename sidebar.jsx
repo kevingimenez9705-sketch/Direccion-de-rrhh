@@ -19,6 +19,7 @@ const Icon = ({ name, size = 18, stroke = 1.7 }) => {
     case 'search':     return <svg {...common}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>;
     case 'alert':      return <svg {...common}><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18.5v.5"/></svg>;
     case 'clock':      return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>;
+    case 'bot':        return <svg {...common}><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 17h5M2 13v3M22 13v3"/><circle cx="12" cy="3.5" r="1"/></svg>;
     case 'users':      return <svg {...common}><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-3.5 3-6 7-6s7 2.5 7 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c3.5.3 6 2.5 6 6"/></svg>;
     case 'calendar':   return <svg {...common}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>;
     case 'refresh':    return <svg {...common}><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 4v4h-4"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16M3 20v-4h4"/></svg>;

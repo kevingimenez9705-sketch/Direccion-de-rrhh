@@ -66,6 +66,8 @@ function App() {
           <window.PanelEjecutivo onOpen={(id) => setView(id)} />
         ) : sector.id === 'fabricas' ? (
           <window.FabricaView key={view} sector={sector} monthIdx={monthIdx} onMonthChange={setMonthIdx} />
+        ) : sector.id === 'oficina' ? (
+          <window.OficinaView key={view} sector={sector} />
         ) : (
           <window.SectorView key={view} sector={sector} monthIdx={monthIdx} onMonthChange={setMonthIdx} />
         )}

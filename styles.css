@@ -1858,3 +1858,92 @@ a.export-opt, a.back-btn { text-decoration: none; }
 @media (max-width: 980px) {
   .fab-dual { grid-template-columns: 1fr; }
 }
+
+/* ============ Oficina digital (agentes de IA) ============ */
+.ofi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+.ofi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 18px 20px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ofi-card::before {
+  content: "";
+  position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+  background: var(--accent-color, var(--steel));
+}
+.ofi-card-head { display: flex; align-items: center; gap: 12px; }
+.ofi-emoji {
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  background: var(--accent-soft, var(--blue-50));
+  font-size: 22px;
+}
+.ofi-card-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex: 1; min-width: 0; }
+.ofi-card-title h3 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.ofi-chip {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px;
+  background: var(--muted); color: var(--text-2);
+  white-space: nowrap;
+}
+.ofi-chip.is-activo { background: #E4F2EA; color: #2C7E51; }
+.ofi-chip.is-pausado { background: #F8E5E3; color: #A8453C; }
+.ofi-rol { margin: 2px 0 4px; color: var(--text-2); font-size: 13px; }
+.ofi-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+  background: var(--sand-soft); border-radius: var(--radius-sm);
+  padding: 10px 8px; text-align: center;
+}
+.ofi-stats strong { display: block; color: var(--navy); font-size: 15px; font-variant-numeric: tabular-nums; }
+.ofi-stats span { display: block; color: var(--text-3); font-size: 10.5px; margin-top: 2px; }
+.ofi-alerta { font-size: 12px; color: #A8453C; background: #F8E5E3; border-radius: var(--radius-sm); padding: 6px 10px; }
+.ofi-block-label {
+  margin-top: 6px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-3);
+}
+.ofi-tareas { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text); }
+.ofi-tareas li { margin: 2px 0; }
+.ofi-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ofi-chips span {
+  font-size: 11.5px; padding: 3px 9px; border-radius: 999px;
+  background: var(--accent-soft, var(--blue-50)); color: var(--accent-color, var(--steel));
+}
+.ofi-chips.is-soft span { background: var(--muted); color: var(--text-2); }
+.ofi-meta { margin: 8px 0 0; display: grid; gap: 6px; }
+.ofi-meta div { display: grid; grid-template-columns: 112px 1fr; gap: 8px; font-size: 12.5px; }
+.ofi-meta dt { color: var(--text-3); }
+.ofi-meta dd { margin: 0; color: var(--text); }
+.ofi-link {
+  margin-top: auto; padding-top: 10px;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 600; text-decoration: none;
+  color: var(--accent-color, var(--steel));
+}
+.ofi-link:hover { text-decoration: underline; }
+[data-theme="dark"] .ofi-stats { background: var(--muted); }
+[data-theme="dark"] .ofi-card-title h3,
+[data-theme="dark"] .ofi-stats strong { color: var(--text); }
+@media (max-width: 760px) {
+  .ofi-grid { grid-template-columns: 1fr; }
+  .ofi-meta div { grid-template-columns: 1fr; gap: 0; }
+}
