@@ -411,11 +411,11 @@ window.LOCALES_FULL = {
       "Marcelo Biurra": [{ x:"Aper Parana", y:16 }, { x:"San Martin 1", y:2 }, { x:"San Nicolas", y:1 }, { x:"Vicente Lopez", y:1 }, { x:"Villa Ballester 2", y:1 }, { x:"Zarate", y:1 }],
     },
     oct26: {
-      "total": [{ x:"Santa Fe Provincia", y:14 }, { x:"Campana", y:13 }, { x:"Cordoba", y:11 }, { x:"Villa Real", y:8 }, { x:"Lugano", y:7 }, { x:"Zarate", y:6 }, { x:"Boulogne", y:5 }, { x:"Crovara", y:5 }, { x:"Garin", y:5 }, { x:"Benavidez", y:4 }, { x:"Olivos", y:4 }, { x:"Caseros 2", y:3 }, { x:"Mar Del Plata 5", y:3 }, { x:"Pilar 2", y:3 }, { x:"San Miguel 2", y:3 }, { x:"Del Viso", y:2 }, { x:"Jose C Paz 2", y:2 }, { x:"Jose Leon Suarez", y:2 }, { x:"Lanus 4", y:2 }, { x:"Maquinista Savio", y:2 }, { x:"Mar Del Plata 1", y:2 }, { x:"Martinez", y:2 }, { x:"San Martin 1", y:2 }, { x:"Vicente Lopez", y:2 }, { x:"Villa Ballester 1", y:2 }, { x:"Villa Ballester 2", y:2 }, { x:"Villa Soldati", y:2 }, { x:"Gran Bourg", y:1 }, { x:"Manuel Alberti", y:1 }, { x:"Maschwitz", y:1 }, { x:"Munro", y:1 }, { x:"Pacheco 1", y:1 }, { x:"Pilar 1", y:1 }, { x:"Saavedra", y:1 }, { x:"San Fernando", y:1 }, { x:"San Martin 2", y:1 }, { x:"Tapiales", y:1 }, { x:"Valentin Alsina", y:1 }],
+      "total": [{ x:"Aper Santa Fe Provincia", y:14 }, { x:"Aper Campana", y:13 }, { x:"Aper Cordoba", y:11 }, { x:"Aper Villa Real", y:8 }, { x:"Lugano", y:7 }, { x:"Zarate", y:6 }, { x:"Boulogne", y:5 }, { x:"Crovara", y:5 }, { x:"Garin", y:5 }, { x:"Benavidez", y:4 }, { x:"Olivos", y:4 }, { x:"Caseros 2", y:3 }, { x:"Mar Del Plata 5", y:3 }, { x:"Pilar 2", y:3 }, { x:"San Miguel 2", y:3 }, { x:"Aper Villa Soldati", y:2 }, { x:"Del Viso", y:2 }, { x:"Jose C Paz 2", y:2 }, { x:"Jose Leon Suarez", y:2 }, { x:"Lanus 4", y:2 }, { x:"Maquinista Savio", y:2 }, { x:"Mar Del Plata 1", y:2 }, { x:"Martinez", y:2 }, { x:"San Martin 1", y:2 }, { x:"Vicente Lopez", y:2 }, { x:"Villa Ballester 1", y:2 }, { x:"Villa Ballester 2", y:2 }, { x:"Alberti", y:1 }, { x:"Grand Bourg", y:1 }, { x:"Maschwitz", y:1 }, { x:"Munro", y:1 }, { x:"Pacheco 1", y:1 }, { x:"Pilar 1", y:1 }, { x:"Saavedra", y:1 }, { x:"San Fernando", y:1 }, { x:"San Martin 2", y:1 }, { x:"Tapiales", y:1 }, { x:"Valentin Alsina", y:1 }],
       "Agustín Sbampato": [{ x:"Mar Del Plata 5", y:3 }, { x:"Lanus 4", y:2 }, { x:"Mar Del Plata 1", y:2 }, { x:"Valentin Alsina", y:1 }],
-      "Gustavo Cabrera": [{ x:"Crovara", y:5 }, { x:"Benavidez", y:4 }, { x:"Caseros 2", y:3 }, { x:"Pilar 2", y:3 }, { x:"San Miguel 2", y:3 }, { x:"Del Viso", y:2 }, { x:"Gran Bourg", y:1 }, { x:"Manuel Alberti", y:1 }, { x:"Pacheco 1", y:1 }, { x:"Pilar 1", y:1 }, { x:"Tapiales", y:1 }],
-      "Sebastián Calderón": [{ x:"Villa Real", y:8 }, { x:"Lugano", y:7 }, { x:"Villa Soldati", y:2 }],
-      "Marcelo Biurra": [{ x:"Santa Fe Provincia", y:14 }, { x:"Campana", y:13 }, { x:"Cordoba", y:11 }, { x:"Zarate", y:6 }, { x:"Boulogne", y:5 }, { x:"Garin", y:5 }, { x:"Olivos", y:4 }, { x:"Jose C Paz 2", y:2 }, { x:"Jose Leon Suarez", y:2 }, { x:"Maquinista Savio", y:2 }, { x:"Martinez", y:2 }, { x:"San Martin 1", y:2 }, { x:"Vicente Lopez", y:2 }, { x:"Villa Ballester 1", y:2 }, { x:"Villa Ballester 2", y:2 }, { x:"Maschwitz", y:1 }, { x:"Munro", y:1 }, { x:"Saavedra", y:1 }, { x:"San Fernando", y:1 }, { x:"San Martin 2", y:1 }],
+      "Gustavo Cabrera": [{ x:"Crovara", y:5 }, { x:"Benavidez", y:4 }, { x:"Caseros 2", y:3 }, { x:"Pilar 2", y:3 }, { x:"San Miguel 2", y:3 }, { x:"Del Viso", y:2 }, { x:"Alberti", y:1 }, { x:"Grand Bourg", y:1 }, { x:"Pacheco 1", y:1 }, { x:"Pilar 1", y:1 }, { x:"Tapiales", y:1 }],
+      "Sebastián Calderón": [{ x:"Aper Villa Real", y:8 }, { x:"Lugano", y:7 }, { x:"Aper Villa Soldati", y:2 }],
+      "Marcelo Biurra": [{ x:"Aper Santa Fe Provincia", y:14 }, { x:"Aper Campana", y:13 }, { x:"Aper Cordoba", y:11 }, { x:"Zarate", y:6 }, { x:"Boulogne", y:5 }, { x:"Garin", y:5 }, { x:"Olivos", y:4 }, { x:"Jose C Paz 2", y:2 }, { x:"Jose Leon Suarez", y:2 }, { x:"Maquinista Savio", y:2 }, { x:"Martinez", y:2 }, { x:"San Martin 1", y:2 }, { x:"Vicente Lopez", y:2 }, { x:"Villa Ballester 1", y:2 }, { x:"Villa Ballester 2", y:2 }, { x:"Maschwitz", y:1 }, { x:"Munro", y:1 }, { x:"Saavedra", y:1 }, { x:"San Fernando", y:1 }, { x:"San Martin 2", y:1 }],
     },
   },
   extremas: {
@@ -579,6 +579,9 @@ window.APERTURAS = {
 // Fuente: tablas "ROTACIÓN SABORES" / "ROTACIÓN EXTREMAS" (Jul–Sep 2026) y "Rotación por Regional" (Oct 2026).
 // "x" debe coincidir con el matchLabel de window.GERENCIAS. El % de rotación se
 // calcula en vivo: ((altas + bajas) / 2) / ((dotación inicial + final) / 2).
+// Oct 2026 Sabores: la tabla traía invertidas las altas de Calderón (79) y Biurra (17); se usan las
+// del listado de altas (Calderón 17, Biurra 79) y la dotación final se recalcula como
+// inicial + altas − bajas (Calderón 450 → 388, Biurra 465 → 527; el total de la marca no cambia).
 window.ROTACION = {
   sabores: {
     jul26: [
@@ -605,9 +608,9 @@ window.ROTACION = {
     oct26: [
       { x:'Agustín Sbampato',    dotIni:456, dotFin:411, altas: 8, bajas:53 },
       { x:'Gustavo Cabrera',     dotIni:426, dotFin:410, altas:25, bajas:41 },
-      { x:'Sebastián Calderón',  dotIni:420, dotFin:450, altas:79, bajas:49 },
+      { x:'Sebastián Calderón',  dotIni:420, dotFin:388, altas:17, bajas:49 },
       { x:'Lucía Vélez',         dotIni:265, dotFin:238, altas: 0, bajas:27 },
-      { x:'Marcelo Biurra',      dotIni:483, dotFin:465, altas:17, bajas:35 },
+      { x:'Marcelo Biurra',      dotIni:483, dotFin:527, altas:79, bajas:35 },
     ],
   },
   extremas: {
