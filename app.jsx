@@ -3,28 +3,31 @@ const { useState, useEffect } = React;
 
 function App() {
   const [view, setView] = useState('__panel'); // '__panel' or sector.id
-  const [monthIdx, setMonthIdx] = useState(() => window.MONTHS.length - 1); // default: mes más reciente
+  // Índice compartido por las marcas (window.MONTHS) y Fábricas (window.MONTHS_FABRICAS, que puede
+  // tener meses de más al final). Default: el mes más reciente; las marcas lo topean a su último mes.
+  const [monthIdx, setMonthIdx] = useState(() => window.MONTHS_FABRICAS.length - 1);
+  const marcasIdx = Math.min(monthIdx, window.MONTHS.length - 1);
 
   // Persist navigation across reload
   // (clave versionada: el rango de meses cambió, un índice viejo guardado ya no aplica)
   useEffect(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem('rrhh:view:v2') || 'null');
+      const saved = JSON.parse(localStorage.getItem('rrhh:view:v3') || 'null');
       if (saved && (saved.view === '__panel' || window.SECTORS.find(s => s.id === saved.view))) {
         setView(saved.view);
-        if (typeof saved.monthIdx === 'number' && saved.monthIdx >= 0 && saved.monthIdx < window.MONTHS.length) {
+        if (typeof saved.monthIdx === 'number' && saved.monthIdx >= 0 && saved.monthIdx < window.MONTHS_FABRICAS.length) {
           setMonthIdx(saved.monthIdx);
         }
       }
     } catch (_) {}
   }, []);
   useEffect(() => {
-    try { localStorage.setItem('rrhh:view:v2', JSON.stringify({ view, monthIdx })); } catch (_) {}
+    try { localStorage.setItem('rrhh:view:v3', JSON.stringify({ view, monthIdx })); } catch (_) {}
   }, [view, monthIdx]);
 
   const sector = view !== '__panel' ? window.SECTORS.find(s => s.id === view) : null;
   // Fábricas solo tiene algunos meses cargados: la barra superior muestra el que se ve.
-  const activeMonth = window.MONTHS[sector && sector.id === 'fabricas' ? window.fabricasMesValido(monthIdx) : monthIdx];
+  const activeMonth = sector && sector.id === 'fabricas' ? window.fabricasMes(monthIdx) : window.MONTHS[marcasIdx];
 
   return (
     <div className="app no-sidebar">
@@ -57,7 +60,7 @@ function App() {
             </div>
           </div>
           <div className="topbar-actions">
-            <window.ExportButton monthIdx={monthIdx} />
+            <window.ExportButton monthIdx={marcasIdx} />
             <button className="btn btn-ghost">{activeMonth.short.charAt(0) + activeMonth.short.slice(1).toLowerCase()} {activeMonth.year}</button>
           </div>
         </div>
@@ -67,7 +70,7 @@ function App() {
         ) : sector.id === 'fabricas' ? (
           <window.FabricaView key={view} sector={sector} monthIdx={monthIdx} onMonthChange={setMonthIdx} />
         ) : (
-          <window.SectorView key={view} sector={sector} monthIdx={monthIdx} onMonthChange={setMonthIdx} />
+          <window.SectorView key={view} sector={sector} monthIdx={marcasIdx} onMonthChange={setMonthIdx} />
         )}
       </main>
     </div>

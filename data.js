@@ -591,35 +591,43 @@ window.ROTACION = {
   },
 };
 
-// ─── FÁBRICAS (Recursos Humanos Soft) — ingresos por área y por mes ───
-// Fuente: "Resultados AGO / SEP - Fábrica" (Gerencia Soft), Ene–Sep 2026. Por área: exp = ingresos
-// por expansión, rot = ingresos por rotación (reemplazos). Las áreas van en el orden de la torta
-// y de las barras apiladas de la referencia; color = paleta fija de las gerencias de las marcas.
-// gerente = quien conduce el área (foto en el selector y en la tarjeta, como en Sabores / Extremas).
+// ─── FÁBRICAS (Recursos Humanos Soft) — ingresos por dirección y por mes ───
+// Fuente: "Resultados AGO / SEP - Fábrica" (Gerencia Soft) y "Datos Selección Fábrica Octubre",
+// Ene–Oct 2026. Por dirección: exp = ingresos por expansión de nómina, rot = ingresos por rotación
+// de personal (reemplazos). Desde octubre el informe viene por dirección; Ene–Sep se re-sumaron
+// desde las áreas del informe anterior: Logística → Supply Chain, Calidad → Calidad,
+// Mantenimiento + Fábricas + Admin → Producción (el detalle por área queda en el historial de git).
+// gerencias = gerencias y jefaturas a cargo de cada dirección (del mismo Excel de octubre).
 window.FABRICAS = {
-  areas: [
-    { key:'logistica',     name:'Logística',     short:'Logística', icon:'truck',       color:'#3B66A8',
-      gerente:{ name:'Fernando Giacosa', role:'Gerente de Logística',      photo:'assets/gerencias/fabricas/giacosa.jpg' } },
-    { key:'calidad',       name:'Calidad',       short:'Calidad',   icon:'badge-check', color:'#B97C33',
-      gerente:{ name:'Cecilia Ibañez',   role:'Gerente de Calidad',        photo:'assets/gerencias/fabricas/ibanez.jpg' } },
-    { key:'mantenimiento', name:'Mantenimiento', short:'MTTO',      icon:'wrench',      color:'#00918E',
-      gerente:{ name:'Matias Marsili',   role:'Gerente de Mantenimiento',  photo:'assets/gerencias/fabricas/marsili.jpg' } },
-    { key:'fabricas',      name:'Fábricas',      short:'Fábricas',  icon:'factory',     color:'#7A5BB0' },
-    { key:'admin',         name:'Admin',         short:'Admin',     icon:'briefcase',   color:'#6B8E2F',
-      gerente:{ name:'Natalia Blanco',   role:'Gerente de Administración', photo:'assets/gerencias/fabricas/blanco.jpg' } },
+  direcciones: [
+    { key:'produccion', name:'Producción',   short:'Producción', icon:'factory',     color:'#7A5BB0',
+      director:'Daniel Mena Segura',
+      gerencias:['Gerencia de Producción', 'Gerencia de Mantenimiento', 'Jefatura de Control Administrativo'] },
+    { key:'supply',     name:'Supply Chain', short:'Supply Chain', icon:'truck',       color:'#3B66A8',
+      director:'Martín Gonzalez Minardi',
+      gerencias:['Gerencia de Distribución', 'Gerencia de Depósito Extremas y Papelera'] },
+    { key:'calidad',    name:'Calidad',      short:'Calidad',    icon:'badge-check', color:'#B97C33',
+      director:'Sabrina Gomez',
+      gerencias:['Gerencia de Aseguramiento de Calidad', 'Gerencia de Control de Calidad', 'Gerencia de Auditoría', 'Gerencia de Investigación y Desarrollo'] },
   ],
   ingresos: {
-    ene26: { logistica:{ exp:19, rot: 5 }, calidad:{ exp:2, rot:8 }, mantenimiento:{ exp:1, rot:4 }, fabricas:{ exp:0, rot:0 }, admin:{ exp:0, rot:2 } },
-    feb26: { logistica:{ exp: 0, rot: 2 }, calidad:{ exp:0, rot:1 }, mantenimiento:{ exp:0, rot:2 }, fabricas:{ exp:2, rot:0 }, admin:{ exp:0, rot:2 } },
-    mar26: { logistica:{ exp: 2, rot:13 }, calidad:{ exp:2, rot:1 }, mantenimiento:{ exp:0, rot:2 }, fabricas:{ exp:3, rot:5 }, admin:{ exp:1, rot:1 } },
-    abr26: { logistica:{ exp: 1, rot: 6 }, calidad:{ exp:0, rot:3 }, mantenimiento:{ exp:0, rot:2 }, fabricas:{ exp:0, rot:5 }, admin:{ exp:1, rot:2 } },
-    may26: { logistica:{ exp: 0, rot:10 }, calidad:{ exp:1, rot:2 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:1, rot:3 }, admin:{ exp:0, rot:0 } },
-    jun26: { logistica:{ exp: 1, rot:16 }, calidad:{ exp:0, rot:4 }, mantenimiento:{ exp:6, rot:4 }, fabricas:{ exp:2, rot:1 }, admin:{ exp:0, rot:0 } },
-    jul26: { logistica:{ exp: 0, rot: 7 }, calidad:{ exp:0, rot:5 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:8, rot:4 }, admin:{ exp:0, rot:0 } },
-    ago26: { logistica:{ exp: 1, rot:31 }, calidad:{ exp:0, rot:1 }, mantenimiento:{ exp:0, rot:1 }, fabricas:{ exp:0, rot:1 }, admin:{ exp:1, rot:0 } },
-    sep26: { logistica:{ exp: 0, rot:17 }, calidad:{ exp:0, rot:4 }, mantenimiento:{ exp:0, rot:3 }, fabricas:{ exp:4, rot:3 }, admin:{ exp:1, rot:2 } },
+    ene26: { produccion:{ exp:1, rot: 6 }, supply:{ exp:19, rot: 5 }, calidad:{ exp:2, rot:8 } },
+    feb26: { produccion:{ exp:2, rot: 4 }, supply:{ exp: 0, rot: 2 }, calidad:{ exp:0, rot:1 } },
+    mar26: { produccion:{ exp:4, rot: 8 }, supply:{ exp: 2, rot:13 }, calidad:{ exp:2, rot:1 } },
+    abr26: { produccion:{ exp:1, rot: 9 }, supply:{ exp: 1, rot: 6 }, calidad:{ exp:0, rot:3 } },
+    may26: { produccion:{ exp:1, rot: 4 }, supply:{ exp: 0, rot:10 }, calidad:{ exp:1, rot:2 } },
+    jun26: { produccion:{ exp:8, rot: 5 }, supply:{ exp: 1, rot:16 }, calidad:{ exp:0, rot:4 } },
+    jul26: { produccion:{ exp:8, rot: 5 }, supply:{ exp: 0, rot: 7 }, calidad:{ exp:0, rot:5 } },
+    ago26: { produccion:{ exp:1, rot: 2 }, supply:{ exp: 1, rot:31 }, calidad:{ exp:0, rot:1 } },
+    sep26: { produccion:{ exp:5, rot: 8 }, supply:{ exp: 0, rot:17 }, calidad:{ exp:0, rot:4 } },
+    oct26: { produccion:{ exp:4, rot: 2 }, supply:{ exp: 2, rot:11 }, calidad:{ exp:0, rot:1 } },
   },
 };
+// Meses de Fábricas: los de window.MONTHS más los que Fábricas ya tiene y las marcas todavía no
+// (siempre al final, así los índices coinciden con window.MONTHS). Cuando las marcas carguen
+// octubre y se agregue a window.MONTHS, se saca de acá.
+window.MONTHS_FABRICAS = [...window.MONTHS, { key: 'oct26', short: 'OCT', year: 2026 }]
+  .filter((m, i, arr) => arr.findIndex(x => x.key === m.key) === i);
 
 const acc = {
   // Sabores = azul acero, Extremas = pizarra (tema "Editorial" de los informes)
@@ -643,7 +651,7 @@ window.SECTORS = [
   { id:'extremas',        group:'UNIDADES', name:'Extremas',         sub:'Operación logística y distribución',             accent:'cyan',   iconKey:'truck',     logo:'assets/extremas.png',            headerSub:'Operación logística y distribución · Altas May 2025–Sep 2026', tags:['1.804 altas en 2026','84 no presentes en 2026'] },
   // Fábricas: grupo propio (no entra en el resumen "ambas marcas" ni en los informes de las
   // marcas); se abre con su propia vista (fabricas.jsx) a partir de window.FABRICAS.
-  { id:'fabricas',        group:'FÁBRICAS', name:'Fábricas',         sub:'Recursos Humanos Soft · plantas productivas',    accent:'navy',   iconKey:'factory',   logo:'assets/fabricas/fabricas.png',   headerSub:'Recursos Humanos Soft · Ingresos Ene–Sep 2026', tags:(() => {
+  { id:'fabricas',        group:'FÁBRICAS', name:'Fábricas',         sub:'Recursos Humanos Soft · plantas productivas',    accent:'navy',   iconKey:'factory',   logo:'assets/fabricas/fabricas.png',   headerSub:'Recursos Humanos Soft · Ingresos Ene–Oct 2026', tags:(() => {
     let exp = 0, rot = 0;
     Object.values(window.FABRICAS.ingresos).forEach(m => Object.values(m).forEach(a => { exp += a.exp; rot += a.rot; }));
     return [`${exp + rot} ingresos en 2026`, `${rot} por rotación · ${exp} por expansión`];
