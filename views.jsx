@@ -427,14 +427,6 @@ function deltaInfo(cur, prev, invert, refLabel) {
   return { dir, trend: isMore ? 'up' : 'down', text: `${isMore ? '+' : '−'}${fmtInt(Math.abs(diff))} vs. ${ref} (${fmtInt(prev)})` };
 }
 
-// Pie de la tarjeta "Ingresos": cuántos no se presentaron y qué % de los ingresos son.
-function noPresentesDelta(ingresos, noPresentes) {
-  if (!ingresos) return { dir: 'neutral', text: 'Sin ingresos en el mes' };
-  if (!noPresentes) return { dir: 'neutral', text: 'Todos se presentaron' };
-  const pct = (noPresentes / ingresos * 100).toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  return { dir: 'down', trend: 'neutral', text: `${fmtInt(noPresentes)} no se ${noPresentes === 1 ? 'presentó' : 'presentaron'} (${pct}%)` };
-}
-
 function GerenciaPicker({ items, gerencias, selectedKey, onSelect }) {
   return (
     <div className="gerencia-picker">
@@ -925,8 +917,6 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
   const altasNetas = (stat.altasMes != null && stat.noPresentes != null) ? stat.altasMes - stat.noPresentes : null;
   const altasNetasPrev = (stat.altasMesPrev != null && stat.noPresentesPrev != null) ? stat.altasMesPrev - stat.noPresentesPrev : null;
   const altasNetasDelta = deltaInfo(altasNetas, altasNetasPrev, true);
-  // "Ingresos" = todos los que entraron en el listado del mes, incluidos los que no se presentaron.
-  const ingresosDelta = !hasAltasMes ? { dir: 'neutral', text: 'Sin datos de altas cargados' } : noPresentesDelta(stat.altasMes, stat.noPresentes);
 
   // Bajas y rotación del mes (tablas de rotación; solo meses cargados en window.ROTACION).
   const rotMes = rotacionStats(window.ROTACION?.[sector.id]?.[activeMonth.key], matchLabel);
@@ -1150,11 +1140,6 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
                   {mesLabelFor(cs.month)}
                 </div>
                 <div className="compare-col-metric">
-                  <div className="compare-col-metric-label">Ingresos</div>
-                  <div className="compare-col-metric-value">{cs.hasData ? (fmtInt(cs.altasMes) ?? '0') : 'S/D'}</div>
-                  {cs.hasData && cs.noPresentes > 0 && <div className="compare-col-delta down">{noPresentesDelta(cs.altasMes, cs.noPresentes).text}</div>}
-                </div>
-                <div className="compare-col-metric">
                   <div className="compare-col-metric-label">Altas</div>
                   <div className="compare-col-metric-value">{cs.hasData ? (fmtInt(cs.netas) ?? '0') : 'S/D'}</div>
                   {aDelta && <div className={'compare-col-delta ' + aDelta.dir}>{aDelta.text}</div>}
@@ -1181,10 +1166,9 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
         /* Cuando hay una gerencia seleccionada, las tarjetas muestran SUS datos
            (acumulado del período + mes activo, con variación vs. el mes anterior)
            en vez de los del sector completo. */
-        <div className="kpi-grid kpi-grid--6">
+        <div className="kpi-grid">
           {[
             { label: `Altas acumuladas${isTotalSelected ? '' : ' — ' + selectedGerencia.name}`, value: fmtInt(altasAcumuladasNetas(sectorData, matchLabel)), delta: { dir: 'neutral', text: periodoAcumuladoTexto(lastAltasMonth) } },
-            { label: `Ingresos — ${mesLabel}`, value: hasAltasMes ? (fmtInt(stat.altasMes) ?? '0') : 'S/D', delta: ingresosDelta },
             { label: `Altas — ${mesLabel}`, value: hasAltasMes ? (fmtInt(altasNetas) ?? '0') : 'S/D', delta: hasAltasMes ? altasNetasDelta : { dir: 'neutral', text: 'Sin datos de altas cargados' } },
             { label: `Bajas — ${mesLabel}`, value: rotMes ? fmtInt(rotMes.bajas) : 'S/D', delta: !rotMes ? sinRotacion : rotPrevMes ? deltaInfo(rotMes.bajas, rotPrevMes.bajas, true) : { dir: 'neutral', text: 'Sin dato de mes ant.' } },
             { label: `Altas por aperturas — ${mesLabel}`, value: aperMes ? fmtInt(aperMes.n) : 'S/D', delta: aperturaDelta(aperMes, stat.altasMes) },
