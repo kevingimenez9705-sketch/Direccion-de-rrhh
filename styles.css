@@ -1284,10 +1284,6 @@ a.export-opt, a.back-btn { text-decoration: none; }
   gap: 14px;
   margin-bottom: 18px;
 }
-/* Tarjetas de cada marca (6): 3 + 3; 6 en fila solo en pantallas muy anchas y 2 por fila en chicas. */
-.kpi-grid--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (min-width: 760px)  { .kpi-grid--6 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 1760px) { .kpi-grid--6 { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .kpi {
   background: var(--surface);
   border: 1px solid var(--border);
