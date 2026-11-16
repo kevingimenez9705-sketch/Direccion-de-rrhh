@@ -205,11 +205,11 @@
         return { label: `Aperturas — ${mesTxt}`, value: a ? K.fmtInt(a.n) : null, delta: K.aperturaDelta(a, brutas) };
       }
 
-      // Serie "Altas por mes" de una marca, del primer mes cargado hasta el mes del informe.
+      // Serie "Altas por mes" de una marca (solo presentes), del primer mes cargado hasta el mes del informe.
       function serieAltas(s) {
         const sd = window.SECTOR_DATA[s.id];
         const meses = window.MONTHS.slice(0, monthIdx + 1).filter(m => sd[m.key]);
-        return meses.map(m => ({ m, v: K.sumOrPick(K.chartByKind(sd[m.key].charts, 'gerencia-mes'), null, 'y') || 0 }));
+        return meses.map(m => ({ m, v: K.altasNetasMes(sd, m.key, null) || 0 }));
       }
 
       // ═════ 1. Portada ═════
@@ -257,7 +257,7 @@
         const series = unidades.map(serieAltas);
         const labels = series[0].map(p => K.mesShortXY(p.m));
         // Con un solo mes cargado la línea sería un punto suelto: se omite.
-        if (labels.length > 1) tituloGrafico(sl, X0, 3.3, CW, 'Altas por mes', 'Ingresos por mes de cada marca (antes de descontar no presentes)');
+        if (labels.length > 1) tituloGrafico(sl, X0, 3.3, CW, 'Altas por mes', 'Altas presentes por mes de cada marca (sin no presentes)');
         if (labels.length > 1) sl.addChart(pptx.ChartType.line, unidades.map((s, i) => ({ name: s.name, labels, values: series[i].map(p => p.v) })), {
           x: X0, y: 3.8, w: CW, h: 3.15, ...ejes,
           chartColors: unidades.map(s => ACENTO[s.id] || C.steel), lineSize: 2.25, lineDataSymbol: 'circle', lineDataSymbolSize: 6,
@@ -289,7 +289,7 @@
           ], acento);
           const serie = serieAltas(s);
           if (serie.length > 1) {
-            tituloGrafico(sl, X0, 3.3, CW, 'Altas por mes', `${K.mesLabelFor(serie[0].m)} – ${mesTxt} · ingresos antes de descontar no presentes`);
+            tituloGrafico(sl, X0, 3.3, CW, 'Altas por mes', `${K.mesLabelFor(serie[0].m)} – ${mesTxt} · altas presentes (sin no presentes)`);
             sl.addChart(pptx.ChartType.line, [{ name: 'Altas', labels: serie.map(p => K.mesShortXY(p.m)), values: serie.map(p => p.v) }], {
               x: X0, y: 3.8, w: CW, h: 3.15, ...ejes, chartColors: [acento], lineSize: 2.25, lineDataSymbol: 'circle', lineDataSymbolSize: 7,
               showValue: true, dataLabelPosition: 't', dataLabelFontSize: 8.5,
@@ -333,12 +333,12 @@
         const ytd = window.MONTHS.filter((m, i) => i <= monthIdx && m.year === M.year && sd[m.key]);
         if (ytd.length > 0) {
           const totals = {};
-          ytd.forEach(m => K.chartByKind(sd[m.key].charts, 'gerencia-mes').data.forEach(d => { totals[d.x] = (totals[d.x] || 0) + d.y; }));
+          ytd.forEach(m => Object.entries(K.altasNetasPorGerencia(sd[m.key])).forEach(([l, v]) => { totals[l] = (totals[l] || 0) + v; }));
           const orden = [...(window.GERENCIAS[s.id] || []).map(g => g.matchLabel), 'Otros'].filter(l => totals[l] > 0);
           const total = orden.reduce((a, l) => a + totals[l], 0);
           const sl = nueva();
           const rango = `${K.mesLabelFor(ytd[0])} – ${K.mesLabelFor(ytd[ytd.length - 1])}`;
-          encabezado(sl, `${s.name.split(' ')[0]} · YTD`, `Altas ${rango} por gerencia · ${K.fmtInt(total)} ingresos`, lg);
+          encabezado(sl, `${s.name.split(' ')[0]} · YTD`, `Altas ${rango} por gerencia · ${K.fmtInt(total)} altas presentes`, lg);
           sl.addChart(pptx.ChartType.pie, [{ name: 'Altas', labels: orden, values: orden.map(l => totals[l]) }], {
             x: X0, y: 1.5, w: 6.2, h: 5.3, chartColors: orden.map(l => hex(K.colorGerencia(s.id, l))),
             showPercent: true, showLegend: false,
@@ -605,13 +605,13 @@
             ], acento);
             // Serie de la regional: cada mes suma a quien estaba a cargo (ej. Ivo hasta Jul, Sebastián desde Ago).
             const todos = window.MONTHS.slice(0, monthIdx + 1).map((m, i) => ({ m, i })).filter(({ m }) => sd[m.key])
-              .map(({ m, i }) => ({ m, v: K.sumOrPick(K.chartByKind(sd[m.key].charts, 'gerencia-mes'), aCargo(g, i).matchLabel, 'y') || 0 }));
+              .map(({ m, i }) => ({ m, v: K.altasNetasMes(sd, m.key, aCargo(g, i).matchLabel) || 0 }));
             // Arranca en el primer mes con altas (antes la regional figuraba en "Otros").
             const serie = todos.slice(Math.max(0, todos.findIndex(p => p.v > 0)));
             if (serie.length > 1) {
               const sub = relevo
                 ? `Regional: ${relevo.name} hasta ${K.mesLabelFor(window.MONTHS[K.idxMes(g.desde) - 1])} · ${g.name} desde ${K.mesLabelFor(window.MONTHS[K.idxMes(g.desde)])}`
-                : `${K.mesLabelFor(serie[0].m)} – ${mesTxt} · ingresos antes de descontar no presentes`;
+                : `${K.mesLabelFor(serie[0].m)} – ${mesTxt} · altas presentes (sin no presentes)`;
               tituloGrafico(sl, X0, 3.3, CW, 'Altas por mes de la regional', sub);
               sl.addChart(pptx.ChartType.line, [{ name: 'Altas', labels: serie.map(p => K.mesShortXY(p.m)), values: serie.map(p => p.v) }], {
                 x: X0, y: 3.8, w: CW, h: 3.15, ...ejes, chartColors: [hex(K.colorGerencia(s.id, g.matchLabel))], lineSize: 2.25, lineDataSymbol: 'circle', lineDataSymbolSize: 7,

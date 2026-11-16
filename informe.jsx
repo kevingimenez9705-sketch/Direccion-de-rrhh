@@ -37,10 +37,12 @@
     const md = m ? window.SECTOR_DATA[s.id]?.[m.key] : null;
     return md ? K.sumOrPick(K.chartByKind(md.charts, 'gerencia-mes'), label, 'y') : null;
   }
-  // "Altas por mes" de una marca, del primer mes cargado hasta el mes del informe.
+  // Altas del mes de los que se presentaron (ingresos − no presentes; null = mes sin datos).
+  const netasMes = (s, m, label = null) => (m ? K.altasNetasMes(window.SECTOR_DATA[s.id], m.key, label) : null);
+  // "Altas por mes" de una marca (solo presentes), del primer mes cargado hasta el mes del informe.
   const serieAltas = (cx, s) => window.MONTHS.slice(0, cx.monthIdx + 1)
     .filter(m => window.SECTOR_DATA[s.id][m.key])
-    .map(m => ({ m, x: K.mesShortXY(m), y: brutasMes(s, m) || 0 }));
+    .map(m => ({ m, x: K.mesShortXY(m), y: netasMes(s, m) || 0 }));
 
   const sinRot = { dir: 'neutral', text: 'Sin datos de rotación' };
   const kpiRotacion = (cx, r, rp, ref = 'mes ant.') => ({
@@ -203,9 +205,9 @@
           kpiRotacion(cx, rot, rotPrev),
         ]} />
         {meses.length > 1 && (
-          <Grafico titulo="Altas por mes" sub="Ingresos por mes de cada marca (antes de descontar no presentes)">
+          <Grafico titulo="Altas por mes" sub="Altas presentes por mes de cada marca (sin no presentes)">
             <LineasMarcas meses={meses.map(K.mesShortXY)}
-              series={us.map(s => ({ label: s.name, color: acentoDe(s), valores: meses.map(m => brutasMes(s, m) || 0) }))} />
+              series={us.map(s => ({ label: s.name, color: acentoDe(s), valores: meses.map(m => netasMes(s, m) || 0) }))} />
           </Grafico>
         )}
       </Hoja>
@@ -229,7 +231,7 @@
           kpiRotacion(cx, rot, rotPrev),
         ]} />
         {serie.length > 1 && (
-          <Grafico titulo="Altas por mes" sub={`${K.mesLabelFor(serie[0].m)} – ${mesTxt} · ingresos antes de descontar no presentes`}>
+          <Grafico titulo="Altas por mes" sub={`${K.mesLabelFor(serie[0].m)} – ${mesTxt} · altas presentes (sin no presentes)`}>
             <window.LineChart data={serie} wide={serie.length > 8} seriesLabel="altas" />
           </Grafico>
         )}
@@ -277,7 +279,7 @@
     const ytd = window.MONTHS.filter((m, i) => i <= cx.monthIdx && m.year === M.year && sd[m.key]);
     if (ytd.length === 0) return null;
     const totals = {};
-    ytd.forEach(m => K.chartByKind(sd[m.key].charts, 'gerencia-mes').data.forEach(d => { totals[d.x] = (totals[d.x] || 0) + d.y; }));
+    ytd.forEach(m => Object.entries(K.altasNetasPorGerencia(sd[m.key])).forEach(([l, v]) => { totals[l] = (totals[l] || 0) + v; }));
     const orden = [...(window.GERENCIAS[s.id] || []).map(g => g.matchLabel), 'Otros'].filter(l => totals[l] > 0);
     const total = orden.reduce((a, l) => a + totals[l], 0);
     const pie = orden.map(l => ({ label: l, short: K.nombreCorto(l), value: totals[l], color: K.colorGerencia(s.id, l) }));
@@ -289,7 +291,7 @@
     const aperturas = [M, P].filter(Boolean).map(m => ({ m, n: K.aperturasMes(s.id, m.key)?.n })).filter(a => a.n > 0);
     return (
       <Hoja titulo={`${s.name.split(' ')[0]} · YTD`} img={s.logo}
-        sub={`Altas ${K.mesLabelFor(ytd[0])} – ${K.mesLabelFor(ytd[ytd.length - 1])} por gerencia · ${K.fmtInt(total)} ingresos`}>
+        sub={`Altas ${K.mesLabelFor(ytd[0])} – ${K.mesLabelFor(ytd[ytd.length - 1])} por gerencia · ${K.fmtInt(total)} altas presentes`}>
         <div className="inf-dos">
           <window.PieChart data={pie} />
           <div className="inf-col">
@@ -527,7 +529,7 @@
     // Cada mes suma a quien estaba a cargo (ej. Ivo hasta Jul, Sebastián desde Ago); la serie
     // arranca en el primer mes con altas (antes la regional figuraba en "Otros").
     const todos = window.MONTHS.slice(0, cx.monthIdx + 1).map((m, i) => ({ m, i })).filter(({ m }) => sd[m.key])
-      .map(({ m, i }) => ({ m, x: K.mesShortXY(m), y: brutasMes(s, m, aCargo(g, i).matchLabel) || 0 }));
+      .map(({ m, i }) => ({ m, x: K.mesShortXY(m), y: netasMes(s, m, aCargo(g, i).matchLabel) || 0 }));
     const serie = todos.slice(Math.max(0, todos.findIndex(p => p.y > 0)));
     const topZ = K.computeTop5(window.ZONALES_FULL, s.id, [M.key], g.matchLabel);
     const topL = K.computeTop5(window.LOCALES_FULL, s.id, [M.key], g.matchLabel);
@@ -545,7 +547,7 @@
             <Grafico titulo="Altas por mes de la regional"
               sub={relevo
                 ? `Regional: ${relevo.name} hasta ${K.mesLabelFor(window.MONTHS[K.idxMes(g.desde) - 1])} · ${g.name} desde ${K.mesLabelFor(window.MONTHS[K.idxMes(g.desde)])}`
-                : `${K.mesLabelFor(serie[0].m)} – ${mesTxt} · ingresos antes de descontar no presentes`}>
+                : `${K.mesLabelFor(serie[0].m)} – ${mesTxt} · altas presentes (sin no presentes)`}>
               <window.LineChart data={serie} wide={serie.length > 8} seriesLabel="altas" />
             </Grafico>
           )}

@@ -382,6 +382,15 @@ function altasNetasMes(sectorData, monthKey, matchLabel) {
   if (altas == null) return null;
   return altas - (sumOrPick(chartByKind(md.charts, 'no-presentes-gerencia'), matchLabel, 'y') || 0);
 }
+// Altas netas de no presentes de un mes, por gerencia: { 'Facundo Aramburo': 36, ... }.
+function altasNetasPorGerencia(md) {
+  const np = chartByKind(md.charts, 'no-presentes-gerencia');
+  const out = {};
+  chartByKind(md.charts, 'gerencia-mes').data.forEach(d => {
+    out[d.x] = d.y - ((np && np.data.find(x => x.x === d.x)?.y) || 0);
+  });
+  return out;
+}
 // Las "Altas acumuladas" cuentan desde este mes hasta el último cargado.
 const INICIO_ACUMULADO = 'ene26';
 // Altas acumuladas netas de no presentes, desde INICIO_ACUMULADO hasta el último mes cargado.
@@ -703,14 +712,10 @@ const MES_SHORT_CAP = { ENE:'Ene', FEB:'Feb', MAR:'Mar', ABR:'Abr', MAY:'May', J
 function mesShortXY(m) {
   return `${MES_SHORT_CAP[m.short]} ${String(m.year).slice(2)}`;
 }
-// Serie mensual de "Altas por mes" de UNA gerencia puntual (matchLabel null = total del
-// sector, igual al c.data ya guardado). Se arma leyendo, mes a mes, el chart "gerencia-mes".
+// Serie mensual de "Altas por mes" (solo los que se presentaron: ingresos − no presentes)
+// de la marca (matchLabel null) o de UNA gerencia puntual.
 function monthlySeriesFor(sectorData, matchLabel) {
-  return window.MONTHS.filter(m => sectorData[m.key]).map(m => {
-    const md = sectorData[m.key];
-    const val = sumOrPick(chartByKind(md.charts, 'gerencia-mes'), matchLabel, 'y');
-    return { x: mesShortXY(m), y: val ?? 0 };
-  });
+  return window.MONTHS.filter(m => sectorData[m.key]).map(m => ({ x: mesShortXY(m), y: altasNetasMes(sectorData, m.key, matchLabel) ?? 0 }));
 }
 
 function mesLabelFor(m) {
@@ -735,7 +740,7 @@ function YtdPanel({ sector, sectorData, monthIdx, matchLabel, selectedName, onSe
   const ytd = window.MONTHS.filter((m, i) => i <= monthIdx && m.year === active.year && sectorData[m.key]);
   if (ytd.length === 0) return null;
   const totals = {};
-  ytd.forEach(m => chartByKind(sectorData[m.key].charts, 'gerencia-mes').data.forEach(d => { totals[d.x] = (totals[d.x] || 0) + d.y; }));
+  ytd.forEach(m => Object.entries(altasNetasPorGerencia(sectorData[m.key])).forEach(([l, v]) => { totals[l] = (totals[l] || 0) + v; }));
   const order = [...(window.GERENCIAS[sector.id] || []).map(g => g.matchLabel), 'Otros'];
   const pie = order.filter(l => totals[l] > 0).map(l => ({ label: l, short: nombreCorto(l), value: totals[l], color: colorGerencia(sector.id, l) }));
   const totalYtd = pie.reduce((a, d) => a + d.value, 0);
@@ -757,7 +762,7 @@ function YtdPanel({ sector, sectorData, monthIdx, matchLabel, selectedName, onSe
     <div className="chart-card viz-panel">
       <div className="viz-title">{sector.name.split(' ')[0]} · YTD</div>
       <div className="viz-panel-sub">
-        Altas {rango} · {fmtInt(totalYtd)} ingresos{matchLabel ? ` · ${selectedName}: ${fmtInt(totals[matchLabel] || 0)}` : ''}
+        Altas presentes {rango} · {fmtInt(totalYtd)}{matchLabel ? ` · ${selectedName}: ${fmtInt(totals[matchLabel] || 0)}` : ''}
       </div>
       <div className="ytd-body">
         <window.PieChart data={pie} activeLabel={matchLabel ?? undefined} onSelect={onSelect} />
@@ -1020,14 +1025,12 @@ function SectorView({ sector, monthIdx, onMonthChange }) {
       const chart = mData ? chartByKind(mData.charts, c.matchKind) : null;
       return { label: mesLabelFor(m), color: COMPARE_COLORS[si], data: chart ? chart.data : [] };
     }) : null;
-    // "Altas por mes" (línea) también sigue a la gerencia elegida: en vez del
-    // total del sector, arma su propia serie mensual mes a mes.
+    // "Altas por mes" (línea): solo los que se presentaron (ingresos − no presentes),
+    // de la marca o de la gerencia elegida, armada mes a mes.
     const isLineFiltering = c.type === 'line' && !isTotalSelected;
-    const lineData = isLineFiltering ? monthlySeriesFor(sectorData, selectedGerencia.matchLabel) : c.data;
+    const lineData = c.type === 'line' ? monthlySeriesFor(sectorData, isLineFiltering ? selectedGerencia.matchLabel : null) : c.data;
     const titleSuffix = (filtering || isLineFiltering) ? ` — ${selectedGerencia.name}` : '';
-    const lineSub = isLineFiltering
-      ? `${mesLabelFor(window.MONTHS[0])} – ${mesLabelFor(lastAltasMonth)} · altas de ${selectedGerencia.name} por mes`
-      : c.sub;
+    const lineSub = `${mesLabelFor(window.MONTHS[0])} – ${mesLabelFor(lastAltasMonth)} · altas presentes${isLineFiltering ? ` de ${selectedGerencia.name}` : ''} (sin no presentes)`;
     return (
       <div key={i} className={'chart-card' + (c.full ? ' chart-card--wide' : '')}>
         <div className="chart-head">
@@ -1411,6 +1414,6 @@ window.DetailAccordion = DetailAccordion;
 // exactamente los mismos números que la pantalla.
 window.RRHH_CALC = {
   rotacionStats, colorGerencia, relevosDe, idxMes, gerenciaActivaEn, aperturasMes, aperturaDelta, nombreCorto, chartByKind, sumOrPick,
-  altasNetasMes, computeTop5, mesLabelFor, mesShortXY, fmtInt, fmtPct, deltaInfo, rotDelta,
+  altasNetasMes, altasNetasPorGerencia, computeTop5, mesLabelFor, mesShortXY, fmtInt, fmtPct, deltaInfo, rotDelta,
   MES_LARGO, MES_SHORT_CAP, COMPARE_COLORS, MAX_COMPARE_MONTHS,
 };
